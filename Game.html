@@ -817,142 +817,348 @@ h1 {
     animation: particleBurst 0.8s ease-out forwards;
 }
 
-/* Menu overlay */
+/* ═══════════════════════════════════════
+   MENU — Full redesign
+   ═══════════════════════════════════════ */
+
+/* Shared overlay base */
 #menuOverlay, #gameOver, #howToPlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
     z-index: 1000;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     text-align: center;
-    padding: 30px 20px;
-    backdrop-filter: blur(6px);
+    padding: 20px;
     overflow-y: auto;
 }
 
-#menuOverlay h1 {
-    font-size: clamp(2rem, 8vw, 3.5rem);
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, #ff758c, #FFD700);
+/* ── Menu background: deep romantic gradient with radial glow ── */
+#menuOverlay {
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,100,160,0.45) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(180,80,255,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 70%, rgba(255,180,80,0.20) 0%, transparent 60%),
+        linear-gradient(160deg, #1a0030 0%, #3d0050 30%, #600030 60%, #1a0020 100%);
+    backdrop-filter: blur(0px);
+}
+
+/* Animated floating menu hearts background */
+.menu-float-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1001;
+    font-size: 20px;
+    opacity: 0;
+    animation: menuHeartFloat linear infinite;
+}
+
+@keyframes menuHeartFloat {
+    0%   { transform: translateY(110vh) translateX(0) rotate(0deg) scale(0.5); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-10vh) translateX(var(--hx)) rotate(var(--hr)) scale(1.1); opacity: 0; }
+}
+
+/* ── Menu card ── */
+.menu-card {
+    background: linear-gradient(145deg,
+        rgba(255,255,255,0.10) 0%,
+        rgba(255,180,220,0.08) 50%,
+        rgba(180,80,255,0.06) 100%);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 28px;
+    padding: clamp(24px,5vw,40px) clamp(20px,6vw,48px);
+    width: min(360px, 92vw);
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 0 60px rgba(255,80,160,0.18),
+        0 0 120px rgba(180,60,255,0.10),
+        0 20px 60px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.22);
+    position: relative;
+    animation: menuCardIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+    transform-origin: center bottom;
+}
+
+@keyframes menuCardIn {
+    0%   { opacity: 0; transform: scale(0.85) translateY(30px); }
+    100% { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Title text */
+#menuOverlay .menu-title {
+    font-size: clamp(2rem, 9vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #fff 0%, #ffcce8 40%, #FFD700 80%, #ffaacc 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 12px rgba(255,100,180,0.6));
+    animation: titleShimmer 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleShimmer {
+    0%   { filter: drop-shadow(0 2px 12px rgba(255,100,180,0.5)); }
+    100% { filter: drop-shadow(0 2px 20px rgba(255,200,80,0.7)); }
+}
+
+#menuOverlay .menu-subtitle {
+    font-size: clamp(0.78rem, 2.5vw, 0.9rem);
+    color: rgba(255,220,240,0.75);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+/* Big animated heart */
+.menu-hero-heart {
+    font-size: clamp(52px, 14vw, 72px);
+    display: block;
+    margin: 8px 0 14px;
+    animation: heroPulse 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(255,100,160,0.8));
+}
+
+@keyframes heroPulse {
+    0%,100% { transform: scale(1)    rotate(-4deg); filter: drop-shadow(0 0 16px rgba(255,100,160,0.8)); }
+    50%      { transform: scale(1.12) rotate(4deg);  filter: drop-shadow(0 0 28px rgba(255,200,80,0.9)); }
+}
+
+/* High score badge */
+.menu-hiscore {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,215,0,0.12);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    color: #FFD700;
+    font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: 0.04em;
 }
 
 .menu-buttons {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 12px;
+    width: 100%;
 }
 
-.menu-button, .restart-btn {
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+/* Primary action button */
+.menu-button {
+    background: linear-gradient(135deg, #ff5fa0 0%, #ff84c0 50%, #ffaadd 100%);
     color: white;
     border: none;
-    padding: 15px 40px;
-    font-size: 18px;
-    font-weight: bold;
+    padding: 15px 28px;
+    font-size: clamp(15px,4vw,18px);
+    font-weight: 800;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
+    letter-spacing: 0.03em;
+    box-shadow:
+        0 4px 20px rgba(255,80,160,0.45),
+        0 1px 0 rgba(255,255,255,0.3) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
 }
 
-.menu-button:active, .restart-btn:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+.menu-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.menu-button:hover  { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 28px rgba(255,80,160,0.55), 0 1px 0 rgba(255,255,255,0.3) inset; filter: brightness(1.05); }
+.menu-button:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(255,80,160,0.3); }
+
+/* Secondary button (outline style) */
+.menu-button.secondary {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.9);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.menu-button.secondary:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.6); }
+
+/* Difficulty section */
+#difficultySelect {
+    margin-top: 16px;
+    width: 100%;
+}
+
+#difficultySelect p {
+    color: rgba(255,220,240,0.85);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
 }
 
 .difficulty-buttons {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 8px;
     justify-content: center;
+    margin-bottom: 14px;
 }
 
 .difficulty-btn {
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: 2px solid white;
-    padding: 8px 10px;
-    font-size: 15px;
-    font-weight: bold;
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.75);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    padding: 10px 6px;
+    font-size: 13px;
+    font-weight: 700;
     border-radius: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    line-height: 1.3;
-    min-width: 0;
+    transition: all 0.2s ease;
+    letter-spacing: 0.03em;
 }
+
+.difficulty-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.45); color: white; }
 
 .difficulty-btn.selected {
-    background: white;
-    color: #ff758c;
+    background: linear-gradient(135deg, rgba(255,90,160,0.7), rgba(255,150,200,0.5));
+    border-color: rgba(255,200,230,0.6);
+    color: white;
+    box-shadow: 0 2px 12px rgba(255,80,160,0.35);
 }
 
-/* How to Play */
+/* Divider */
+.menu-divider {
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    margin: 10px auto;
+}
+
+/* ── How to Play ── */
 #howToPlay {
     display: none;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 20%, rgba(255,100,160,0.3) 0%, transparent 70%),
+        linear-gradient(160deg, #1a0030 0%, #3d0050 50%, #1a0020 100%);
     overflow-y: auto;
 }
 
 .how-to-content {
-    max-width: 500px;
-    background: rgba(255,255,255,0.1);
-    padding: 30px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
+    max-width: 400px;
+    width: 92vw;
+    background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,180,220,0.06));
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: clamp(20px,5vw,32px);
+    border-radius: 24px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
 }
 
 .how-to-content h2 {
     color: white;
-    margin-bottom: 20px;
-    font-size: 28px;
+    font-size: clamp(1.3rem,5vw,1.6rem);
+    font-weight: 900;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff, #ffcce8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .how-to-content p, .how-to-content ul {
-    color: white;
+    color: rgba(255,220,240,0.85);
     text-align: left;
     line-height: 1.8;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
 }
 
-.how-to-content ul {
-    list-style-position: inside;
-}
+.how-to-content ul { list-style: none; padding: 0; }
+.how-to-content ul li { padding: 4px 0; }
+.how-to-content strong { color: white; }
 
-/* Game Over Screen */
+/* ── Game Over ── */
 #gameOver {
     display: none;
+    background:
+        radial-gradient(ellipse 70% 50% at 50% 20%, rgba(255,100,160,0.25) 0%, transparent 70%),
+        linear-gradient(160deg, #1a0030 0%, #3d0050 50%, #1a0020 100%);
 }
 
 .game-over-content {
-    background: rgba(255,255,255,0.1);
-    padding: 40px 30px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-    max-width: 400px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.10), rgba(255,180,220,0.06));
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: clamp(24px,5vw,40px) clamp(20px,6vw,40px);
+    border-radius: 28px;
+    backdrop-filter: blur(20px);
+    max-width: 360px;
+    width: 92vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 60px rgba(255,80,160,0.12);
+    animation: menuCardIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
 }
 
 #gameOverTitle {
-    font-size: 36px;
+    font-size: clamp(1.5rem,6vw,2rem);
+    font-weight: 900;
     color: white;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 12px rgba(255,80,160,0.5);
 }
 
 #gameOverImg {
-    font-size: 80px;
-    margin-bottom: 20px;
+    font-size: 72px;
+    margin-bottom: 14px;
 }
 
 #gameOverScore, #gameOverHigh, #gameOverStreak, #gameOverLevel {
-    color: white;
-    font-size: 18px;
-    margin: 10px 0;
+    color: rgba(255,220,240,0.85);
+    font-size: clamp(14px,3.5vw,17px);
+    margin: 7px 0;
+    font-weight: 600;
 }
+
+.restart-btn {
+    background: linear-gradient(135deg, #ff5fa0 0%, #ff84c0 50%, #ffaadd 100%);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: clamp(14px,3.8vw,17px);
+    font-weight: 800;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    box-shadow: 0 4px 20px rgba(255,80,160,0.4), 0 1px 0 rgba(255,255,255,0.3) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+    margin-top: 8px;
+    position: relative;
+    overflow: hidden;
+}
+.restart-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+    border-radius: inherit;
+    pointer-events: none;
+}
+.restart-btn:hover  { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 28px rgba(255,80,160,0.5); }
+.restart-btn:active { transform: scale(0.96); }
 
 /* Sound toggle */
 #soundToggle {
@@ -1106,31 +1312,34 @@ h1 {
 <!-- Double Points Banner -->
 <div id="doubleBanner">⭐ DOUBLE POINTS ⭐</div>
 
+<!-- Floating background hearts for menu -->
+<div id="menuHearts"></div>
+
 <!-- Menu Overlay -->
 <div id="menuOverlay">
-    <h1>Catch the Love 💕</h1>
-    <div style="font-size: 60px; margin: 20px 0;">❤️</div>
-    <p style="color: white; font-size: 18px; margin-bottom: 10px;">A Game Made with Love for Beatrix</p>
-    
-    <div class="menu-buttons">
-        <button class="menu-button" onclick="showDifficultySelect()">▶️ Start Game</button>
-        <button class="menu-button" onclick="showHowToPlay()">❓ How to Play</button>
-    </div>
-    
-    <div id="difficultySelect" style="display: none; margin-top: 30px;">
-        <p style="color: white; font-size: 20px; margin-bottom: 15px;">Select Difficulty</p>
-        <div class="difficulty-buttons" id="difficultyBtns">
-            <button class="difficulty-btn" onclick="selectDifficulty('easy')">Easy</button>
-            <button class="difficulty-btn selected" onclick="selectDifficulty('medium')">Medium</button>
-            <button class="difficulty-btn" onclick="selectDifficulty('hard')">Hard</button>
+    <div class="menu-card">
+        <span class="menu-hero-heart">💖</span>
+        <div class="menu-title">Catch the Love</div>
+        <div class="menu-subtitle">Made with ❤️ for Beatrix</div>
+
+        <div class="menu-hiscore">🏆 Best: <span id="menuHighScore">0</span> hearts</div>
+
+        <div class="menu-buttons">
+            <button class="menu-button" onclick="playBtnConfirm();showDifficultySelect()">▶&nbsp;&nbsp;Play Now</button>
+            <button class="menu-button secondary" onclick="playBtnHover();showHowToPlay()">❓&nbsp;&nbsp;How to Play</button>
         </div>
 
-        <button class="menu-button" onclick="startGame()" style="margin-top: 20px;">Start! 🚀</button>
+        <div id="difficultySelect" style="display:none">
+            <div class="menu-divider"></div>
+            <p>Choose difficulty</p>
+            <div class="difficulty-buttons" id="difficultyBtns">
+                <button class="difficulty-btn" onclick="playBtnHover();selectDifficulty('easy')">🌸 Easy</button>
+                <button class="difficulty-btn selected" onclick="playBtnHover();selectDifficulty('medium')">⚡ Medium</button>
+                <button class="difficulty-btn" onclick="playBtnHover();selectDifficulty('hard')">🔥 Hard</button>
+            </div>
+            <button class="menu-button" onclick="playBtnConfirm();startGame()">🚀&nbsp;&nbsp;Start!</button>
+        </div>
     </div>
-    
-    <p style="color: rgba(255,255,255,0.6); margin-top: 30px; font-size: 14px;">
-        High Score: <span id="menuHighScore">0</span> ❤️
-    </p>
 </div>
 
 <!-- How to Play -->
@@ -1150,7 +1359,7 @@ h1 {
         
         <p><strong>Lives:</strong> You have 3 lives. Missing a heart or catching a bomb costs a life!</p>
         
-        <button class="menu-button" onclick="closeHowToPlay()">Got it! 👍</button>
+        <button class="menu-button" onclick="playBtnHover();closeHowToPlay()">Got it! 👍</button>
     </div>
 </div>
 
@@ -1173,8 +1382,8 @@ h1 {
         <p id="gameOverHigh">High Score: 0</p>
         <p id="gameOverStreak">Max Streak: 0</p>
         <p id="gameOverLevel">Level: 1</p>
-        <button class="restart-btn" onclick="restartGame()">Play Again 🔄</button>
-        <button class="restart-btn" onclick="backToMenu()" style="background: linear-gradient(135deg, #667eea, #764ba2); margin-top: 10px;">Main Menu 🏠</button>
+        <button class="restart-btn" onclick="playBtnConfirm();restartGame()">Play Again 🔄</button>
+        <button class="restart-btn" onclick="playBtnHover();backToMenu()" style="background: linear-gradient(135deg, #667eea, #764ba2); margin-top: 10px;">Main Menu 🏠</button>
     </div>
 </div>
 
@@ -1241,7 +1450,7 @@ h1 {
                 <div class="lc-stat-lbl">Lives Left</div>
             </div>
         </div>
-        <button class="lc-next" onclick="nextLevel()">Next Level →</button>
+        <button class="lc-next" onclick="playBtnConfirm();nextLevel()">Next Level →</button>
     </div>
 </div>
 
@@ -1652,11 +1861,169 @@ function stopMusic() {
     if (musicInterval) { clearInterval(musicInterval); musicInterval = null; }
 }
 
+/* ── Menu Music ── */
+let menuMusicInterval = null;
+let menuMusicStep = 0;
+
+/*
+  Bouncy ragtime-style waltz — upbeat, staccato, playful.
+  Structure: A(8) B(8) A(8) C(8) — 32 notes then loops.
+  Key of C, 3/4 feel at 280ms/step.
+*/
+const menuSong = {
+    bpm: 210,
+    melody: [
+        // A phrase — skippy ascending run
+        784, 880,1047,1175, 1047,880, 784, 698,
+        // B phrase — playful bounce
+        659, 784, 880, 784,  698,659, 587, 523,
+        // A' phrase — higher octave
+        1047,1175,1319,1568,1319,1175,1047,880,
+        // C phrase — descending resolution
+        784,  698, 659, 587,  523, 587, 659, 784
+    ],
+    bass: [
+        // Bouncy oom-pah bass: root on beat 1, fifth on beats 2-3
+        131,196,196, 147,196,196, 131,196,
+        165,220,220, 131,196,196, 123,175,
+        131,196,196, 147,196,196, 131,220,
+        131,175,165, 123,175,165, 131,196
+    ],
+    // Staccato pluck layer — pizzicato feel
+    pluck: [
+        1568,0,1319,0, 1175,0,1047,0,
+        988, 0, 784,0,  698,0, 659,0,
+        1319,0,1047,0, 1319,0,1568,0,
+        1047,0, 880,0,  784,0, 880,0
+    ]
+};
+
+function startMenuMusic() {
+    stopMenuMusic();
+    menuMusicStep = 0;
+    menuMusicInterval = setInterval(() => {
+        if (!soundEnabled) return;
+        try {
+            const ctx = getAudioCtx();
+            const t   = ctx.currentTime;
+            const idx = menuMusicStep % menuSong.melody.length;
+            menuMusicStep++;
+            const stepSec = menuSong.bpm / 1000;
+            const noteDur = stepSec * 0.72;   // staccato — leave a gap
+
+            // ── Melody: square wave for that chiptune/toy-piano feel ──
+            const freq = menuSong.melody[idx];
+            if (freq) {
+                const om = ctx.createOscillator(); const gm = ctx.createGain();
+                om.connect(gm); gm.connect(ctx.destination);
+                om.type = 'square';
+                om.frequency.value = freq;
+                gm.gain.setValueAtTime(0, t);
+                gm.gain.linearRampToValueAtTime(0.055, t + 0.008);
+                gm.gain.setValueAtTime(0.055, t + noteDur * 0.5);
+                gm.gain.exponentialRampToValueAtTime(0.001, t + noteDur);
+                om.start(t); om.stop(t + noteDur);
+
+                // Thin sine doubled one octave down for warmth
+                const od = ctx.createOscillator(); const gd = ctx.createGain();
+                od.connect(gd); gd.connect(ctx.destination);
+                od.type = 'sine';
+                od.frequency.value = freq / 2;
+                gd.gain.setValueAtTime(0.03, t);
+                gd.gain.exponentialRampToValueAtTime(0.001, t + noteDur * 0.8);
+                od.start(t); od.stop(t + noteDur);
+            }
+
+            // ── Pluck: very short triangle ping on every other note ──
+            const pluckFreq = menuSong.pluck[idx];
+            if (pluckFreq) {
+                const op = ctx.createOscillator(); const gp = ctx.createGain();
+                op.connect(gp); gp.connect(ctx.destination);
+                op.type = 'triangle';
+                op.frequency.value = pluckFreq;
+                gp.gain.setValueAtTime(0.05, t);
+                gp.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+                op.start(t); op.stop(t + 0.08);
+            }
+
+            // ── Bass: oom-pah — sine, fires on every beat (every 2 steps) ──
+            if (idx % 2 === 0) {
+                const bassFreq = menuSong.bass[idx];
+                if (bassFreq) {
+                    const ob = ctx.createOscillator(); const gb = ctx.createGain();
+                    ob.connect(gb); gb.connect(ctx.destination);
+                    ob.type = 'sine';
+                    ob.frequency.value = bassFreq;
+                    gb.gain.setValueAtTime(0, t);
+                    gb.gain.linearRampToValueAtTime(0.10, t + 0.015);
+                    gb.gain.exponentialRampToValueAtTime(0.001, t + stepSec * 1.6);
+                    ob.start(t); ob.stop(t + stepSec * 1.7);
+                }
+            }
+
+        } catch(e) {}
+    }, menuSong.bpm);
+}
+
+function stopMenuMusic() {
+    if (menuMusicInterval) { clearInterval(menuMusicInterval); menuMusicInterval = null; }
+}
+
+/* ── Button sounds ── */
+function playBtnHover() {
+    // Soft, airy click — like a light key press
+    if (!soundEnabled) return;
+    try {
+        const ctx = getAudioCtx(); const t = ctx.currentTime;
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime(880, t);
+        o.frequency.linearRampToValueAtTime(1100, t + 0.04);
+        g.gain.setValueAtTime(0.18, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+        o.start(t); o.stop(t + 0.09);
+    } catch(e) {}
+}
+
+function playBtnConfirm() {
+    // Bright two-note rising chime — satisfying "yes!"
+    if (!soundEnabled) return;
+    try {
+        const ctx = getAudioCtx(); const t = ctx.currentTime;
+        [[784, 0], [1047, 0.10]].forEach(([freq, delay]) => {
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.type = 'triangle';
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0, t + delay);
+            g.gain.linearRampToValueAtTime(0.30, t + delay + 0.012);
+            g.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.22);
+            o.start(t + delay); o.stop(t + delay + 0.22);
+        });
+        // Subtle sparkle on top
+        const os = ctx.createOscillator(); const gs = ctx.createGain();
+        os.connect(gs); gs.connect(ctx.destination);
+        os.type = 'sine';
+        os.frequency.setValueAtTime(2093, t + 0.08);
+        gs.gain.setValueAtTime(0.10, t + 0.08);
+        gs.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+        os.start(t + 0.08); os.stop(t + 0.22);
+    } catch(e) {}
+}
+
 function toggleSound() {
     soundEnabled = !soundEnabled;
     document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
-    if (!soundEnabled) stopMusic();
-    else startMusic();
+    if (!soundEnabled) {
+        stopMusic();
+        stopMenuMusic();
+        stopBossMusic();
+    } else {
+        // Resume whichever context is active
+        if (!gameStarted) startMenuMusic();
+        else startMusic();
+    }
 }
 
 /* Menu Functions */
@@ -2698,6 +3065,8 @@ function startGame() {
 
     startCollisionLoop();
 
+    stopMenuMusic();
+    stopMenuHearts();
     if (soundEnabled) startMusic();
 }
 
@@ -3467,12 +3836,54 @@ function createLoveText() {
     setTimeout(() => text.remove(), 6000);
 }
 
-/* Initialize page with default theme */
+/* Initialize page with default theme + start menu music */
 window.addEventListener('DOMContentLoaded', function() {
-    // Set initial background
     document.body.style.background = 'linear-gradient(to bottom, #ff758c, #ff7eb3)';
-    console.log('Page loaded, background set');
+    startMenuHearts();
 });
+
+/* ── Floating hearts background for menu ── */
+let menuHeartsInterval = null;
+const MENU_HEARTS = ['💖','💗','💓','💕','💝','✨','💫','🌸','💞','❤️'];
+
+function startMenuHearts() {
+    stopMenuHearts();
+    const container = document.getElementById('menuHearts');
+    if (!container) return;
+    menuHeartsInterval = setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'menu-float-heart';
+        el.textContent = MENU_HEARTS[Math.floor(Math.random() * MENU_HEARTS.length)];
+        el.style.left   = (Math.random() * 96) + 'vw';
+        el.style.bottom = '-60px';
+        el.style.fontSize = (14 + Math.random() * 18) + 'px';
+        el.style.setProperty('--hx', ((Math.random() - 0.5) * 80) + 'px');
+        el.style.setProperty('--hr', ((Math.random() - 0.5) * 40) + 'deg');
+        const dur = (7 + Math.random() * 8).toFixed(1);
+        el.style.animationDuration = dur + 's';
+        el.style.animationDelay = (Math.random() * 1.5) + 's';
+        container.appendChild(el);
+        setTimeout(() => el.remove(), (parseFloat(dur) + 2) * 1000);
+    }, 380);
+}
+
+function stopMenuHearts() {
+    if (menuHeartsInterval) { clearInterval(menuHeartsInterval); menuHeartsInterval = null; }
+    const container = document.getElementById('menuHearts');
+    if (container) container.innerHTML = '';
+}
+
+/* Start menu music on first user interaction (browser autoplay policy) */
+function tryStartMenuMusic() {
+    if (!gameStarted && soundEnabled) startMenuMusic();
+    startMenuHearts();
+    document.body.removeEventListener('click',     tryStartMenuMusic);
+    document.body.removeEventListener('touchstart', tryStartMenuMusic);
+    document.body.removeEventListener('keydown',    tryStartMenuMusic);
+}
+document.body.addEventListener('click',      tryStartMenuMusic, { once: true });
+document.body.addEventListener('touchstart', tryStartMenuMusic, { once: true, passive: true });
+document.body.addEventListener('keydown',    tryStartMenuMusic, { once: true });
 
 </script>
 
