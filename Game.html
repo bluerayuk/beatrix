@@ -2382,17 +2382,8 @@ function startBossFight() {
         document.getElementById('bossHUD').style.display = 'flex';
         document.getElementById('bossArena').style.display = 'block';
 
-        // Show shoot hint
-        // Show shoot hint briefly then fade out
-        const hint = document.getElementById('shootHint');
-        hint.style.opacity = '1';
-        hint.style.transition = '';
-        hint.style.display = 'block';
-        setTimeout(() => {
-            hint.style.transition = 'opacity 1s ease';
-            hint.style.opacity = '0';
-            setTimeout(() => { hint.style.display = 'none'; hint.style.transition = ''; }, 1000);
-        }, 3000);
+        // Show shoot hint only during boss fight, auto-fade after 3s
+        showShootHint();
 
         startBossMusic();
         startBossMovement();
@@ -2733,6 +2724,37 @@ function spawnDebris(x, y, bossSprite) {
     }
 }
 
+let shootHintFadeTimer1 = null;
+let shootHintFadeTimer2 = null;
+
+function showShootHint() {
+    // Cancel any in-progress fade
+    clearTimeout(shootHintFadeTimer1);
+    clearTimeout(shootHintFadeTimer2);
+    const hint = document.getElementById('shootHint');
+    hint.style.transition = '';
+    hint.style.opacity    = '1';
+    hint.style.display    = 'block';
+    // Auto-fade after 3s
+    shootHintFadeTimer1 = setTimeout(() => {
+        hint.style.transition = 'opacity 1s ease';
+        hint.style.opacity    = '0';
+        shootHintFadeTimer2 = setTimeout(() => {
+            hint.style.display    = 'none';
+            hint.style.transition = '';
+        }, 1000);
+    }, 3000);
+}
+
+function hideShootHint() {
+    clearTimeout(shootHintFadeTimer1);
+    clearTimeout(shootHintFadeTimer2);
+    const hint = document.getElementById('shootHint');
+    hint.style.display    = 'none';
+    hint.style.opacity    = '1';
+    hint.style.transition = '';
+}
+
 function defeatedBoss() {
     bossActive = false;
     clearInterval(bossAttackInterval);
@@ -2896,7 +2918,7 @@ function endBossFight() {
     document.getElementById('bossRageBanner').style.display = 'none';
     document.getElementById('bossIntro').style.display = 'none';
     document.getElementById('bossFlashEl').style.display = 'none';
-    document.getElementById('shootHint').style.display = 'none';
+    hideShootHint();
     // Clear any in-flight projectiles
     activeProjectiles.forEach(p => p.el.remove());
     activeProjectiles = [];
