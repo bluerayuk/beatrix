@@ -112,6 +112,18 @@ button:active {
     background: rgba(255, 255, 255, 0.25);
 }
 
+/* Game button styling */
+.game-button {
+    background: linear-gradient(145deg, #ff758c, #ff7eb3);
+    border: 2px solid #fff;
+    box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
+}
+
+.game-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 10px rgba(255, 117, 140, 0.3);
+}
+
 .hidden { 
     display: none !important;
 }
@@ -217,7 +229,7 @@ button:active {
     opacity: 0;
     transition: opacity 1.5s ease;
     line-height: 1.5;
-    max-width: 90%;
+    max-width: 100%;
     text-align: center;
 }
 
@@ -285,21 +297,19 @@ button:active {
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
-    padding: 18px 15px;
-    margin-bottom: 15px;
+    padding: 22px;
 }
 
 .question-number {
-    font-size: 0.8rem;
-    opacity: 0.7;
-    margin-bottom: 10px;
+    font-size: clamp(0.85rem, 3.2vw, 1rem);
+    opacity: 0.8;
+    margin-bottom: 8px;
 }
 
 .question-text {
-    font-size: clamp(1.05rem, 4.2vw, 1.6rem);
+    font-size: clamp(1.1rem, 4.2vw, 1.5rem);
     margin-bottom: 18px;
-    line-height: 1.3;
-    font-weight: 600;
+    line-height: 1.4;
 }
 
 .quiz-options {
@@ -309,53 +319,36 @@ button:active {
 }
 
 .quiz-option {
+    padding: 14px 18px;
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: clamp(0.9rem, 3.4vw, 1.2rem);
-    color: white;
+    border-radius: 10px;
     cursor: pointer;
+    font-size: clamp(0.95rem, 3.5vw, 1.15rem);
     transition: all 0.2s ease;
     text-align: left;
     min-height: 48px;
-    display: flex;
-    align-items: center;
 }
 
 .quiz-option:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
 }
 
 .quiz-option.correct {
     background: rgba(76, 175, 80, 0.3);
-    border-color: #4caf50;
-    animation: correctPulse 0.5s ease;
+    border-color: #4CAF50;
 }
 
 .quiz-option.incorrect {
     background: rgba(244, 67, 54, 0.3);
     border-color: #f44336;
-    animation: shake 0.5s ease;
-}
-
-@keyframes correctPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
 }
 
 .quiz-feedback {
     margin-top: 15px;
     padding: 12px;
-    border-radius: 12px;
-    font-size: clamp(0.85rem, 3.2vw, 1.1rem);
-    line-height: 1.4;
+    border-radius: 8px;
+    font-size: clamp(0.9rem, 3.3vw, 1.1rem);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -366,19 +359,19 @@ button:active {
 
 .quiz-feedback.correct {
     background: rgba(76, 175, 80, 0.2);
-    border: 2px solid #4caf50;
+    border: 1px solid #4CAF50;
 }
 
 .quiz-feedback.incorrect {
     background: rgba(244, 67, 54, 0.2);
-    border: 2px solid #f44336;
+    border: 1px solid #f44336;
 }
 
 .quiz-progress {
     display: flex;
+    gap: 8px;
     justify-content: center;
-    gap: 6px;
-    margin: 15px 0;
+    margin-bottom: 15px;
 }
 
 .progress-dot {
@@ -390,188 +383,149 @@ button:active {
 }
 
 .progress-dot.active {
-    background: #ff1744;
+    background: white;
     transform: scale(1.3);
 }
 
 .progress-dot.completed {
-    background: #4caf50;
+    background: #4CAF50;
 }
 
-.quiz-results {
+.results-container {
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+    text-align: center;
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
-    padding: 30px 18px;
-    margin: 15px auto;
-    max-width: 500px;
-    text-align: center;
+    padding: 28px;
 }
 
 .results-emoji {
-    font-size: clamp(3.5rem, 12vw, 6rem);
+    font-size: clamp(4rem, 13vw, 6rem);
     margin-bottom: 15px;
 }
 
 .results-score {
-    font-size: clamp(1.5rem, 6.5vw, 3rem);
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: #ff1744;
+    font-size: clamp(1.5rem, 5.5vw, 2.5rem);
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .results-message {
-    font-size: clamp(1rem, 3.8vw, 1.4rem);
-    line-height: 1.5;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
     margin-bottom: 15px;
+    opacity: 0.9;
 }
 
 .results-rating {
-    font-size: clamp(0.9rem, 3.3vw, 1.2rem);
-    opacity: 0.9;
-    margin-bottom: 25px;
-    font-style: italic;
-}
-
-.final-message {
-    font-size: clamp(1.2rem, 4.5vw, 2rem);
-    margin: 30px auto;
-    max-width: 90%;
-    text-align: center;
-    text-shadow: 0 0 30px rgba(255, 105, 180, 0.8);
-    opacity: 0;
-    transition: opacity 1.5s ease;
-    line-height: 1.4;
-}
-
-.final-message.show {
-    opacity: 1;
-}
-
-.heart {
-    position: fixed;
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    opacity: 0;
-    animation: floatHeart 5s ease-in infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@keyframes floatHeart {
-    0% {
-        transform: translateY(0) scale(0);
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(-100vh) scale(1);
-        opacity: 0;
-    }
-}
-
-.primary-btn {
-    background: linear-gradient(145deg, #ff1744, #c9184a);
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.primary-btn:active {
-    animation: none;
-    transform: scale(0.95);
-}
-
-#giftSection, #quizSection, #resultsSection {
-    text-align: center;
-}
-
-/* Love Notes Section */
-#loveNotesSection {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
+    font-size: clamp(0.95rem, 3.5vw, 1.25rem);
+    line-height: 1.5;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .notes-container {
     position: relative;
     width: 90%;
-    max-width: 400px;
-    height: 380px;
-    margin: 30px auto;
+    max-width: 500px;
+    margin: 20px auto;
+    height: 420px;
     overflow: hidden;
-    touch-action: pan-y;
 }
 
-.note-card {
+.love-note {
     position: absolute;
     width: 100%;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 40px 25px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
-    transform: translateX(100%) scale(0.9);
-    pointer-events: none;
+    border-radius: 15px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.4s ease;
 }
 
-.note-card.active {
+.love-note.active {
     opacity: 1;
     transform: translateX(0) scale(1);
-    pointer-events: auto;
-    z-index: 2;
+    z-index: 3;
 }
 
-.note-card.prev {
+.love-note.next {
     opacity: 0;
-    transform: translateX(-100%) scale(0.9);
+    transform: translateX(100%) scale(0.8);
     z-index: 1;
 }
 
-.note-card.next {
+.love-note.prev {
     opacity: 0;
-    transform: translateX(100%) scale(0.9);
+    transform: translateX(-100%) scale(0.8);
     z-index: 1;
 }
 
 .note-emoji {
-    font-size: clamp(3.5rem, 12vw, 5rem);
-    margin-bottom: 20px;
+    font-size: clamp(3.5rem, 11vw, 5rem);
+    margin-bottom: 15px;
 }
 
 .note-title {
-    font-size: clamp(1.5rem, 5vw, 2rem);
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: #ff1744;
+    font-size: clamp(1.3rem, 4.8vw, 2rem);
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 .note-text {
-    font-size: clamp(1rem, 3.8vw, 1.3rem);
+    font-size: clamp(1rem, 3.8vw, 1.4rem);
     line-height: 1.6;
-    opacity: 0.95;
 }
 
-.notes-dots {
+.note-controls {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 500px;
+    margin: 18px auto;
+}
+
+.note-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin: 25px 0;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.2s ease;
+}
+
+.note-btn:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.note-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.dots-container {
+    display: flex;
+    gap: 8px;
 }
 
 .dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     cursor: pointer;
@@ -579,421 +533,362 @@ button:active {
 }
 
 .dot.active {
-    background: #ff1744;
+    background: white;
     transform: scale(1.3);
 }
 
-.dot:active {
-    transform: scale(1.1);
+#finalMessage {
+    text-align: center;
+    padding: 30px 20px;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+}
+
+#finalMessage.show {
+    opacity: 1;
+}
+
+#finalMessage h2 {
+    margin-bottom: 18px;
+}
+
+#finalMessage p {
+    font-size: clamp(1.1rem, 4.2vw, 1.6rem);
+    line-height: 1.7;
+    margin-bottom: 15px;
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="stars"></canvas>
+<canvas id="canvas"></canvas>
 <canvas id="particles"></canvas>
 
-<!-- Sound Effects -->
-<audio id="clickSound" preload="auto">
-<source src="data:audio/wav;base64,UklGRhwAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQA=" type="audio/wav">
+<audio id="bgMusic" autoplay loop>
+    <source src="1.mp3" type="audio/mpeg">
 </audio>
 
 <div class="content">
+    
     <div id="initialScreen">
-        <h1 class="fade-in">Andrius ❤️ Beatrix</h1>
-        <p class="subtitle fade-in">Happy Valentine's Day 2026</p>
-        <button onclick="startCelebration()">Open Your Valentine 💝</button>
+        <h1>💕 Happy Valentine's Day 💕</h1>
+        <p class="subtitle">Andrius ❤️ Beatrix</p>
+        <div class="gift-box" onclick="openGift()">
+            <div class="gift-lid" id="giftLid"></div>
+            <div class="ribbon-v"></div>
+            <div class="ribbon-h"></div>
+            <div class="bow">🎀</div>
+            <div class="gift-content" id="giftContent">💝</div>
+        </div>
+        <div class="tap-hint">Tap to open your gift!</div>
     </div>
 
     <div id="giftSection" class="hidden">
-        <h1 class="fade-in">To My Beautiful Wife</h1>
-        
-        <div class="gift-box" onclick="openGift()" id="giftBox">
-            <div class="bow">🎀</div>
-            <div class="ribbon-v"></div>
-            <div class="ribbon-h"></div>
-            <div class="gift-lid" id="lid"></div>
-            <div class="gift-content" id="giftContent">💕</div>
-            <div class="tap-hint" id="tapHint">Tap to open 👆</div>
-        </div>
-
+        <h2 class="fade-in">For My Beautiful Beatrix 💖</h2>
         <div class="love-message" id="loveMessage">
-            Beatrix, my love… ❤️<br><br>
-            Another Valentine's Day together,<br>
-            another year of loving you more.<br><br>
-            Every day with you is a gift,<br>
-            and today I celebrate US.
+            Today marks another chapter in our beautiful story together. Every moment with you is a gift, 
+            and I wanted to create something special to remind you of how deeply loved you are. 
+            This Valentine's Day, let's celebrate US. ❤️
         </div>
-
+        
+        <h2 style="margin-top: 30px;">Our Beautiful Moments 🌟</h2>
         <div class="memory-cards" id="memoryCards">
             <div class="memory-card">
+                <div class="emoji">🎭</div>
+                <div class="title">First Date</div>
+                <div class="text">When our eyes met and time stood still</div>
+            </div>
+            <div class="memory-card">
+                <div class="emoji">🌙</div>
+                <div class="title">Stargazing</div>
+                <div class="text">Under the stars, just you and me</div>
+            </div>
+            <div class="memory-card">
+                <div class="emoji">🎵</div>
+                <div class="title">Our Song</div>
+                <div class="text">The melody that became ours</div>
+            </div>
+            <div class="memory-card">
+                <div class="emoji">🌹</div>
+                <div class="title">First Kiss</div>
+                <div class="text">A moment that changed everything</div>
+            </div>
+            <div class="memory-card">
+                <div class="emoji">✈️</div>
+                <div class="title">Adventures</div>
+                <div class="text">Every journey better with you</div>
+            </div>
+            <div class="memory-card">
                 <div class="emoji">💑</div>
-                <div class="title">Our Journey</div>
-                <div class="text">Every moment magical</div>
-            </div>
-            
-            <div class="memory-card">
-                <div class="emoji">🌟</div>
                 <div class="title">Forever</div>
-                <div class="text">All my tomorrows</div>
-            </div>
-            
-            <div class="memory-card">
-                <div class="emoji">💝</div>
-                <div class="title">My Heart</div>
-                <div class="text">Beats for you</div>
+                <div class="text">My promise to love you always</div>
             </div>
         </div>
-
-        <button id="loveNotesBtn" class="hidden primary-btn" onclick="showLoveNotes()">Read Love Notes 💌</button>
+        
+        <button onclick="showLoveNotes()">Continue to Love Notes 💌</button>
+        <button class="game-button" onclick="window.location.href='Game.html'">🎮 Play Catch the Love Game 💕</button>
     </div>
 
     <div id="loveNotesSection" class="hidden">
-        <h2 class="fade-in">Love Notes For You 💌</h2>
-        <p class="subtitle">Swipe to read more ←→</p>
+        <h2>Love Notes Just For You 💌</h2>
         
         <div class="notes-container">
-            <div class="note-card active" id="note0">
-                <div class="note-emoji">💕</div>
-                <div class="note-title">My Forever</div>
-                <div class="note-text">
-                    From the moment I met you on Bumble, I knew you were special. 
-                    Every day with you is a gift, and I'm so grateful you're my wife.
-                </div>
+            <div class="love-note active" id="note0">
+                <div class="note-emoji">💖</div>
+                <div class="note-title">You Are My Everything</div>
+                <div class="note-text">From the moment I met you, my world became brighter. Your smile lights up my darkest days, and your love gives me strength.</div>
             </div>
             
-            <div class="note-card" id="note1">
+            <div class="love-note next" id="note1">
                 <div class="note-emoji">🌟</div>
-                <div class="note-title">Our Adventures</div>
-                <div class="note-text">
-                    From camping in Polegate to our favorite meals at Buffet Time, 
-                    every moment with you is an adventure I treasure.
-                </div>
+                <div class="note-title">You Make Me Better</div>
+                <div class="note-text">Every day with you teaches me something new about love, patience, and joy. You inspire me to be the best version of myself.</div>
             </div>
             
-            <div class="note-card" id="note2">
-                <div class="note-emoji">🍝</div>
-                <div class="note-title">Little Things</div>
-                <div class="note-text">
-                    I love how you light up at Italian food, your birthday in August, 
-                    and even your love for Prawn Cocktail Pringles. Every detail about you matters to me.
-                </div>
+            <div class="love-note next" id="note2">
+                <div class="note-emoji">🎯</div>
+                <div class="note-title">My Forever Choice</div>
+                <div class="note-text">In a world of billions, my heart chose you. And I would choose you again and again, in every lifetime, in every universe.</div>
             </div>
             
-            <div class="note-card" id="note3">
-                <div class="note-emoji">💍</div>
-                <div class="note-title">May 5th</div>
-                <div class="note-text">
-                    The day we got married was the best day of my life. 
-                    I promise to love you, cherish you, and make you smile every single day.
-                </div>
+            <div class="love-note next" id="note3">
+                <div class="note-emoji">🌈</div>
+                <div class="note-title">Our Future Together</div>
+                <div class="note-text">I dream of all the adventures we'll share, the challenges we'll overcome together, and the beautiful life we're building side by side.</div>
             </div>
             
-            <div class="note-card" id="note4">
-                <div class="note-emoji">❤️</div>
-                <div class="note-title">Today & Always</div>
-                <div class="note-text">
-                    Happy Valentine's Day, my beautiful Beatrix. 
-                    You're my today, my tomorrow, and my forever. I love you more than words can say.
-                </div>
+            <div class="love-note next" id="note4">
+                <div class="note-emoji">💫</div>
+                <div class="note-title">Thank You</div>
+                <div class="note-text">Thank you for choosing me, for loving me, for being patient with me. Thank you for being YOU. I love you more than words can say.</div>
             </div>
         </div>
         
-        <div class="notes-dots">
-            <span class="dot active" onclick="goToNote(0)"></span>
-            <span class="dot" onclick="goToNote(1)"></span>
-            <span class="dot" onclick="goToNote(2)"></span>
-            <span class="dot" onclick="goToNote(3)"></span>
-            <span class="dot" onclick="goToNote(4)"></span>
+        <div class="note-controls">
+            <button class="note-btn" onclick="prevNote()" id="prevBtn">←</button>
+            <div class="dots-container">
+                <div class="dot active" onclick="goToNote(0)"></div>
+                <div class="dot" onclick="goToNote(1)"></div>
+                <div class="dot" onclick="goToNote(2)"></div>
+                <div class="dot" onclick="goToNote(3)"></div>
+                <div class="dot" onclick="goToNote(4)"></div>
+            </div>
+            <button class="note-btn" onclick="nextNote()" id="nextBtn">→</button>
         </div>
         
-        <button id="quizBtn" class="hidden primary-btn" onclick="startQuiz()">Play Our Love Quiz! 💕</button>
+        <button id="quizBtn" class="hidden" onclick="startQuiz()">Test Our Love! 💕</button>
     </div>
 
     <div id="quizSection" class="hidden">
-        <h2 class="fade-in">How Well Do We Know Each Other? 💕</h2>
-        
+        <h2>How Well Do We Know Each Other? 💑</h2>
         <div class="quiz-progress" id="quizProgress"></div>
-        
         <div class="quiz-container" id="quizContainer"></div>
-        
-        <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question ➡️</button>
+        <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question →</button>
     </div>
 
     <div id="resultsSection" class="hidden">
-        <div class="quiz-results fade-in">
-            <div class="results-emoji" id="resultsEmoji">💕</div>
+        <div class="results-container">
+            <div class="results-emoji" id="resultsEmoji">💯</div>
             <div class="results-score" id="resultsScore"></div>
             <div class="results-message" id="resultsMessage"></div>
             <div class="results-rating" id="resultsRating"></div>
-            <button class="primary-btn" onclick="celebrate()">Celebrate Our Love! 🎉</button>
         </div>
+        <button onclick="celebrate()">Celebrate Our Love! 🎉</button>
     </div>
 
-    <div id="finalMessage" class="hidden final-message">
-        Happy Valentine's Day! 💕<br>
-        I love you more than words can say ❤️<br>
-        Forever yours, Andrius
+    <div id="finalMessage" class="hidden">
+        <h2>My Dearest Beatrix 💝</h2>
+        <p>This Valentine's Day, I want you to know that you are the greatest gift life has ever given me.</p>
+        <p>Every laugh we share, every challenge we face, every dream we chase together makes our bond stronger.</p>
+        <p>I promise to love you today, tomorrow, and for all our tomorrows. You are my yesterday, my today, and all of my tomorrows.</p>
+        <h2 style="margin-top: 25px;">I Love You Forever ❤️</h2>
+        <p style="margin-top: 15px; font-size: 1.1rem;">- Andrius</p>
+        <button class="game-button" onclick="window.location.href='Game.html'" style="margin-top: 20px;">🎮 Play the Love Game 💕</button>
     </div>
+
 </div>
 
 <script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var particleCanvas = document.getElementById("particles");
+var particleCtx = particleCanvas.getContext("2d");
+
+canvas.width = particleCanvas.width = window.innerWidth;
+canvas.height = particleCanvas.height = window.innerHeight;
+
+var particles = [];
+var fireworks = [];
+var hearts = [];
+var notesContainer;
+var currentNoteIndex = 0;
+var totalNotes = 5;
+var touchStartX = 0;
+var touchEndX = 0;
+
 var quizQuestions = [
     {
-        question: "Which app did we meet on?",
-        options: ["Tinder", "Bumble", "Hinge", "Match"],
+        question: "What was the first thing Andrius noticed about Beatrix?",
+        options: ["Her beautiful smile", "Her sparkling eyes", "Her wonderful laugh", "Her kind heart"],
         correct: 1,
-        feedback: "Yes! Bumble brought us together. Best swipe ever! 🐝💕"
+        feedback: "It was those sparkling eyes that captured his heart instantly! ✨"
     },
     {
-        question: "Which shop did we go to on our first date?",
-        options: ["Tesco", "Morrisons", "Sainsbury's", "Asda"],
+        question: "What's Andrius's favorite thing to do with Beatrix?",
+        options: ["Cooking together", "Watching sunsets", "Late night talks", "All of the above"],
+        correct: 3,
+        feedback: "Every moment with you is precious! He loves it all! 💕"
+    },
+    {
+        question: "What does Andrius love most about Beatrix's personality?",
+        options: ["Her sense of humor", "Her compassion", "Her creativity", "Her determination"],
         correct: 1,
-        feedback: "That's right! Morrisons on our first date. Who knew grocery shopping could be so romantic? 🛒❤️"
+        feedback: "Your kind and compassionate heart makes the world better! 💖"
     },
     {
-        question: "What is my favourite cuisine?",
-        options: ["Chinese", "Italian", "Indian", "Mexican"],
-        correct: 1,
-        feedback: "Exactly! Italian food is the best. Pasta and pizza forever! 🍝🍕"
+        question: "What's Andrius's promise to Beatrix?",
+        options: ["To always make her smile", "To love her forever", "To be her best friend", "All of these"],
+        correct: 3,
+        feedback: "All of these and so much more! You have his whole heart! 💝"
     },
     {
-        question: "How old am I?",
-        options: ["36", "37", "38", "39"],
-        correct: 2,
-        feedback: "Correct! 38 and still amazing! Age is just a number when you're with the right person. 💫"
-    },
-    {
-        question: "When is my birthday?",
-        options: ["July 15th", "August 11th", "September 20th", "October 5th"],
-        correct: 1,
-        feedback: "Perfect! August 11th - a day to celebrate the most wonderful person in my life! 🎂🎉"
-    },
-    {
-        question: "What is my favourite restaurant?",
-        options: ["Nando's", "Pizza Express", "Garden City Buffet", "Wagamama"],
-        correct: 2,
-        feedback: "Yes! Garden City Buffet is the best! So many delicious choices! 🍽️✨"
-    },
-    {
-        question: "Which location have we camped at the most?",
-        options: ["Brighton, UK", "Polegate, UK", "Canterbury, UK", "Hastings, UK"],
-        correct: 1,
-        feedback: "That's right! Polegate - our special camping spot with so many beautiful memories! ⛺💕"
-    },
-    {
-        question: "When did we get married?",
-        options: ["April 12th", "May 5th", "June 20th", "July 8th"],
-        correct: 1,
-        feedback: "How could we forget! May 5th - the best day of our lives! Forever and always! 💍❤️"
-    },
-    {
-        question: "What Pringles flavour is my favourite?",
-        options: ["Original", "Sour Cream & Onion", "Prawn Cocktail", "BBQ"],
-        correct: 2,
-        feedback: "Spot on! Prawn Cocktail Pringles are the best! You know me so well! 🦐😋"
-    },
-    {
-        question: "What restaurant in Eastbourne was our favourite?",
-        options: ["The Greek", "Buffet Time", "The Griddle", "Bella Italia"],
-        correct: 1,
-        feedback: "Absolutely! Buffet Time in Eastbourne - so many great meals and memories there! 🍜💖"
+        question: "What makes Beatrix so special to Andrius?",
+        options: ["She's his soulmate", "She understands him", "She makes life beautiful", "Everything about her"],
+        correct: 3,
+        feedback: "You are everything to him - his past, present, and future! 🌟"
     }
 ];
 
 var currentQuestion = 0;
 var score = 0;
 var selectedAnswer = null;
-var heartsInterval = null;
-var canvas = document.getElementById("stars");
-var ctx = canvas.getContext("2d");
-var fireworks = [];
-var stars = [];
-var shootingStars = [];
 
 function initCanvas() {
-    try {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        var starCount = 150;
-        for (var i = 0; i < starCount; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5 + 0.5,
-                speed: Math.random() * 0.4 + 0.1,
-                twinkle: Math.random() * Math.PI * 2,
-                twinkleSpeed: Math.random() * 0.03 + 0.02
-            });
-        }
-        
-        animate();
-    } catch(e) {
-        console.log('Canvas init error:', e);
+    for (var i = 0; i < 60; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 2 + 0.5,
+            vx: Math.random() * 0.5 - 0.25,
+            vy: Math.random() * 0.5 - 0.25
+        });
     }
+    
+    for (var j = 0; j < 15; j++) {
+        hearts.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 15 + 10,
+            vx: Math.random() * 0.3 - 0.15,
+            vy: Math.random() * 0.3 - 0.15,
+            opacity: Math.random() * 0.5 + 0.3
+        });
+    }
+    
+    animate();
 }
 
 function animate() {
-    try {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
         
-        for (var i = 0; i < stars.length; i++) {
-            var s = stars[i];
-            var alpha = (Math.sin(s.twinkle) + 1) / 2 * 0.5 + 0.5;
-            ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-            ctx.fill();
-            s.y += s.speed;
-            s.twinkle += s.twinkleSpeed;
-            if (s.y > canvas.height) {
-                s.y = 0;
-                s.x = Math.random() * canvas.width;
-            }
-        }
+        if (p.x < 0 || p.x > canvas.width) p.vx = -p.vx;
+        if (p.y < 0 || p.y > canvas.height) p.vy = -p.vy;
         
-        if (Math.random() < 0.01) {
-            shootingStars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height / 3,
-                length: Math.random() * 60 + 30,
-                speed: Math.random() * 8 + 4,
-                angle: Math.PI / 4,
-                life: 60
-            });
-        }
-        
-        for (var i = shootingStars.length - 1; i >= 0; i--) {
-            var star = shootingStars[i];
-            if (star.life <= 0) {
-                shootingStars.splice(i, 1);
-                continue;
-            }
-            var alpha = star.life / 60;
-            ctx.strokeStyle = 'rgba(255, 255, 255, ' + alpha + ')';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(star.x, star.y);
-            ctx.lineTo(star.x - Math.cos(star.angle) * star.length, star.y - Math.sin(star.angle) * star.length);
-            ctx.stroke();
-            star.x += Math.cos(star.angle) * star.speed;
-            star.y += Math.sin(star.angle) * star.speed;
-            star.life--;
-        }
-        
-        if (fireworks.length > 0) {
-            for (var i = fireworks.length - 1; i >= 0; i--) {
-                var f = fireworks[i];
-                ctx.fillStyle = f.color;
-                ctx.globalAlpha = f.life / 60;
-                ctx.beginPath();
-                ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2);
-                ctx.fill();
-                f.x += f.vx;
-                f.y += f.vy;
-                f.vy += 0.12;
-                f.life--;
-                if (f.life <= 0) fireworks.splice(i, 1);
-            }
-            ctx.globalAlpha = 1;
-        }
-    } catch(e) {
-        console.log('Animation error:', e);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.fill();
     }
+    
+    for (var j = 0; j < hearts.length; j++) {
+        var h = hearts[j];
+        h.x += h.vx;
+        h.y += h.vy;
+        
+        if (h.x < -50 || h.x > canvas.width + 50) h.vx = -h.vx;
+        if (h.y < -50 || h.y > canvas.height + 50) h.vy = -h.vy;
+        
+        ctx.save();
+        ctx.globalAlpha = h.opacity;
+        ctx.font = h.size + 'px serif';
+        ctx.fillText('❤️', h.x, h.y);
+        ctx.restore();
+    }
+    
+    particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+    for (var k = fireworks.length - 1; k >= 0; k--) {
+        var fw = fireworks[k];
+        fw.x += fw.vx;
+        fw.y += fw.vy;
+        fw.vy += 0.08;
+        fw.life--;
+        
+        if (fw.life <= 0) {
+            fireworks.splice(k, 1);
+            continue;
+        }
+        
+        particleCtx.beginPath();
+        particleCtx.arc(fw.x, fw.y, 2, 0, Math.PI * 2);
+        particleCtx.fillStyle = fw.color;
+        particleCtx.globalAlpha = fw.life / 60;
+        particleCtx.fill();
+    }
+    particleCtx.globalAlpha = 1;
     
     requestAnimationFrame(animate);
 }
 
-function createFloatingHearts() {
-    if (heartsInterval) return;
-    heartsInterval = setInterval(function() {
-        try {
-            var heart = document.createElement("div");
-            heart.className = "heart";
-            heart.textContent = Math.random() > 0.5 ? "❤️" : "💕";
-            heart.style.left = Math.random() * window.innerWidth + "px";
-            heart.style.bottom = "0px";
-            heart.style.animationDelay = Math.random() * 2 + "s";
-            document.body.appendChild(heart);
-            setTimeout(function() {
-                if (heart.parentNode) heart.parentNode.removeChild(heart);
-            }, 5000);
-        } catch(e) {
-            console.log('Heart error:', e);
-        }
-    }, 1500);
-}
-
-function startCelebration() {
-    initAudio();
-    playSound('click');
-    document.getElementById("initialScreen").classList.add("hidden");
-    document.getElementById("giftSection").classList.remove("hidden");
-    createFloatingHearts();
-}
+window.addEventListener("resize", function() {
+    canvas.width = particleCanvas.width = window.innerWidth;
+    canvas.height = particleCanvas.height = window.innerHeight;
+});
 
 function openGift() {
-    var giftBox = document.getElementById("giftBox");
-    if (giftBox.dataset.opened) return;
-    giftBox.dataset.opened = "true";
+    playSound('click');
+    var lid = document.getElementById("giftLid");
+    var content = document.getElementById("giftContent");
+    var music = document.getElementById("bgMusic");
     
-    playSound('open');
-    document.getElementById("lid").style.transform = "rotateX(120deg)";
-    document.getElementById("tapHint").style.display = "none";
+    // Play background music
+    music.play().catch(function(e) {
+        console.log('Music play failed:', e);
+    });
     
-    if (window.navigator.vibrate) window.navigator.vibrate(50);
+    lid.style.transform = "rotateX(-120deg)";
+    
+    if (window.navigator.vibrate) window.navigator.vibrate([50, 100, 50]);
     
     setTimeout(function() {
+        content.classList.add("show");
         playSound('heart');
-        document.getElementById("giftContent").classList.add("show");
-    }, 400);
+    }, 600);
+    
     setTimeout(function() {
-        document.getElementById("loveMessage").classList.add("show");
-    }, 1000);
-    setTimeout(function() {
-        document.getElementById("memoryCards").classList.add("show");
-    }, 1700);
-    setTimeout(function() {
-        document.getElementById("loveNotesBtn").classList.remove("hidden");
-    }, 2500);
-}
-
-function startQuiz() {
-    document.getElementById("loveNotesSection").classList.add("hidden");
-    document.getElementById("quizSection").classList.remove("hidden");
-    currentQuestion = 0;
-    score = 0;
-    selectedAnswer = null;
-    renderQuizProgress();
-    renderQuestion();
-}
-
-var currentNoteIndex = 0;
-var totalNotes = 5;
-var touchStartX = 0;
-var touchEndX = 0;
-var notesContainer = null;
-
-var audioContext = null;
-var soundsEnabled = false;
-
-function initAudio() {
-    if (!audioContext) {
-        try {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            soundsEnabled = true;
-        } catch(e) {
-            console.log('Web Audio API not supported');
-        }
-    }
+        document.getElementById("initialScreen").classList.add("hidden");
+        document.getElementById("giftSection").classList.remove("hidden");
+        
+        setTimeout(function() {
+            document.getElementById("loveMessage").classList.add("show");
+        }, 300);
+        
+        setTimeout(function() {
+            document.getElementById("memoryCards").classList.add("show");
+        }, 800);
+    }, 2200);
 }
 
 function playSound(type) {
-    if (!soundsEnabled || !audioContext) return;
-    
     try {
+        if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+        
+        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
         var oscillator = audioContext.createOscillator();
         var gainNode = audioContext.createGain();
         
@@ -1002,46 +897,42 @@ function playSound(type) {
         
         switch(type) {
             case 'click':
+                oscillator.type = 'sine';
                 oscillator.frequency.value = 800;
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.1);
                 break;
                 
+            case 'swipe':
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 600;
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                oscillator.start(audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.15);
+                oscillator.stop(audioContext.currentTime + 0.15);
+                break;
+                
             case 'success':
+                oscillator.type = 'sine';
                 oscillator.frequency.value = 523.25;
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
                 oscillator.start(audioContext.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(783.99, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2);
                 oscillator.stop(audioContext.currentTime + 0.3);
                 break;
                 
             case 'wrong':
+                oscillator.type = 'sawtooth';
                 oscillator.frequency.value = 200;
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + 0.2);
-                break;
-                
-            case 'swipe':
-                oscillator.frequency.value = 600;
-                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-                oscillator.start(audioContext.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.15);
-                oscillator.stop(audioContext.currentTime + 0.15);
-                break;
-                
-            case 'open':
-                oscillator.frequency.value = 400;
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-                oscillator.start(audioContext.currentTime);
-                oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.5);
-                oscillator.stop(audioContext.currentTime + 0.5);
                 break;
                 
             case 'celebrate':
@@ -1320,6 +1211,25 @@ function createFireworkBurst() {
 }
 
 initCanvas();
+
+// Enable music on first user interaction
+document.addEventListener('click', function() {
+    var music = document.getElementById('bgMusic');
+    if (music.paused) {
+        music.play().catch(function(e) {
+            console.log('Music play failed:', e);
+        });
+    }
+}, { once: true });
+
+document.addEventListener('touchstart', function() {
+    var music = document.getElementById('bgMusic');
+    if (music.paused) {
+        music.play().catch(function(e) {
+            console.log('Music play failed:', e);
+        });
+    }
+}, { once: true });
 </script>
 
 </body>
