@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Andrius ❤️ Beatrix">
 <meta name="theme-color" content="#000000">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>💝</text></svg>">
 <title>Andrius ❤️ Beatrix - Happy Valentine's Day</title>
 
 <style>
@@ -14,6 +17,7 @@
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 
 html, body {
@@ -21,21 +25,28 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    position: fixed;
+    overscroll-behavior: none;
 }
 
 body {
     background: radial-gradient(circle at bottom, #0b1d3a, #000);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
     color: white;
-    overflow-x: hidden;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+/* Hardware acceleration for better 120Hz performance */
 canvas {
     position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
     z-index: 1;
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 #particles {
@@ -47,12 +58,20 @@ canvas {
     position: relative;
     z-index: 2;
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for iPhone */
     padding: 20px;
-    padding-top: max(30px, env(safe-area-inset-top) + 15px);
-    padding-bottom: 30px;
+    padding-top: max(40px, env(safe-area-inset-top) + 20px); /* Extra space for Dynamic Island */
+    padding-bottom: max(30px, env(safe-area-inset-bottom) + 20px);
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 #initialScreen {
@@ -60,8 +79,54 @@ canvas {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 600px;
     min-height: 80vh;
     text-align: center;
+}
+
+#giftSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+#loveNotesSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+#quizSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+#resultsSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+#finalMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
 }
 
 h1 {
@@ -100,16 +165,21 @@ button {
     -webkit-backdrop-filter: blur(10px);
     color: white;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 48px;
     margin: 8px;
     cursor: pointer;
     display: inline-block;
+    transform: translateZ(0);
+    will-change: transform;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 button:active {
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
     background: rgba(255, 255, 255, 0.25);
+    transition: all 0.05s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Game button styling */
@@ -117,10 +187,11 @@ button:active {
     background: linear-gradient(145deg, #ff758c, #ff7eb3);
     border: 2px solid #fff;
     box-shadow: 0 4px 15px rgba(255, 117, 140, 0.4);
+    transform: translateZ(0);
 }
 
 .game-button:active {
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
     box-shadow: 0 2px 10px rgba(255, 117, 140, 0.3);
 }
 
@@ -146,11 +217,16 @@ button:active {
     position: relative;
     cursor: pointer;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s ease;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+    will-change: transform;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .gift-box:active {
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
+    transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .gift-lid {
@@ -161,7 +237,9 @@ button:active {
     position: absolute;
     top: 0;
     transform-origin: bottom;
-    transition: transform 0.8s ease;
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .ribbon-v {
@@ -198,13 +276,14 @@ button:active {
     bottom: 15%;
     width: 100%;
     opacity: 0;
-    transition: all 1s ease;
-    transform: scale(0.5);
+    transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: scale(0.5) translateZ(0);
+    will-change: opacity, transform;
 }
 
 .gift-content.show {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateZ(0);
 }
 
 .tap-hint {
@@ -260,12 +339,17 @@ button:active {
     border-radius: 12px;
     padding: 12px 10px;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+    will-change: transform, background;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .memory-card:active {
     background: rgba(255, 255, 255, 0.2);
-    transform: scale(0.95);
+    transform: scale(0.95) translateZ(0);
+    transition: all 0.05s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .memory-card .emoji {
@@ -298,18 +382,21 @@ button:active {
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
     padding: 22px;
+    text-align: left;
 }
 
 .question-number {
     font-size: clamp(0.85rem, 3.2vw, 1rem);
     opacity: 0.8;
     margin-bottom: 8px;
+    text-align: left;
 }
 
 .question-text {
     font-size: clamp(1.1rem, 4.2vw, 1.5rem);
     margin-bottom: 18px;
     line-height: 1.4;
+    text-align: left;
 }
 
 .quiz-options {
@@ -325,13 +412,18 @@ button:active {
     border-radius: 10px;
     cursor: pointer;
     font-size: clamp(0.95rem, 3.5vw, 1.15rem);
-    transition: all 0.2s ease;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: left;
     min-height: 48px;
+    transform: translateZ(0);
+    will-change: transform, background;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .quiz-option:active {
-    transform: scale(0.98);
+    transform: scale(0.98) translateZ(0);
+    transition: all 0.05s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .quiz-option.correct {
@@ -684,7 +776,7 @@ button:active {
         <h2>How Well Do We Know Each Other? 💑</h2>
         <div class="quiz-progress" id="quizProgress"></div>
         <div class="quiz-container" id="quizContainer"></div>
-        <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question →</button>
+        <button id="quizNextBtn" class="hidden" onclick="nextQuestion()">Next Question →</button>
     </div>
 
     <div id="resultsSection" class="hidden">
@@ -715,8 +807,10 @@ var ctx = canvas.getContext("2d");
 var particleCanvas = document.getElementById("particles");
 var particleCtx = particleCanvas.getContext("2d");
 
-canvas.width = particleCanvas.width = window.innerWidth;
-canvas.height = particleCanvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+particleCanvas.width = window.innerWidth;
+particleCanvas.height = window.innerHeight;
 
 var particles = [];
 var fireworks = [];
@@ -846,8 +940,10 @@ function animate() {
 }
 
 window.addEventListener("resize", function() {
-    canvas.width = particleCanvas.width = window.innerWidth;
-    canvas.height = particleCanvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    particleCanvas.width = window.innerWidth;
+    particleCanvas.height = window.innerHeight;
 });
 
 function openGift() {
@@ -863,11 +959,17 @@ function openGift() {
     
     lid.style.transform = "rotateX(-120deg)";
     
-    if (window.navigator.vibrate) window.navigator.vibrate([50, 100, 50]);
+    // Enhanced haptic feedback for iPhone Pro
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate([40, 80, 40]); // Refined haptic pattern
+    }
     
     setTimeout(function() {
         content.classList.add("show");
         playSound('heart');
+        if (window.navigator.vibrate) {
+            window.navigator.vibrate(30); // Success haptic
+        }
     }, 600);
     
     setTimeout(function() {
@@ -1043,7 +1145,8 @@ function updateNoteDisplay(newIndex) {
     dots[currentNoteIndex].classList.remove('active');
     dots[newIndex].classList.add('active');
     
-    if (window.navigator.vibrate) window.navigator.vibrate(20);
+    // Lighter haptic for smooth 120Hz navigation feel
+    if (window.navigator.vibrate) window.navigator.vibrate(10);
     
     currentNoteIndex = newIndex;
 }
@@ -1087,7 +1190,7 @@ function renderQuestion() {
         '</div>';
     
     selectedAnswer = null;
-    document.getElementById("nextBtn").classList.add("hidden");
+    document.getElementById("quizNextBtn").classList.add("hidden");
 }
 
 function selectAnswer(index) {
@@ -1098,7 +1201,8 @@ function selectAnswer(index) {
     var options = document.querySelectorAll('.quiz-option');
     var feedback = document.getElementById('quizFeedback');
     
-    if (window.navigator.vibrate) window.navigator.vibrate(30);
+    // Light tap haptic for selection
+    if (window.navigator.vibrate) window.navigator.vibrate(15);
     
     for (var i = 0; i < options.length; i++) {
         options[i].style.pointerEvents = 'none';
@@ -1114,16 +1218,18 @@ function selectAnswer(index) {
         score++;
         feedback.className = 'quiz-feedback correct show';
         feedback.innerHTML = '✓ Correct! ' + question.feedback;
-        if (window.navigator.vibrate) window.navigator.vibrate([50, 50, 50]);
+        // Success pattern haptic
+        if (window.navigator.vibrate) window.navigator.vibrate([30, 40, 30]);
     } else {
         playSound('wrong');
         feedback.className = 'quiz-feedback incorrect show';
         feedback.innerHTML = '✗ Oops! ' + question.feedback;
-        if (window.navigator.vibrate) window.navigator.vibrate(200);
+        // Error haptic (longer single pulse)
+        if (window.navigator.vibrate) window.navigator.vibrate(100);
     }
     
     setTimeout(function() {
-        document.getElementById("nextBtn").classList.remove("hidden");
+        document.getElementById("quizNextBtn").classList.remove("hidden");
     }, 1500);
 }
 
@@ -1176,7 +1282,8 @@ function celebrate() {
     document.getElementById("finalMessage").classList.remove("hidden");
     document.getElementById("finalMessage").classList.add("show");
     
-    if (window.navigator.vibrate) window.navigator.vibrate([50, 100, 50]);
+    // Celebratory haptic pattern
+    if (window.navigator.vibrate) window.navigator.vibrate([40, 60, 40, 60, 40]);
     
     for (var burst = 0; burst < 5; burst++) {
         setTimeout(function() {
