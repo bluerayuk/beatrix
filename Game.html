@@ -527,6 +527,21 @@ h1 {
     to   { filter: brightness(1.4); }
 }
 
+@keyframes hpCriticalPulse {
+    0%   { filter: brightness(1) drop-shadow(0 0 4px rgba(255,0,0,0.6)); }
+    50%  { filter: brightness(1.7) drop-shadow(0 0 12px rgba(255,0,0,1)); }
+    100% { filter: brightness(1) drop-shadow(0 0 4px rgba(255,0,0,0.6)); }
+}
+
+#bossHpFill.critical {
+    background: linear-gradient(90deg, #cc0000, #ff2200) !important;
+    animation: hpCriticalPulse 0.18s ease-in-out infinite !important;
+}
+
+#bossHUD.critical-shake {
+    animation: bossHpShake 0.15s ease infinite !important;
+}
+
 #bossHpText {
     font-size: 0.72rem;
     color: rgba(255,255,255,0.8);
@@ -608,6 +623,31 @@ h1 {
     0%   { opacity: 1; transform: translateX(-50%) scale(1); filter: brightness(1); }
     30%  { opacity: 1; transform: translateX(-50%) scale(1.4); filter: brightness(5); }
     100% { opacity: 0; transform: translateX(-50%) scale(2); filter: brightness(8); }
+}
+
+/* ── Final Blow slow-mo ── */
+@keyframes finalBlowZoom {
+    0%   { transform: scale(1);    filter: brightness(1); }
+    40%  { transform: scale(1.06); filter: brightness(1.3) saturate(1.5); }
+    100% { transform: scale(1);    filter: brightness(1); }
+}
+
+@keyframes finalBlowVignette {
+    0%   { opacity: 0; }
+    30%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+#finalBlowOverlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+        transparent 30%,
+        rgba(0,0,0,0.82) 100%);
+    z-index: 818;
+    pointer-events: none;
+    display: none;
+    animation: finalBlowVignette 0.9s ease forwards;
 }
 
 /* New death sequence animations */
@@ -1420,6 +1460,7 @@ h1 {
 <div id="bossArena"></div>
 <div id="bossSprite"></div>
 <div id="bossFlashEl"></div>
+<div id="finalBlowOverlay"></div>
 <div id="bossHUD">
     <div id="bossNameRow">
         <div id="bossName">BOSS</div>
@@ -1807,20 +1848,40 @@ const levelSongs = {
     }
 };
 
+/* Dynamic pitch multiplier — rises with heartsThisLevel (0→10) */
+let musicPitchMult = 1.0;   // applied to every note frequency
+let musicTempoMult = 1.0;   // interval shrinks as tension builds
+
+function updateMusicTension() {
+    // heartsThisLevel goes 0→10; at 7+ we start ramping pitch & tempo
+    const progress = Math.min(heartsThisLevel, 10) / 10;  // 0.0 → 1.0
+    // Pitch: +0% at 0 hearts → +18% at 10 hearts (starts noticeable from 7)
+    musicPitchMult  = 1.0 + (progress * progress) * 0.18;
+    // Tempo: multiplier 1.0→1.22 (intervals get shorter = faster)
+    musicTempoMult  = 1.0 + (progress * progress) * 0.22;
+}
+
 function startMusic() {
     stopMusic();
     musicStep = 0;
+    updateMusicTension();
     const song = levelSongs[level] || levelSongs[1];
-    const stepMs = song.bpm;
 
-    musicInterval = setInterval(() => {
-        if (!soundEnabled) return;
+    function scheduleNext() {
+        if (!musicInterval) return; // was stopped
+        if (!soundEnabled) {
+            musicInterval = setTimeout(scheduleNext, song.bpm);
+            return;
+        }
         try {
             const ctx = getAudioCtx();
             const t = ctx.currentTime;
             const idx = musicStep % song.notes.length;
             musicStep++;
 
+            // Apply tension pitch multiplier
+            const pitch = musicPitchMult;
+            const stepMs = Math.round(song.bpm / musicTempoMult);
             const noteDur = (stepMs / 1000) * 0.85;
 
             // Melody note
@@ -1828,33 +1889,33 @@ function startMusic() {
             const g = ctx.createGain();
             o.connect(g); g.connect(ctx.destination);
             o.type = song.wave;
-            o.frequency.value = song.notes[idx];
+            o.frequency.value = song.notes[idx] * pitch;
             g.gain.setValueAtTime(0.0, t);
             g.gain.linearRampToValueAtTime(song.vol, t + 0.03);
             g.gain.setValueAtTime(song.vol, t + noteDur * 0.6);
             g.gain.exponentialRampToValueAtTime(0.001, t + noteDur);
             o.start(t); o.stop(t + noteDur);
 
-            // Bass note (sine, quieter)
+            // Bass note
             if (song.bass && song.bass[idx]) {
                 const ob = ctx.createOscillator();
                 const gb = ctx.createGain();
                 ob.connect(gb); gb.connect(ctx.destination);
                 ob.type = 'sine';
-                ob.frequency.value = song.bass[idx];
+                ob.frequency.value = song.bass[idx] * pitch;
                 gb.gain.setValueAtTime(0.0, t);
                 gb.gain.linearRampToValueAtTime(song.vol * 0.7, t + 0.05);
                 gb.gain.exponentialRampToValueAtTime(0.001, t + noteDur * 1.1);
                 ob.start(t); ob.stop(t + noteDur * 1.1);
             }
 
-            // Level 5 gets a shimmer harmony
+            // Level 5 shimmer harmony
             if (level === 5) {
                 const oh = ctx.createOscillator();
                 const gh = ctx.createGain();
                 oh.connect(gh); gh.connect(ctx.destination);
                 oh.type = 'triangle';
-                oh.frequency.value = song.notes[idx] * 1.5;
+                oh.frequency.value = song.notes[idx] * pitch * 1.5;
                 gh.gain.setValueAtTime(0.0, t);
                 gh.gain.linearRampToValueAtTime(0.04, t + 0.02);
                 gh.gain.exponentialRampToValueAtTime(0.001, t + noteDur * 0.8);
@@ -1862,11 +1923,19 @@ function startMusic() {
             }
 
         } catch(e) {}
-    }, stepMs);
+
+        // Dynamic interval — recalculate each note so pitch/tempo updates live
+        const nextMs = Math.round(song.bpm / musicTempoMult);
+        musicInterval = setTimeout(scheduleNext, nextMs);
+    }
+
+    musicInterval = setTimeout(scheduleNext, 0); // kick off immediately
 }
 
 function stopMusic() {
-    if (musicInterval) { clearInterval(musicInterval); musicInterval = null; }
+    if (musicInterval) { clearTimeout(musicInterval); musicInterval = null; }
+    musicPitchMult = 1.0;
+    musicTempoMult = 1.0;
 }
 
 /* ── Menu Music ── */
@@ -2314,7 +2383,16 @@ function startBossFight() {
         document.getElementById('bossArena').style.display = 'block';
 
         // Show shoot hint
-        document.getElementById('shootHint').style.display = 'block';
+        // Show shoot hint briefly then fade out
+        const hint = document.getElementById('shootHint');
+        hint.style.opacity = '1';
+        hint.style.transition = '';
+        hint.style.display = 'block';
+        setTimeout(() => {
+            hint.style.transition = 'opacity 1s ease';
+            hint.style.opacity = '0';
+            setTimeout(() => { hint.style.display = 'none'; hint.style.transition = ''; }, 1000);
+        }, 3000);
 
         startBossMusic();
         startBossMovement();
@@ -2487,8 +2565,50 @@ function hitBoss() {
     }
 
     if (bossHp <= 0) {
-        defeatedBoss();
+        triggerFinalBlow();
     }
+}
+
+function triggerFinalBlow() {
+    // Freeze attacks immediately
+    clearInterval(bossAttackInterval);
+    clearInterval(bossHeartInterval);
+    stopBossMovement();
+
+    // ── Slow-motion effect: CSS transition on gameArea ──
+    gameArea.style.transition = 'transform 0.15s ease, filter 0.15s ease';
+    gameArea.style.transform  = 'scale(1.06)';
+    gameArea.style.filter     = 'brightness(1.35) saturate(1.6)';
+
+    // Vignette darkening
+    const overlay = document.getElementById('finalBlowOverlay');
+    overlay.style.display = 'block';
+    overlay.style.animation = 'none';
+    void overlay.offsetWidth;
+    overlay.style.animation = 'finalBlowVignette 0.9s ease forwards';
+
+    // Boss sprite: freeze in place, briefly glow white
+    const sprite = document.getElementById('bossSprite');
+    sprite.style.animation = 'none';
+    sprite.style.filter = 'brightness(5) drop-shadow(0 0 30px white)';
+    sprite.style.transition = 'filter 0.3s ease';
+
+    // Haptic — dramatic long rumble on the killing blow
+    haptic([30, 20, 30, 20, 30, 20, 200]);
+
+    // Short dramatic pause then return to normal speed → death sequence
+    setTimeout(() => {
+        // Ease back to normal
+        gameArea.style.transform = 'scale(1)';
+        gameArea.style.filter    = '';
+        overlay.style.display    = 'none';
+        sprite.style.filter      = '';
+
+        setTimeout(() => {
+            gameArea.style.transition = '';
+            defeatedBoss();
+        }, 160);
+    }, 650);
 }
 
 function triggerBossEnrage() {
@@ -2531,13 +2651,22 @@ function triggerBossEnrage() {
 
 function updateBossHpBar() {
     const pct = Math.max(0, bossHp / bossMaxHp * 100);
-    document.getElementById('bossHpFill').style.width = pct + '%';
+    const fill = document.getElementById('bossHpFill');
+    const hud  = document.getElementById('bossHUD');
+
+    fill.style.width = pct + '%';
     document.getElementById('bossHpText').textContent = `${Math.max(0,bossHp)} / ${bossMaxHp} HP`;
 
-    // Shake the bar on hit
-    const bar = document.getElementById('bossHUD');
-    bar.style.animation = 'bossHpShake 0.2s ease';
-    setTimeout(() => { bar.style.animation = ''; }, 220);
+    // Critical state: below 25% HP → urgent red pulse
+    const isCritical = pct <= 25 && pct > 0;
+    fill.classList.toggle('critical', isCritical);
+    hud.classList.toggle('critical-shake', isCritical);
+
+    // Shake the bar on hit (only when not in persistent critical shake)
+    if (!isCritical) {
+        hud.style.animation = 'bossHpShake 0.2s ease';
+        setTimeout(() => { if (!hud.classList.contains('critical-shake')) hud.style.animation = ''; }, 220);
+    }
 }
 
 function spawnBossEmbers(x, y, count) {
@@ -2692,6 +2821,7 @@ function defeatedBoss() {
         }, 200);
 
         playSound('bomb');
+        haptic([50, 30, 80, 30, 200]);  // dramatic rumble on kill
     }, 2200);
 
     // ── PHASE 4: Cleanup + level complete (3400ms) ──
@@ -2706,6 +2836,13 @@ function defeatedBoss() {
         playSound('levelup');
         showLevelComplete();
     }, 3400);
+}
+
+/* ── Haptic feedback (mobile only, silent fail on desktop) ── */
+function haptic(pattern) {
+    try {
+        if (navigator.vibrate) navigator.vibrate(pattern);
+    } catch(e) {}
 }
 
 function playBossDeathSound() {
@@ -2748,6 +2885,12 @@ function endBossFight() {
     sprite.style.top = '';
     sprite.style.transform = '';
     sprite.style.position = '';
+    document.getElementById('bossHpFill').classList.remove('critical');
+    document.getElementById('bossHUD').classList.remove('critical-shake');
+    document.getElementById('finalBlowOverlay').style.display = 'none';
+    gameArea.style.transform  = '';
+    gameArea.style.filter     = '';
+    gameArea.style.transition = '';
     document.getElementById('bossHUD').style.display = 'none';
     document.getElementById('bossArena').style.display = 'none';
     document.getElementById('bossRageBanner').style.display = 'none';
@@ -3674,6 +3817,7 @@ function handleCatch(type, itemRect) {
         streak++;
         combo++;
         updateHeartsDisplay();
+        updateMusicTension();  // live pitch/tempo update
 
         if (itemRect) {
             const cx = itemRect.left + itemRect.width / 2 - gameArea.getBoundingClientRect().left;
@@ -3717,6 +3861,7 @@ function handleCatch(type, itemRect) {
             showPopup("💥 BOMB! -1 Life 💔");
             reactToHit();
             screenShake();
+            haptic([80, 30, 80]);   // double-thump
             loseLife();          // 💣 costs a LIFE
         } else {
             showPopup("🛡️ PROTECTED!");
@@ -3768,6 +3913,7 @@ function handleCatch(type, itemRect) {
             showPopup("💥 BOSS HIT! -1 Life");
             reactToHit();
             screenShake();
+            haptic([120, 40, 120]);  // harder double-thump
             loseLife();
         } else {
             showPopup("🛡️ BLOCKED!");
