@@ -26,9 +26,12 @@ html, body {
     margin: 0;
     padding: 0;
     overscroll-behavior: none;
+    background: #000;
 }
 
 body {
+    background: #0b1d3a;
+    background: -webkit-radial-gradient(circle at bottom, #0b1d3a, #000);
     background: radial-gradient(circle at bottom, #0b1d3a, #000);
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
     color: white;
@@ -44,6 +47,7 @@ canvas {
     left: 0;
     pointer-events: none;
     z-index: 1;
+    -webkit-transform: translateZ(0);
     transform: translateZ(0);
     will-change: transform;
 }
@@ -57,12 +61,12 @@ canvas {
     position: relative;
     z-index: 2;
     min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height for iPhone */
+    min-height: -webkit-fill-available;
     padding: 20px;
-    padding-top: max(40px, env(safe-area-inset-top) + 20px); /* Extra space for Dynamic Island */
-    padding-bottom: max(30px, env(safe-area-inset-bottom) + 20px);
-    padding-left: max(20px, env(safe-area-inset-left));
-    padding-right: max(20px, env(safe-area-inset-right));
+    padding-top: max(40px, env(safe-area-inset-top, 20px) + 20px);
+    padding-bottom: max(30px, env(safe-area-inset-bottom, 20px) + 20px);
+    padding-left: max(20px, env(safe-area-inset-left, 20px));
+    padding-right: max(20px, env(safe-area-inset-right, 20px));
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -656,7 +660,7 @@ button:active {
 <canvas id="canvas"></canvas>
 <canvas id="particles"></canvas>
 
-<audio id="bgMusic" autoplay loop>
+<audio id="bgMusic" loop>
     <source src="1.mp3" type="audio/mpeg">
 </audio>
 
