@@ -581,6 +581,80 @@ button:active {
 .dot:active {
     transform: scale(1.1);
 }
+
+/* Shake Surprise Animations */
+.shake-heart {
+    position: fixed;
+    font-size: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    animation: burstHeart 2.5s ease-out forwards;
+    bottom: 50%;
+}
+
+@keyframes burstHeart {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60vh) scale(1.5) rotate(360deg);
+    }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        top: -10px;
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        top: 100vh;
+        transform: rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.shake-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(255, 23, 68, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: white;
+    padding: 25px 35px;
+    border-radius: 20px;
+    font-size: clamp(1.3rem, 5vw, 2rem);
+    font-weight: 700;
+    text-align: center;
+    z-index: 10000;
+    box-shadow: 0 10px 40px rgba(255, 23, 68, 0.6);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+}
+
+.shake-message.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
 </style>
 </head>
 
@@ -961,6 +1035,125 @@ var touchStartX = 0;
 var touchEndX = 0;
 var notesContainer = null;
 
+var lastShakeTime = 0;
+var shakeThreshold = 15;
+var lastX = 0;
+var lastY = 0;
+var lastZ = 0;
+
+function initShakeDetection() {
+    if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', handleShake, false);
+    }
+}
+
+function handleShake(event) {
+    var current = new Date().getTime();
+    
+    if (current - lastShakeTime < 1000) {
+        return;
+    }
+    
+    var acceleration = event.accelerationIncludingGravity;
+    if (!acceleration) return;
+    
+    var x = acceleration.x || 0;
+    var y = acceleration.y || 0;
+    var z = acceleration.z || 0;
+    
+    var deltaX = Math.abs(x - lastX);
+    var deltaY = Math.abs(y - lastY);
+    var deltaZ = Math.abs(z - lastZ);
+    
+    if (deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold) {
+        lastShakeTime = current;
+        triggerShakeSurprise();
+    }
+    
+    lastX = x;
+    lastY = y;
+    lastZ = z;
+}
+
+function triggerShakeSurprise() {
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate([100, 50, 100, 50, 100]);
+    }
+    
+    createHeartBurst();
+    createConfetti();
+    
+    var messages = [
+        "💕 I love you!",
+        "❤️ You're amazing!",
+        "✨ You make me smile!",
+        "💖 Forever yours!",
+        "🌟 You're my star!",
+        "💝 Best wife ever!",
+        "😍 So beautiful!",
+        "💑 Perfect together!"
+    ];
+    
+    var message = messages[Math.floor(Math.random() * messages.length)];
+    showShakeMessage(message);
+}
+
+function createHeartBurst() {
+    var colors = ['❤️', '💕', '💖', '💗', '💓', '💝'];
+    for (var i = 0; i < 12; i++) {
+        setTimeout(function() {
+            var heart = document.createElement('div');
+            heart.className = 'shake-heart';
+            heart.textContent = colors[Math.floor(Math.random() * colors.length)];
+            heart.style.left = (20 + Math.random() * 60) + '%';
+            heart.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
+            heart.style.animationDelay = (Math.random() * 0.5) + 's';
+            document.body.appendChild(heart);
+            setTimeout(function() {
+                if (heart.parentNode) heart.parentNode.removeChild(heart);
+            }, 3000);
+        }, i * 50);
+    }
+}
+
+function createConfetti() {
+    var colors = ['#ff1744', '#ff4569', '#ffd700', '#ff69b4', '#ff1493', '#00bfff'];
+    for (var i = 0; i < 20; i++) {
+        var confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = (Math.random() * 0.3) + 's';
+        confetti.style.animationDuration = (2 + Math.random() * 1) + 's';
+        document.body.appendChild(confetti);
+        setTimeout(function() {
+            if (confetti.parentNode) confetti.parentNode.removeChild(confetti);
+        }, 3500);
+    }
+}
+
+function showShakeMessage(message) {
+    var existing = document.getElementById('shakeMessage');
+    if (existing) existing.remove();
+    
+    var msgDiv = document.createElement('div');
+    msgDiv.id = 'shakeMessage';
+    msgDiv.className = 'shake-message';
+    msgDiv.textContent = message;
+    document.body.appendChild(msgDiv);
+    
+    setTimeout(function() {
+        msgDiv.classList.add('show');
+    }, 10);
+    
+    setTimeout(function() {
+        msgDiv.classList.remove('show');
+        setTimeout(function() {
+            if (msgDiv.parentNode) msgDiv.parentNode.removeChild(msgDiv);
+        }, 500);
+    }, 2500);
+}
+
 function showLoveNotes() {
     document.getElementById("giftSection").classList.add("hidden");
     document.getElementById("loveNotesSection").classList.remove("hidden");
@@ -1198,6 +1391,7 @@ function createFireworkBurst() {
 }
 
 initCanvas();
+initShakeDetection();
 </script>
 
 </body>
