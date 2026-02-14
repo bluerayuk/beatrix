@@ -110,7 +110,12 @@ h1 {
 
 .powerup {
     font-size: 32px;
-    animation: fall linear, spin 2s linear infinite;
+    animation: fall linear, starPulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes starPulse {
+    from { filter: brightness(1) drop-shadow(0 0 4px rgba(255,220,0,0.6)); }
+    to   { filter: brightness(1.5) drop-shadow(0 0 12px rgba(255,220,0,1)); }
 }
 
 .bomb {
@@ -123,15 +128,6 @@ h1 {
     to { transform: translateY(calc(100vh + 50px)); }
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-@keyframes wobble {
-    0%, 100% { transform: translateY(var(--fall-pos)) rotate(-5deg); }
-    50% { transform: translateY(var(--fall-pos)) rotate(5deg); }
-}
 
 @keyframes fallWobble {
     from { transform: translateY(-50px) rotate(-5deg); }
@@ -583,7 +579,8 @@ function createPowerup() {
     const powerups = ["⭐", "💫", "✨", "🌟"];
     powerup.innerHTML = powerups[Math.floor(Math.random() * powerups.length)];
     powerup.style.left = Math.random() * (getGameWidth() - 50) + "px";
-    powerup.style.animationDuration = (2 + Math.random() * 2) + "s";
+    const fallDuration = (2 + Math.random() * 2).toFixed(2) + "s";
+    powerup.style.animationDuration = fallDuration + ", 0.6s";
     gameArea.appendChild(powerup);
     activeItems.push({ el: powerup, type: 'powerup' });
 }
