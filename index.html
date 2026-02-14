@@ -805,6 +805,8 @@ button:active {
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+
 var canvas = document.getElementById("canvas");
 var ctx = canvas ? canvas.getContext("2d") : null;
 var particleCanvas = document.getElementById("particles");
@@ -1344,6 +1346,8 @@ document.addEventListener('touchstart', function() {
         });
     }
 }, { once: true });
+
+}); // End of DOMContentLoaded
 </script>
 
 </body>
