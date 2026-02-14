@@ -1324,21 +1324,18 @@ h1 {
 
         <div class="menu-hiscore">🏆 Best: <span id="menuHighScore">0</span> hearts</div>
 
-        <div class="menu-buttons">
-            <button class="menu-button" onclick="playBtnConfirm();showDifficultySelect()">▶&nbsp;&nbsp;Play Now</button>
-            <button class="menu-button secondary" onclick="playBtnHover();showHowToPlay()">❓&nbsp;&nbsp;How to Play</button>
+        <p style="color:rgba(255,220,240,0.75);font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">Choose difficulty</p>
+        <div class="difficulty-buttons" id="difficultyBtns">
+            <button class="difficulty-btn" onclick="playBtnHover();selectDifficulty('easy',this)">🌸 Easy</button>
+            <button class="difficulty-btn selected" onclick="playBtnHover();selectDifficulty('medium',this)">⚡ Medium</button>
+            <button class="difficulty-btn" onclick="playBtnHover();selectDifficulty('hard',this)">🔥 Hard</button>
         </div>
 
-        <div id="difficultySelect" style="display:none">
-            <div class="menu-divider"></div>
-            <p>Choose difficulty</p>
-            <div class="difficulty-buttons" id="difficultyBtns">
-                <button class="difficulty-btn" onclick="playBtnHover();selectDifficulty('easy')">🌸 Easy</button>
-                <button class="difficulty-btn selected" onclick="playBtnHover();selectDifficulty('medium')">⚡ Medium</button>
-                <button class="difficulty-btn" onclick="playBtnHover();selectDifficulty('hard')">🔥 Hard</button>
-            </div>
-            <button class="menu-button" onclick="playBtnConfirm();startGame()">🚀&nbsp;&nbsp;Start!</button>
-        </div>
+        <button class="menu-button" style="margin-top:14px" onclick="playBtnConfirm();startGame()">🚀&nbsp;&nbsp;Start!</button>
+
+        <div class="menu-divider" style="margin:12px auto"></div>
+
+        <button class="menu-button secondary" onclick="playBtnHover();showHowToPlay()">❓&nbsp;&nbsp;How to Play</button>
     </div>
 </div>
 
@@ -1347,19 +1344,30 @@ h1 {
     <div class="how-to-content">
         <h2>How to Play 🎮</h2>
         <p><strong>Goal:</strong> Catch falling hearts to collect 10 hearts per level and complete all 10 levels!</p>
-        
+
         <ul>
             <li>❤️ <strong>Hearts:</strong> Catch them! Each heart = 1 point</li>
-            <li>⭐ <strong>Power-ups:</strong> Get invincibility shield + double points for 5 seconds</li>
-            <li>💣 <strong>Bombs:</strong> Avoid! Loses 1 life</li>
+            <li>⭐ <strong>Power-ups:</strong> Invincibility shield + double points for 5 seconds</li>
+            <li>💣 <strong>Bombs:</strong> Avoid! Costs 1 life</li>
             <li>🍆 <strong>Easter Egg:</strong> Loses 1 heart from your level progress</li>
         </ul>
-        
+
         <p><strong>Controls:</strong> Drag or touch to move the basket</p>
-        
         <p><strong>Lives:</strong> You have 3 lives. Missing a heart or catching a bomb costs a life!</p>
-        
-        <button class="menu-button" onclick="playBtnHover();closeHowToPlay()">Got it! 👍</button>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.15);margin:14px 0">
+
+        <p style="color:#FFD700;font-weight:800;font-size:1rem;margin-bottom:8px">⚔️ Boss Fight</p>
+        <ul>
+            <li>👹 A boss appears after collecting all 10 hearts each level</li>
+            <li>💘 <strong>Tap or click</strong> to shoot projectiles at the boss</li>
+            <li>🏃 The boss moves — dodge its attacks while shooting back!</li>
+            <li>💗 Catch glowing pink hearts to <strong>restore 1 life</strong></li>
+            <li>⚠️ At 50% HP the boss enters <strong>ENRAGED</strong> mode — faster and more dangerous</li>
+            <li>💥 Deplete all boss HP to complete the level</li>
+        </ul>
+
+        <button class="menu-button" onclick="playBtnHover();closeHowToPlay()" style="margin-top:16px">Got it! 👍</button>
     </div>
 </div>
 
@@ -2040,10 +2048,10 @@ function selectStartLevel(lvl) {
     });
 }
 
-function selectDifficulty(diff) {
+function selectDifficulty(diff, el) {
     difficulty = diff;
     document.querySelectorAll('#difficultyBtns .difficulty-btn').forEach(btn => btn.classList.remove('selected'));
-    event.target.classList.add('selected');
+    if (el) el.classList.add('selected');
 }
 
 /* ── Per-level themes ── */
