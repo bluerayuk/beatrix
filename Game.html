@@ -93,6 +93,12 @@ body {
     50%      { transform: scale(1.3); opacity: 1;   }
 }
 
+@keyframes bgMeteor {
+    0%   { transform: translate(0, 0) rotate(30deg);          opacity: 1; }
+    80%  { opacity: 0.8; }
+    100% { transform: translate(60vw, 110vh) rotate(30deg);   opacity: 0; }
+}
+
 /* Header */
 .header {
     position: relative;
@@ -285,23 +291,46 @@ h1 {
 
 
 /* Love message overlay */
-#loveOverlay {
+#levelComplete {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, rgba(180,0,60,0.95), rgba(255,100,150,0.95));
     z-index: 1500;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 40px 30px;
-    backdrop-filter: blur(4px);
+    padding: 30px 20px;
     animation: fadeIn 0.4s ease;
 }
-#loveOverlay .love-emoji { font-size: 64px; margin-bottom: 16px; }
-#loveOverlay .love-msg   { font-size: clamp(1.3rem,5vw,2rem); color: white; font-weight: 600; line-height: 1.5; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-#loveOverlay .level-tag  { margin-top: 20px; font-size: 1.1rem; color: rgba(255,255,255,0.8); }
+
+#levelComplete .lc-card {
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 28px 32px;
+    max-width: 320px;
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+#levelComplete .lc-emoji  { font-size: 52px; margin-bottom: 8px; }
+#levelComplete .lc-title  { font-size: 1.6rem; font-weight: 800; color: #FFD700; margin-bottom: 4px; }
+#levelComplete .lc-theme  { font-size: 1rem; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
+#levelComplete .lc-stats  { display: flex; justify-content: space-around; margin-bottom: 20px; }
+#levelComplete .lc-stat   { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+#levelComplete .lc-stat-val { font-size: 1.5rem; font-weight: 800; color: white; }
+#levelComplete .lc-stat-lbl { font-size: 0.7rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; }
+#levelComplete .lc-next   {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    color: white; border: none;
+    padding: 13px 36px; font-size: 1.1rem; font-weight: 700;
+    border-radius: 50px; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,100,150,0.4);
+    transition: transform 0.15s;
+    width: 100%;
+}
+#levelComplete .lc-next:active { transform: scale(0.96); }
 
 /* Messages */
 #message {
@@ -374,10 +403,11 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
-    padding: 30px;
+    padding: 30px 20px;
     backdrop-filter: blur(6px);
+    overflow-y: auto;
 }
 
 #menuOverlay h1 {
@@ -425,12 +455,14 @@ h1 {
     background: rgba(255,255,255,0.2);
     color: white;
     border: 2px solid white;
-    padding: 10px 25px;
-    font-size: 16px;
+    padding: 8px 10px;
+    font-size: 15px;
     font-weight: bold;
-    border-radius: 25px;
+    border-radius: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
+    line-height: 1.3;
+    min-width: 0;
 }
 
 .difficulty-btn.selected {
@@ -529,39 +561,68 @@ h1 {
     z-index: 50;
 }
 
-/* Level transition overlay */
+/* Level transition — pinned to top, no overlay */
 #levelTransition {
     position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 2000;
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    padding: 40px;
-    animation: fadeIn 0.5s ease;
+    pointer-events: none;
+    background: rgba(0,0,0,0.5);
+    border-radius: 12px;
+    padding: 8px 20px 10px;
+    white-space: nowrap;
 }
 
 #levelTransition .level-number {
-    font-size: clamp(3rem, 10vw, 6rem);
+    font-size: 1rem;
     color: white;
     font-weight: bold;
-    margin-bottom: 20px;
-    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+    margin-bottom: 1px;
 }
 
 #levelTransition .level-theme {
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    font-size: 1.1rem;
     color: #FFD700;
-    margin-bottom: 10px;
+    font-weight: bold;
+    margin-bottom: 1px;
 }
 
 #levelTransition .level-description {
-    font-size: 18px;
-    color: rgba(255,255,255,0.8);
-    max-width: 400px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.75);
+}
+
+/* Countdown word — dead centre, nothing else nearby */
+#countdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(2rem, 10vw, 4rem);
+    font-weight: 800;
+    pointer-events: none;
+    z-index: 2100;
+    display: none;
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    animation: countPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes countPop {
+    0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    70%  { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+}
+
+@keyframes countFade {
+    0%   { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
 }
 </style>
 </head>
@@ -589,10 +650,24 @@ h1 {
     
     <div id="difficultySelect" style="display: none; margin-top: 30px;">
         <p style="color: white; font-size: 20px; margin-bottom: 15px;">Select Difficulty</p>
-        <div class="difficulty-buttons">
+        <div class="difficulty-buttons" id="difficultyBtns">
             <button class="difficulty-btn" onclick="selectDifficulty('easy')">Easy</button>
             <button class="difficulty-btn selected" onclick="selectDifficulty('medium')">Medium</button>
             <button class="difficulty-btn" onclick="selectDifficulty('hard')">Hard</button>
+        </div>
+
+        <p style="color: white; font-size: 20px; margin: 25px 0 15px 0;">Start from Level</p>
+        <div id="levelSelect" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:400px;margin:0 auto;">
+            <button class="difficulty-btn selected" onclick="selectStartLevel(1)">1<br><span style="font-size:16px">🌸</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(2)">2<br><span style="font-size:16px">🌊</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(3)">3<br><span style="font-size:16px">🍂</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(4)">4<br><span style="font-size:16px">🌠</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(5)">5<br><span style="font-size:16px">☀️</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(6)">6<br><span style="font-size:16px">🌿</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(7)">7<br><span style="font-size:16px">🍬</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(8)">8<br><span style="font-size:16px">🌌</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(9)">9<br><span style="font-size:16px">🌺</span></button>
+            <button class="difficulty-btn" onclick="selectStartLevel(10)">10<br><span style="font-size:16px">🎉</span></button>
         </div>
         
         <button class="menu-button" onclick="startGame()" style="margin-top: 20px;">Start! 🚀</button>
@@ -607,7 +682,7 @@ h1 {
 <div id="howToPlay">
     <div class="how-to-content">
         <h2>How to Play 🎮</h2>
-        <p><strong>Goal:</strong> Catch falling hearts to collect 10 hearts per level and complete all 5 levels!</p>
+        <p><strong>Goal:</strong> Catch falling hearts to collect 10 hearts per level and complete all 10 levels!</p>
         
         <ul>
             <li>❤️ <strong>Hearts:</strong> Catch them! Each heart = 1 point</li>
@@ -630,6 +705,9 @@ h1 {
     <div class="level-theme"></div>
     <div class="level-description"></div>
 </div>
+
+<!-- Countdown -->
+<div id="countdown"></div>
 
 <!-- Game Over Screen -->
 <div id="gameOver">
@@ -663,11 +741,28 @@ h1 {
     <div id="basket"><img id="basketImg" src="me.jpg" style="height:90px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));"></div>
 </div>
 
-<!-- Love Overlay -->
-<div id="loveOverlay">
-    <div class="love-emoji">💕</div>
-    <div class="love-msg">I love you, Beatrix!</div>
-    <div class="level-tag">Keep going, my love! ❤️</div>
+<!-- Level Complete Screen -->
+<div id="levelComplete">
+    <div class="lc-card">
+        <div class="lc-emoji" id="lcEmoji">🎉</div>
+        <div class="lc-title" id="lcTitle">Level Complete!</div>
+        <div class="lc-theme" id="lcTheme"></div>
+        <div class="lc-stats">
+            <div class="lc-stat">
+                <div class="lc-stat-val" id="lcStreak">0</div>
+                <div class="lc-stat-lbl">Best Streak</div>
+            </div>
+            <div class="lc-stat">
+                <div class="lc-stat-val" id="lcScore">0</div>
+                <div class="lc-stat-lbl">Total Hearts</div>
+            </div>
+            <div class="lc-stat">
+                <div class="lc-stat-val" id="lcLives">💖</div>
+                <div class="lc-stat-lbl">Lives Left</div>
+            </div>
+        </div>
+        <button class="lc-next" onclick="nextLevel()">Next Level →</button>
+    </div>
 </div>
 
 <script>
@@ -839,28 +934,41 @@ function playSound(type) {
             }
 
             case 'levelup': {
-                // Triumphant fanfare — C E G C
-                [262, 330, 392, 523].forEach((freq, i) => {
-                    const o = ctx.createOscillator();
-                    const g = ctx.createGain();
-                    o.connect(g); g.connect(ctx.destination);
-                    o.type = 'square';
-                    const st = t + i * 0.13;
-                    o.frequency.setValueAtTime(freq, st);
-                    g.gain.setValueAtTime(0.18, st);
-                    g.gain.exponentialRampToValueAtTime(0.001, st + 0.25);
-                    o.start(st); o.stop(st + 0.25);
-                });
-                // Final chord shimmer
-                [523, 659, 784].forEach((freq) => {
+                // Full celebratory jingle — plays while level complete card is shown (~3.5s)
+                stopMusic();
+                const melody = [
+                    {f:523,  t:0.00}, {f:659,  t:0.18}, {f:784,  t:0.36},
+                    {f:1047, t:0.54}, {f:784,  t:0.72}, {f:880,  t:0.90},
+                    {f:1047, t:1.08}, {f:1175, t:1.32},
+                    {f:1047, t:1.56}, {f:880,  t:1.74}, {f:784,  t:1.92},
+                    {f:1047, t:2.10}, {f:1319, t:2.40}, {f:1047, t:2.70},
+                    {f:784,  t:3.00}, {f:1047, t:3.20}
+                ];
+                melody.forEach(({f, t: st}) => {
                     const o = ctx.createOscillator();
                     const g = ctx.createGain();
                     o.connect(g); g.connect(ctx.destination);
                     o.type = 'sine';
-                    o.frequency.value = freq;
-                    g.gain.setValueAtTime(0.12, t + 0.55);
-                    g.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
-                    o.start(t + 0.55); o.stop(t + 1.1);
+                    o.frequency.value = f;
+                    g.gain.setValueAtTime(0.0, t + st);
+                    g.gain.linearRampToValueAtTime(0.18, t + st + 0.03);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + st + 0.28);
+                    o.start(t + st); o.stop(t + st + 0.3);
+                });
+                // Harmony bass notes
+                const bass = [
+                    {f:131, t:0.00}, {f:165, t:0.54}, {f:131, t:1.08},
+                    {f:196, t:1.56}, {f:131, t:2.10}, {f:196, t:2.70}
+                ];
+                bass.forEach(({f, t: st}) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'triangle';
+                    o.frequency.value = f;
+                    g.gain.setValueAtTime(0.12, t + st);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + st + 0.45);
+                    o.start(t + st); o.stop(t + st + 0.5);
                 });
                 break;
             }
@@ -916,31 +1024,148 @@ function playSound(type) {
     } catch(e) {}
 }
 
-/* Background music — simple looping chime pattern */
+/* ── Per-level music ── */
 let musicInterval = null;
-const musicNotes = [523, 659, 784, 659, 523, 392, 440, 523];
 let musicStep = 0;
 
+/*
+  Each song: { bpm, wave, notes[], bass[] }
+  notes = melody frequencies (Hz), bass = optional low drone notes
+  Level 1 — Sweet/dreamy waltz (sine, slow)
+  Level 2 — Flowing ocean lullaby (triangle, gentle)
+  Level 3 — Upbeat warm strumming (square, medium)
+  Level 4 — Mysterious cosmic arp (sawtooth filtered, fast)
+  Level 5 — Triumphant fanfare (all voices, energetic)
+*/
+const levelSongs = {
+    1: {
+        bpm: 320,
+        wave: 'sine',
+        vol: 0.09,
+        notes: [523,659,784,659,784,880,784,659, 523,440,392,440,523,392,330,392],
+        bass:  [131,131,131,131, 98, 98, 98, 98, 131,131, 98, 98,131,131, 98, 98]
+    },
+    2: {
+        bpm: 380,
+        wave: 'triangle',
+        vol: 0.10,
+        notes: [440,494,523,587,523,494,440,415, 392,440,494,523,440,392,349,392],
+        bass:  [110,110,130,130,110,110, 98, 98,  98, 98,110,110, 98, 98, 87, 87]
+    },
+    3: {
+        bpm: 260,
+        wave: 'square',
+        vol: 0.06,
+        notes: [659,784,880,784,659,587,523,587, 659,784,880,1047,880,784,659,523],
+        bass:  [165,165,220,220,165,165,131,131, 165,165,220,220, 165,165,131,131]
+    },
+    4: {
+        bpm: 200,
+        wave: 'sawtooth',
+        vol: 0.05,
+        notes: [293,349,440,523,440,349,293,261, 220,261,330,440,523,440,330,220],
+        bass:  [ 73, 73, 87, 87, 87, 87, 73, 73,  55, 55, 73, 73, 87, 87, 73, 73]
+    },
+    5: {
+        bpm: 220,
+        wave: 'sine',
+        vol: 0.10,
+        notes: [523,659,784,1047,784,659,880,1047, 1047,880,784,659,523,659,784,523],
+        bass:  [131,165,196, 262,196,165,220, 262,  262,220,196,165,131,165,196,131]
+    },
+    6: {
+        bpm: 300,
+        wave: 'triangle',
+        vol: 0.08,
+        notes: [392,440,494,523,587,523,494,440, 392,349,392,440,523,494,440,392],
+        bass:  [ 98, 98,110,131,131,131,110,110,  98, 87, 98,110,131,110,110, 98]
+    },
+    7: {
+        bpm: 340,
+        wave: 'sine',
+        vol: 0.09,
+        notes: [659,698,784,880,784,698,659,622, 587,622,659,698,784,698,622,587],
+        bass:  [165,175,196,220,196,175,165,155, 147,155,165,175,196,175,155,147]
+    },
+    8: {
+        bpm: 180,
+        wave: 'sawtooth',
+        vol: 0.04,
+        notes: [220,247,261,294,330,294,261,247, 220,196,220,247,294,261,247,220],
+        bass:  [ 55, 55, 65, 73, 82, 73, 65, 65,  55, 49, 55, 65, 73, 65, 65, 55]
+    },
+    9: {
+        bpm: 250,
+        wave: 'triangle',
+        vol: 0.09,
+        notes: [880,988,1047,1175,1047,988,880,831, 784,831,880,988,1047,988,831,784],
+        bass:  [220,247, 261, 294, 261,247,220,208, 196,208,220,247, 261,247,208,196]
+    },
+    10: {
+        bpm: 160,
+        wave: 'sine',
+        vol: 0.11,
+        notes: [1047,988,880,784,880,988,1047,1175, 1175,1047,988,880,784,880,1047,1319],
+        bass:  [ 262,247,220,196,220,247, 262, 294,  294, 262,247,220,196,220, 262, 330]
+    }
+};
+
 function startMusic() {
-    if (musicInterval) return;
+    stopMusic();
+    musicStep = 0;
+    const song = levelSongs[level] || levelSongs[1];
+    const stepMs = song.bpm;
+
     musicInterval = setInterval(() => {
         if (!soundEnabled) return;
         try {
             const ctx = getAudioCtx();
             const t = ctx.currentTime;
-            const freq = musicNotes[musicStep % musicNotes.length];
+            const idx = musicStep % song.notes.length;
             musicStep++;
+
+            const noteDur = (stepMs / 1000) * 0.85;
+
+            // Melody note
             const o = ctx.createOscillator();
             const g = ctx.createGain();
             o.connect(g); g.connect(ctx.destination);
-            o.type = 'sine';
-            o.frequency.value = freq;
+            o.type = song.wave;
+            o.frequency.value = song.notes[idx];
             g.gain.setValueAtTime(0.0, t);
-            g.gain.linearRampToValueAtTime(0.08, t + 0.05);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
-            o.start(t); o.stop(t + 0.55);
+            g.gain.linearRampToValueAtTime(song.vol, t + 0.03);
+            g.gain.setValueAtTime(song.vol, t + noteDur * 0.6);
+            g.gain.exponentialRampToValueAtTime(0.001, t + noteDur);
+            o.start(t); o.stop(t + noteDur);
+
+            // Bass note (sine, quieter)
+            if (song.bass && song.bass[idx]) {
+                const ob = ctx.createOscillator();
+                const gb = ctx.createGain();
+                ob.connect(gb); gb.connect(ctx.destination);
+                ob.type = 'sine';
+                ob.frequency.value = song.bass[idx];
+                gb.gain.setValueAtTime(0.0, t);
+                gb.gain.linearRampToValueAtTime(song.vol * 0.7, t + 0.05);
+                gb.gain.exponentialRampToValueAtTime(0.001, t + noteDur * 1.1);
+                ob.start(t); ob.stop(t + noteDur * 1.1);
+            }
+
+            // Level 5 gets a shimmer harmony
+            if (level === 5) {
+                const oh = ctx.createOscillator();
+                const gh = ctx.createGain();
+                oh.connect(gh); gh.connect(ctx.destination);
+                oh.type = 'triangle';
+                oh.frequency.value = song.notes[idx] * 1.5;
+                gh.gain.setValueAtTime(0.0, t);
+                gh.gain.linearRampToValueAtTime(0.04, t + 0.02);
+                gh.gain.exponentialRampToValueAtTime(0.001, t + noteDur * 0.8);
+                oh.start(t); oh.stop(t + noteDur);
+            }
+
         } catch(e) {}
-    }, 400);
+    }, stepMs);
 }
 
 function stopMusic() {
@@ -959,12 +1184,20 @@ function showDifficultySelect() {
     document.getElementById('difficultySelect').style.display = 'block';
 }
 
-function selectDifficulty(diff) {
-    difficulty = diff;
-    document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
-    event.target.classList.add('selected');
+let startLevel = 1;
+
+function selectStartLevel(lvl) {
+    startLevel = lvl;
+    document.querySelectorAll('#levelSelect .difficulty-btn').forEach((btn, i) => {
+        btn.classList.toggle('selected', i + 1 === lvl);
+    });
 }
 
+function selectDifficulty(diff) {
+    difficulty = diff;
+    document.querySelectorAll('#difficultyBtns .difficulty-btn').forEach(btn => btn.classList.remove('selected'));
+    event.target.classList.add('selected');
+}
 
 /* ── Per-level themes ── */
 const levelThemeData = {
@@ -972,7 +1205,7 @@ const levelThemeData = {
         name: "Sweet Beginnings",
         description: "Pink skies of love",
         bg: 'linear-gradient(180deg, #ff758c 0%, #ff9ab0 60%, #ffb3c6 100%)',
-        particles: () => spawnLoop(['💕','❤️','🌸'], 900, 18, 'fall')
+        particles: () => spawnLoop(['🌸','🌷','✿'], 3000, 13, 'fall', 0.35)
     },
     2: {
         name: "Ocean Dreams",
@@ -984,19 +1217,49 @@ const levelThemeData = {
         name: "Sunset Romance",
         description: "Warm golden glow",
         bg: 'linear-gradient(180deg, #ff6b35 0%, #f7931e 40%, #ffd89b 100%)',
-        particles: () => spawnLoop(['🍂','🍁','✨','🌟'], 700, 22, 'fall')
+        particles: () => spawnLoop(['🍂','🍁','🍃'], 800, 20, 'fall', 0.7)
     },
     4: {
-        name: "Starlight Magic",
-        description: "Purple cosmic love",
-        bg: 'linear-gradient(180deg, #0a0a2e 0%, #1a0b4e 50%, #2d1b6e 100%)',
-        particles: () => spawnStars()
+        name: "Aurora Night",
+        description: "Dancing lights in the sky",
+        bg: 'linear-gradient(180deg, #0a0a2e 0%, #0d1b4e 40%, #1a0b4e 100%)',
+        particles: () => spawnMeteors()
     },
     5: {
-        name: "Golden Finale",
-        description: "The final adventure",
-        bg: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)',
-        particles: () => { spawnStars(); spawnLoop(['⭐','💫','✨','🌟','💛'], 500, 20, 'fall'); }
+        name: "Golden Sunrise",
+        description: "A warm new dawn",
+        bg: 'linear-gradient(180deg, #f7971e 0%, #ffd200 50%, #fff176 100%)',
+        particles: () => spawnConfetti()
+    },
+    6: {
+        name: "Enchanted Forest",
+        description: "Magic in the trees",
+        bg: 'linear-gradient(180deg, #134e5e 0%, #1a6b3a 50%, #2d9e5f 100%)',
+        particles: () => spawnLoop(['🍀','🌿','✨','🦋','🌺'], 700, 18, 'fall', 0.75)
+    },
+    7: {
+        name: "Cotton Candy Sky",
+        description: "Pastel clouds and dreams",
+        bg: 'linear-gradient(180deg, #c9d6ff 0%, #e2c9f5 40%, #ffd6f0 100%)',
+        particles: () => spawnLoop(['☁️','🍬','🍭','💜','💗'], 900, 20, 'fall', 0.6)
+    },
+    8: {
+        name: "Deep Space",
+        description: "Lost among the stars",
+        bg: 'linear-gradient(180deg, #000000 0%, #0d0d2b 50%, #1a0533 100%)',
+        particles: () => spawnGalaxy()
+    },
+    9: {
+        name: "Cherry Blossom",
+        description: "Spring in full bloom",
+        bg: 'linear-gradient(180deg, #fceabb 0%, #f8b4c8 50%, #f9d0e0 100%)',
+        particles: () => spawnLoop(['🌸','🌸','🌸','🌷','🌺','🌸'], 400, 22, 'fall', 0.8)
+    },
+    10: {
+        name: "Grand Finale ✨",
+        description: "You made it — all 10 levels!",
+        bg: 'linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        particles: () => spawnFinale()
     }
 };
 
@@ -1050,15 +1313,16 @@ function spawnParticleEl(content, isStar) {
     return el;
 }
 
-function spawnLoop(emojis, interval, fontSize, mode) {
+function spawnLoop(emojis, interval, fontSize, mode, opacity = 1) {
     themeAnimationInterval = setInterval(() => {
         const el = document.createElement('div');
         el.className = 'bg-particle';
         el.style.position = 'fixed';
         el.style.left = (Math.random() * 98) + 'vw';
         el.style.top = '-50px';
-        el.style.fontSize = (Math.random() * 8 + fontSize - 4) + 'px';
+        el.style.fontSize = (Math.random() * 6 + fontSize - 3) + 'px';
         el.style.zIndex = '1';
+        el.style.opacity = opacity;
         el.style.pointerEvents = 'none';
         el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         const dur = (Math.random() * 4 + 5).toFixed(2);
@@ -1068,27 +1332,91 @@ function spawnLoop(emojis, interval, fontSize, mode) {
     }, interval);
 }
 
-function spawnStars() {
-    // Static twinkling stars scattered across screen
-    for (let i = 0; i < 35; i++) {
-        spawnParticleEl('', true);
-    }
-    // Occasional shooting stars
+function spawnMeteors() {
+    // Diagonal meteors streaking across — very different from stars
     themeAnimationInterval = setInterval(() => {
         const el = document.createElement('div');
         el.className = 'bg-particle';
         el.style.position = 'fixed';
-        el.style.left = (Math.random() * 80) + 'vw';
+        el.style.left = (Math.random() * 90) + 'vw';
         el.style.top = '-10px';
-        el.style.fontSize = (Math.random() * 6 + 10) + 'px';
+        el.style.fontSize = (Math.random() * 8 + 12) + 'px';
         el.style.zIndex = '1';
         el.style.pointerEvents = 'none';
-        el.textContent = '⭐';
-        const dur = (Math.random() * 2 + 2).toFixed(2);
-        el.style.animation = `bgFall ${dur}s linear forwards`;
+        el.style.filter = 'drop-shadow(0 0 6px rgba(150,100,255,0.9))';
+        el.textContent = ['🌠','💜','🔮'][Math.floor(Math.random() * 3)];
+        const dur = (Math.random() * 1.5 + 1.5).toFixed(2);
+        // Diagonal fall using bgMeteor keyframe
+        el.style.animation = `bgMeteor ${dur}s linear forwards`;
         document.body.appendChild(el);
         setTimeout(() => el.remove(), (parseFloat(dur) + 0.3) * 1000);
-    }, 1200);
+    }, 600);
+}
+
+function spawnConfetti() {
+    const pieces = ['🌟','⭐','✨','💛','🎊','🎉'];
+    themeAnimationInterval = setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'bg-particle';
+        el.style.position = 'fixed';
+        el.style.left = (Math.random() * 98) + 'vw';
+        el.style.top = '-50px';
+        el.style.fontSize = (Math.random() * 10 + 12) + 'px';
+        el.style.zIndex = '1';
+        el.style.pointerEvents = 'none';
+        el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+        const dur = (Math.random() * 3 + 4).toFixed(2);
+        el.style.animation = `bgFall ${dur}s linear forwards`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (parseFloat(dur) + 0.5) * 1000);
+    }, 350);
+}
+
+function spawnGalaxy() {
+    // Tiny glowing orbs drifting slowly — deep space feel
+    const colors = ['rgba(180,100,255,0.9)','rgba(100,180,255,0.9)','rgba(255,255,255,0.9)','rgba(255,100,200,0.8)'];
+    themeAnimationInterval = setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'bg-particle';
+        el.style.position = 'fixed';
+        el.style.left = (Math.random() * 98) + 'vw';
+        el.style.top = '-20px';
+        el.style.zIndex = '1';
+        el.style.pointerEvents = 'none';
+        const size = Math.random() * 5 + 3;
+        el.style.width  = size + 'px';
+        el.style.height = size + 'px';
+        el.style.borderRadius = '50%';
+        const col = colors[Math.floor(Math.random() * colors.length)];
+        el.style.background = col;
+        el.style.boxShadow = `0 0 ${size * 3}px ${size}px ${col}`;
+        const dur = (Math.random() * 6 + 7).toFixed(2);
+        el.style.animation = `bgFall ${dur}s linear forwards`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (parseFloat(dur) + 0.5) * 1000);
+    }, 180);
+}
+
+function spawnFinale() {
+    // Everything — meteors, confetti, sparkles all at once
+    const all = ['🌟','🎉','💥','🎊','✨','💫','🌠','❤️','💕','🔥'];
+    themeAnimationInterval = setInterval(() => {
+        for (let i = 0; i < 3; i++) {
+            const el = document.createElement('div');
+            el.className = 'bg-particle';
+            el.style.position = 'fixed';
+            el.style.left = (Math.random() * 98) + 'vw';
+            el.style.top = '-50px';
+            el.style.fontSize = (Math.random() * 14 + 14) + 'px';
+            el.style.zIndex = '1';
+            el.style.pointerEvents = 'none';
+            el.textContent = all[Math.floor(Math.random() * all.length)];
+            const dur = (Math.random() * 3 + 3).toFixed(2);
+            el.style.animation = `bgFall ${dur}s linear forwards`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), (parseFloat(dur) + 0.5) * 1000);
+        }
+    }, 200);
 }
 
 function spawnBubbles() {
@@ -1129,6 +1457,34 @@ function backToMenu() {
     location.reload();
 }
 
+/* ── Level difficulty scaling ── */
+function getLevelConfig(lvl) {
+    // Difficulty multiplier per menu setting
+    const diffMult = { easy: 0.75, medium: 1.0, hard: 1.35 }[difficulty] || 1.0;
+
+    // Base values that tighten each level
+    //   spawnMs  : how often a new item spawns (lower = faster)
+    //   fallBase : base fall duration in seconds (lower = faster falling)
+    //   fallRand : random extra seconds added to fall (lower = less variance)
+    //   bombChance   : probability 0-1 of spawning a bomb
+    //   eggChance    : probability 0-1 of spawning easter egg
+    //   powerupChance: probability 0-1 of spawning powerup
+    const base = {
+        spawnMs:       Math.max(400, 1400 - (lvl - 1) * 100),  // 1400 → 500ms
+        fallBase:      Math.max(0.8, 2.8 - (lvl - 1) * 0.2),   // 2.8s → 1.0s
+        fallRand:      Math.max(0.3, 1.5 - (lvl - 1) * 0.13),  // 1.5s → 0.3s variance
+        bombChance:    Math.min(0.22, 0.04 + (lvl - 1) * 0.02),// 4% → 22%
+        eggChance:     Math.min(0.30, 0.08 + (lvl - 1) * 0.025),// 8% → 30%
+        powerupChance: Math.max(0.04, 0.12 - (lvl - 1) * 0.008)// 12% → 5%
+    };
+
+    // Apply difficulty multiplier to speed (lower spawnMs = harder)
+    base.spawnMs  = Math.round(base.spawnMs / diffMult);
+    base.fallBase = base.fallBase / diffMult;
+
+    return base;
+}
+
 /* Game Functions */
 function startGame() {
     document.getElementById('menuOverlay').style.display = 'none';
@@ -1136,45 +1492,80 @@ function startGame() {
     lives = 3;
     score = 0;
     heartsThisLevel = 0;
-    level = 1;
+    level = startLevel;
     streak = 0;
     combo = 0;
     updateLivesDisplay();
     updateHeartsDisplay();
     applyTheme();
     showLevelTransition();
-    
-    let spawnRate = 1200;
-    if (difficulty === 'easy') spawnRate = 1500;
-    if (difficulty === 'hard') spawnRate = 900;
-    
-    spawnInterval = setInterval(createItem, spawnRate);
+
+    // Don't spawn until GO (at 2s into countdown)
+    setTimeout(() => {
+        if (gameStarted) restartSpawnInterval();
+    }, 2000);
     setInterval(createSparkle, 300);
     setInterval(createLoveText, 4000);
-    
+
     startCollisionLoop();
-    
+
     if (soundEnabled) startMusic();
+}
+
+function restartSpawnInterval() {
+    clearInterval(spawnInterval);
+    const cfg = getLevelConfig(level);
+    spawnInterval = setInterval(createItem, cfg.spawnMs);
 }
 
 function updateLevelTheme() {
     applyTheme();
+    if (soundEnabled) startMusic();
 }
 
 function showLevelTransition() {
     const theme = levelThemeData[level];
     if (!theme) return;
-    
+
+    const cfg = getLevelConfig(level);
+    const speedLabel = level <= 2 ? '🐢 Chill' : level <= 4 ? '🚶 Easy' : level <= 6 ? '🏃 Medium' : level <= 8 ? '⚡ Fast' : '🔥 Intense';
+    const dangerPct  = Math.round((cfg.bombChance + cfg.eggChance) * 100);
+
+    // Show level info briefly at top of screen (no dark overlay)
     const transition = document.getElementById('levelTransition');
-    transition.querySelector('.level-number').textContent = `Level ${level}`;
-    transition.querySelector('.level-theme').textContent = theme.name;
-    transition.querySelector('.level-description').textContent = theme.description;
-    
+    transition.querySelector('.level-number').textContent = `Level ${level} — ${theme.name}`;
+    transition.querySelector('.level-theme').textContent = theme.description;
+    transition.querySelector('.level-description').textContent = `${speedLabel}  •  ${dangerPct}% danger`;
     transition.style.display = 'flex';
-    
-    setTimeout(() => {
-        transition.style.display = 'none';
-    }, 2500);
+    setTimeout(() => { transition.style.display = 'none'; }, 3800);
+
+    // Ready... Steady... GO! countdown
+    const cd = document.getElementById('countdown');
+    const steps = [
+        { text: 'READY', color: '#FFD700' },
+        { text: 'STEADY', color: '#ff9a00' },
+        { text: 'GO! 🚀', color: '#00e676' }
+    ];
+
+    steps.forEach(({ text, color }, i) => {
+        setTimeout(() => {
+            cd.textContent = text;
+            cd.style.color = color;
+            cd.style.display = 'block';
+            cd.style.animation = 'none';
+            // Force reflow to restart animation
+            void cd.offsetWidth;
+            cd.style.animation = 'countPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+
+            // Fade out before next step
+            setTimeout(() => {
+                cd.style.animation = 'countFade 0.3s ease-out forwards';
+            }, 650);
+        }, i * 1000);
+    });
+
+    // Hide after GO
+    setTimeout(() => { cd.style.display = 'none'; }, 3200);
 }
 
 function restartGame() {
@@ -1226,25 +1617,85 @@ function gameOver() {
     }, 1000);
 }
 
+function clearActiveItems() {
+    for (let i = activeItems.length - 1; i >= 0; i--) {
+        activeItems[i].el.remove();
+    }
+    activeItems = [];
+}
+
 function checkLevelUp() {
     if (heartsThisLevel >= 10) {
-        heartsThisLevel = 0;
-        level++;
-        levelDisplay.textContent = level;
-        updateHeartsDisplay();
-        updateLevelTheme();
-        showLevelTransition();
+        // Stop spawning and wipe screen
+        clearInterval(spawnInterval);
+        clearActiveItems();
         playSound('levelup');
-        showLoveMessage();
+        showLevelComplete();
     }
 }
 
-function showLoveMessage() {
-    const overlay = document.getElementById('loveOverlay');
-    overlay.style.display = 'flex';
+const levelEmojis = {1:'🌸',2:'🌊',3:'🍂',4:'🌠',5:'☀️',6:'🌿',7:'🍬',8:'🌌',9:'🌺',10:'🎉'};
+const levelMessages = {
+    1:'Pink skies cleared! 🌸', 2:'Waves conquered! 🌊', 3:'Autumn mastered! 🍂',
+    4:'Stars aligned! 🌠',      5:'Sunrise claimed! ☀️', 6:'Forest explored! 🌿',
+    7:'Sugar rush! 🍬',         8:'Deep space! 🌌',       9:'Blossoms caught! 🌺',
+    10:'LEGENDARY! 🎉'
+};
+
+function showLevelComplete() {
+    const completedLevel = level;
+    const theme = levelThemeData[completedLevel] || {};
+
+    document.getElementById('lcEmoji').textContent   = levelEmojis[completedLevel] || '🎉';
+    document.getElementById('lcTitle').textContent   = `Level ${completedLevel} Complete!`;
+    document.getElementById('lcTheme').textContent   = levelMessages[completedLevel] || theme.name || '';
+    document.getElementById('lcStreak').textContent  = maxStreak;
+    document.getElementById('lcScore').textContent   = score;
+    document.getElementById('lcLives').textContent   = '💖'.repeat(lives);
+
+    // Match background to current level theme
+    const lc = document.getElementById('levelComplete');
+    lc.style.background = theme.bg || 'linear-gradient(135deg, #ff758c, #ff7eb3)';
+    // Last level button says Finish
+    document.querySelector('.lc-next').textContent = completedLevel >= 10 ? 'Finish! 🎉' : 'Next Level →';
+    lc.style.display = 'flex';
+}
+
+function nextLevel() {
+    document.getElementById('levelComplete').style.display = 'none';
+
+    // Advance level
+    heartsThisLevel = 0;
+    level++;
+    levelDisplay.textContent = level;
+    updateHeartsDisplay();
+
+    // Win — completed all 10 levels
+    if (level > 10) {
+        const imgEl = document.getElementById('gameOverImg');
+        imgEl.innerHTML = `<img src="${ME_HAPPY}" style="height:100px;width:auto;border-radius:12px;object-fit:cover;">`;
+        document.getElementById('gameOverTitle').textContent = '🎉 You Won!';
+        if (score > highScore) { highScore = score; localStorage.setItem('beatrix_highscore', highScore); }
+        document.getElementById('gameOverScore').textContent = `${score} hearts collected 💖`;
+        document.getElementById('gameOverHigh').textContent = `Best: ${highScore} 🏆`;
+        document.getElementById('gameOverStreak').textContent = `Max Streak: ${maxStreak} 🔥`;
+        document.getElementById('gameOverLevel').textContent = `Completed all 10 levels!`;
+        gameStarted = false;
+        clearInterval(spawnInterval);
+        stopMusic();
+        playSound('win');
+        showPopup('🎉 YOU WIN! 🎉');
+        setTimeout(() => { document.getElementById('gameOver').style.display = 'flex'; }, 1500);
+        return;
+    }
+
+    updateLevelTheme(); // this calls startMusic() inside
+
+    // Show Ready/Steady/Go then start spawning
+    showLevelTransition();
     setTimeout(() => {
-        overlay.style.display = 'none';
-    }, 2500);
+        if (gameStarted) restartSpawnInterval();
+    }, 2000);
 }
 
 /* Basket movement - follows mouse/touch directly, no click required */
@@ -1348,65 +1799,62 @@ document.body.addEventListener('touchstart', () => {
 
 /* Create falling items */
 function createItem() {
+    const cfg = getLevelConfig(level);
     const rand = Math.random();
-    let item;
-    
-    if (rand < 0.25) {
-        // Regular heart
-        item = createHeart();
-    } else if (rand < 0.35) {
-        // Power-up
-        item = createPowerup();
-    } else if (rand < 0.40) {
-        // Bomb
-        item = createBomb();
+    const heartThreshold    = 1 - cfg.bombChance - cfg.eggChance - cfg.powerupChance;
+
+    if (rand < heartThreshold) {
+        createHeart(cfg);
+    } else if (rand < heartThreshold + cfg.powerupChance) {
+        createPowerup(cfg);
+    } else if (rand < heartThreshold + cfg.powerupChance + cfg.bombChance) {
+        createBomb(cfg);
     } else {
-        // Flying penis easter egg (60% chance - it's EVERYWHERE!)
-        item = createEasterEgg();
+        createEasterEgg(cfg);
     }
 }
 
-function createHeart() {
+function createHeart(cfg) {
     const heart = document.createElement("div");
     heart.classList.add("heart");
     const hearts = ["❤️", "💕", "💖", "💗", "💓", "💝"];
     heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
     heart.style.left = Math.random() * (getGameWidth() - 50) + "px";
-    heart.style.animationDuration = (2 + Math.random() * 2) + "s";
-    if (difficulty === 'hard') heart.style.animationDuration = (1.5 + Math.random() * 1) + "s";
-    if (difficulty === 'easy') heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+    heart.style.animationDuration = (cfg.fallBase + Math.random() * cfg.fallRand) + "s";
     gameArea.appendChild(heart);
     activeItems.push({ el: heart, type: 'heart' });
 }
 
-function createPowerup() {
+function createPowerup(cfg) {
     const powerup = document.createElement("div");
     powerup.classList.add("powerup");
     const powerups = ["⭐", "💫", "✨", "🌟"];
     powerup.innerHTML = powerups[Math.floor(Math.random() * powerups.length)];
     powerup.style.left = Math.random() * (getGameWidth() - 50) + "px";
-    const fallDuration = (2 + Math.random() * 2).toFixed(2) + "s";
-    powerup.style.animationDuration = fallDuration + ", 0.6s";
+    const fallDur = (cfg.fallBase + Math.random() * cfg.fallRand).toFixed(2);
+    powerup.style.animationDuration = fallDur + "s, 0.6s";
     gameArea.appendChild(powerup);
     activeItems.push({ el: powerup, type: 'powerup' });
 }
 
-function createBomb() {
+function createBomb(cfg) {
     const bomb = document.createElement("div");
     bomb.classList.add("bomb");
     bomb.innerHTML = "💣";
     bomb.style.left = Math.random() * (getGameWidth() - 50) + "px";
-    bomb.style.animationDuration = (2 + Math.random() * 1.5) + "s";
+    // Bombs fall slightly faster than hearts for more danger
+    bomb.style.animationDuration = (cfg.fallBase * 0.85 + Math.random() * cfg.fallRand) + "s";
     gameArea.appendChild(bomb);
     activeItems.push({ el: bomb, type: 'bomb' });
 }
 
-function createEasterEgg() {
+function createEasterEgg(cfg) {
     const egg = document.createElement("div");
     egg.classList.add("bomb");
     egg.innerHTML = "🍆";
     egg.style.left = Math.random() * (getGameWidth() - 50) + "px";
-    egg.style.animationDuration = (1.5 + Math.random() * 1) + "s";
+    // Easter eggs fall faster than bombs — sneaky
+    egg.style.animationDuration = (cfg.fallBase * 0.7 + Math.random() * cfg.fallRand * 0.5) + "s";
     egg.style.fontSize = "35px";
     gameArea.appendChild(egg);
     playSound('spawn');
@@ -1537,8 +1985,8 @@ function handleCatch(type, itemRect) {
         screenShake();
     }
 
-    // Win condition: reach level 6 (complete 5 levels of 10 hearts)
-    if (level > 5 && gameStarted) {
+    // Win condition: reach level 11 (complete 10 levels of 10 hearts)
+    if (level > 10 && gameStarted) {
         const imgEl = document.getElementById('gameOverImg');
         imgEl.innerHTML = `<img src="${ME_HAPPY}" style="height:100px;width:auto;border-radius:12px;object-fit:cover;">`;
         document.getElementById('gameOverTitle').textContent = '🎉 You Won!';
@@ -1548,7 +1996,7 @@ function handleCatch(type, itemRect) {
         }
         document.getElementById('gameOverScore').textContent = `${score} hearts collected 💖`;
         document.getElementById('gameOverHigh').textContent = `Best: ${highScore} 🏆`;
-        document.getElementById('gameOverLevel').textContent = `Completed all 5 levels!`;
+        document.getElementById('gameOverLevel').textContent = `Completed all 10 levels!`;
         gameStarted = false;
         clearInterval(spawnInterval);
         stopMusic();
