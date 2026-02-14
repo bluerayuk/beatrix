@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
-<title>Andrius ❤️ Beatrix</title>
+<title>Andrius ❤️ Beatrix - Happy Valentine's Day</title>
 
 <style>
 * {
@@ -24,15 +24,13 @@ html, body {
     height: 100%;
     position: fixed;
     overflow: hidden;
-    overscroll-behavior: none;
 }
 
 body {
     margin: 0;
     background: radial-gradient(circle at bottom, #0b1d3a, #000);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
     color: white;
-    text-align: center;
     padding: 0;
 }
 
@@ -41,9 +39,6 @@ canvas {
     top: 0;
     left: 0;
     pointer-events: none;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: transform;
 }
 
 .content {
@@ -54,16 +49,13 @@ canvas {
     justify-content: flex-start;
     align-items: center;
     height: 100vh;
-    height: -webkit-fill-available;
     padding: 15px;
     padding-top: max(30px, env(safe-area-inset-top) + 15px);
-    padding-bottom: max(30px, env(safe-area-inset-bottom) + 15px);
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
-/* Center initial screen only */
 #initialScreen {
     display: flex;
     flex-direction: column;
@@ -76,10 +68,8 @@ h1 {
     font-size: clamp(1.5rem, 6vw, 3.5rem);
     margin-bottom: 8px;
     font-weight: 700;
-    letter-spacing: -0.02em;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     animation: glow 2s ease-in-out infinite;
-    -webkit-text-size-adjust: 100%;
 }
 
 @keyframes glow {
@@ -97,7 +87,6 @@ h2 {
     font-size: clamp(0.9rem, 3.2vw, 1.5rem);
     margin-bottom: 15px;
     opacity: 0.9;
-    font-weight: 500;
 }
 
 button {
@@ -105,19 +94,15 @@ button {
     border-radius: 25px;
     border: 2px solid white;
     font-size: clamp(0.9rem, 3.5vw, 1.2rem);
-    cursor: pointer;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: white;
     font-weight: 600;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
     min-height: 44px;
-    min-width: 100px;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
     margin: 6px;
+    cursor: pointer;
 }
 
 button:active {
@@ -138,7 +123,6 @@ button:active {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Gift Box */
 .gift-box {
     width: clamp(100px, 28vw, 150px);
     height: clamp(75px, 22vw, 115px);
@@ -149,10 +133,6 @@ button:active {
     cursor: pointer;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s ease;
-    touch-action: manipulation;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: transform;
 }
 
 .gift-box:active {
@@ -167,9 +147,7 @@ button:active {
     position: absolute;
     top: 0;
     transform-origin: bottom;
-    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-    will-change: transform;
+    transition: transform 0.6s ease;
 }
 
 .ribbon-v {
@@ -198,7 +176,6 @@ button:active {
     transform: translateX(-50%);
     font-size: clamp(1.6rem, 5vw, 2.8rem);
     z-index: 2;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
 }
 
 .gift-content {
@@ -208,13 +185,12 @@ button:active {
     width: 100%;
     opacity: 0;
     transition: all 0.8s ease;
-    transform: scale(0.5) rotate(-20deg);
-    will-change: transform, opacity;
+    transform: scale(0.5);
 }
 
 .gift-content.show {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: scale(1);
 }
 
 .tap-hint {
@@ -233,7 +209,6 @@ button:active {
     50% { opacity: 0.3; }
 }
 
-/* Love Message */
 .love-message {
     margin-top: 10px;
     font-size: clamp(0.9rem, 3.5vw, 1.5rem);
@@ -241,14 +216,12 @@ button:active {
     transition: opacity 1.5s ease;
     line-height: 1.4;
     max-width: 90%;
-    font-weight: 400;
 }
 
 .love-message.show {
     opacity: 1;
 }
 
-/* Memory Cards */
 .memory-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -272,9 +245,6 @@ button:active {
     border-radius: 12px;
     padding: 10px 8px;
     transition: all 0.2s ease;
-    touch-action: manipulation;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
 }
 
 .memory-card:active {
@@ -299,7 +269,6 @@ button:active {
     line-height: 1.2;
 }
 
-/* Quiz Section */
 .quiz-container {
     width: 90%;
     max-width: 500px;
@@ -320,7 +289,6 @@ button:active {
     font-size: 0.75rem;
     opacity: 0.7;
     margin-bottom: 8px;
-    font-weight: 500;
 }
 
 .question-text {
@@ -353,11 +321,6 @@ button:active {
 
 .quiz-option:active {
     transform: scale(0.97);
-}
-
-.quiz-option.selected {
-    background: rgba(255, 23, 68, 0.3);
-    border-color: #ff1744;
 }
 
 .quiz-option.correct {
@@ -431,7 +394,6 @@ button:active {
     background: #4caf50;
 }
 
-/* Quiz Results */
 .quiz-results {
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
@@ -467,7 +429,6 @@ button:active {
     font-style: italic;
 }
 
-/* Final Message */
 .final-message {
     font-size: clamp(1.1rem, 4.2vw, 2rem);
     margin-top: 20px;
@@ -476,53 +437,49 @@ button:active {
     opacity: 0;
     transition: opacity 1.5s ease;
     line-height: 1.35;
-    font-weight: 500;
 }
 
 .final-message.show {
     opacity: 1;
 }
 
-/* Hearts */
 .heart {
     position: absolute;
     font-size: clamp(1.5rem, 5vw, 2rem);
     opacity: 0;
     animation: floatHeart 4s ease-in infinite;
     pointer-events: none;
-    will-change: transform, opacity;
 }
 
 @keyframes floatHeart {
     0% {
-        transform: translateY(0) scale(0) rotate(0deg);
+        transform: translateY(0) scale(0);
         opacity: 0;
     }
     10% {
         opacity: 1;
     }
     100% {
-        transform: translateY(-100vh) scale(1) rotate(120deg);
+        transform: translateY(-100vh) scale(1);
         opacity: 0;
     }
 }
 
-.music-note {
-    position: fixed;
-    top: calc(20px + env(safe-area-inset-top));
-    right: 20px;
-    font-size: clamp(1.2rem, 4vw, 1.5rem);
-    opacity: 0.5;
-    animation: bounce 1s ease-in-out infinite;
-    z-index: 10;
+.primary-btn {
+    background: linear-gradient(145deg, #ff1744, #c9184a);
+    animation: pulse 1.5s ease-in-out infinite;
 }
 
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
-/* Loading overlay */
+.primary-btn:active {
+    animation: none;
+    transform: scale(0.95);
+}
+
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -554,22 +511,6 @@ button:active {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
-
-/* Special button styles */
-.primary-btn {
-    background: linear-gradient(145deg, #ff1744, #c9184a);
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.primary-btn:active {
-    animation: none;
-    transform: scale(0.95);
-}
 </style>
 </head>
 
@@ -579,23 +520,15 @@ button:active {
     <div class="loader"></div>
 </div>
 
-<audio id="bgMusic" loop preload="auto">
-<source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<div class="music-note">🎵</div>
-
 <canvas id="stars"></canvas>
 
 <div class="content">
-    <!-- Initial Screen -->
     <div id="initialScreen">
         <h1 class="fade-in">Andrius ❤️ Beatrix</h1>
         <p class="subtitle fade-in">Happy Valentine's Day 2026</p>
         <button onclick="startCelebration()">Open Your Valentine 💝</button>
     </div>
 
-    <!-- Gift Opening -->
     <div id="giftSection" class="hidden">
         <h1 class="fade-in">To My Beautiful Wife</h1>
         
@@ -620,26 +553,25 @@ button:active {
             <div class="memory-card">
                 <div class="emoji">💑</div>
                 <div class="title">Our Journey</div>
-                <div class="text">Every moment together has been magical</div>
+                <div class="text">Every moment magical</div>
             </div>
             
             <div class="memory-card">
                 <div class="emoji">🌟</div>
                 <div class="title">Forever</div>
-                <div class="text">You're my today and all of my tomorrows</div>
+                <div class="text">All my tomorrows</div>
             </div>
             
             <div class="memory-card">
                 <div class="emoji">💝</div>
                 <div class="title">My Heart</div>
-                <div class="text">It beats only for you, always</div>
+                <div class="text">Beats for you</div>
             </div>
         </div>
 
         <button id="quizBtn" class="hidden primary-btn" onclick="startQuiz()">Play Our Love Quiz! 💕</button>
     </div>
 
-    <!-- Quiz Section -->
     <div id="quizSection" class="hidden">
         <h2 class="fade-in">How Well Do We Know Each Other? 💕</h2>
         
@@ -650,7 +582,6 @@ button:active {
         <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question ➡️</button>
     </div>
 
-    <!-- Quiz Results -->
     <div id="resultsSection" class="hidden">
         <div class="quiz-results fade-in">
             <div class="results-emoji" id="resultsEmoji">💕</div>
@@ -661,7 +592,6 @@ button:active {
         </div>
     </div>
 
-    <!-- Final Celebration -->
     <div id="finalMessage" class="hidden final-message">
         Happy Valentine's Day! 💕<br>
         I love you more than words can say ❤️<br>
@@ -670,8 +600,7 @@ button:active {
 </div>
 
 <script>
-// Quiz Questions - Personalized for Andrius & Beatrix
-const quizQuestions = [
+var quizQuestions = [
     {
         question: "Which app did we meet on?",
         options: ["Tinder", "Bumble", "Hinge", "Match"],
@@ -734,63 +663,31 @@ const quizQuestions = [
     }
 ];
 
-let currentQuestion = 0;
-let score = 0;
-let selectedAnswer = null;
+var currentQuestion = 0;
+var score = 0;
+var selectedAnswer = null;
+var heartsInterval;
 
-// Performance optimization
-window.addEventListener('load', () => {
-    setTimeout(() => {
+window.addEventListener('load', function() {
+    setTimeout(function() {
         document.getElementById('loadingOverlay').classList.add('hidden');
     }, 500);
 });
 
-// Audio
-let musicStarted = false;
-function initAudio() {
-    if (!musicStarted) {
-        const music = document.getElementById("bgMusic");
-        const playPromise = music.play();
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                music.volume = 0.25;
-                musicStarted = true;
-            }).catch(e => console.log("Audio autoplay prevented"));
-        }
-    }
-}
-
-['touchstart', 'click'].forEach(event => {
-    document.body.addEventListener(event, initAudio, { once: true, passive: true });
-});
-
-// Canvas setup
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-const dpr = Math.min(window.devicePixelRatio || 1, 2);
+var canvas = document.getElementById("stars");
+var ctx = canvas.getContext("2d");
+var dpr = Math.min(window.devicePixelRatio || 1, 2);
 canvas.width = window.innerWidth * dpr;
 canvas.height = window.innerHeight * dpr;
 canvas.style.width = window.innerWidth + 'px';
 canvas.style.height = window.innerHeight + 'px';
 ctx.scale(dpr, dpr);
 
-let resizeTimeout;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        canvas.width = window.innerWidth * dpr;
-        canvas.height = window.innerHeight * dpr;
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
-        ctx.scale(dpr, dpr);
-    }, 250);
-}, { passive: true });
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+var starCount = isMobile ? 150 : 250;
+var stars = [];
 
-// Stars
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-const starCount = isMobile ? 150 : 250;
-let stars = [];
-for (let i = 0; i < starCount; i++) {
+for (var i = 0; i < starCount; i++) {
     stars.push({
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
@@ -801,9 +698,12 @@ for (let i = 0; i < starCount; i++) {
     });
 }
 
-let shootingStars = [];
+var shootingStars = [];
+var fireworks = [];
+var maxFireworks = isMobile ? 500 : 1000;
+
 function createShootingStar() {
-    const threshold = isMobile ? 0.008 : 0.015;
+    var threshold = isMobile ? 0.008 : 0.015;
     if (Math.random() < threshold) {
         shootingStars.push({
             x: Math.random() * window.innerWidth,
@@ -816,23 +716,20 @@ function createShootingStar() {
     }
 }
 
-let fireworks = [];
-const maxFireworks = isMobile ? 500 : 1000;
-
-let lastTime = 0;
-const targetFPS = 60;
-const frameInterval = 1000 / targetFPS;
+var lastTime = 0;
+var frameInterval = 1000 / 60;
 
 function draw(currentTime) {
-    const deltaTime = currentTime - lastTime;
+    var deltaTime = currentTime - lastTime;
     
     if (deltaTime >= frameInterval) {
         lastTime = currentTime - (deltaTime % frameInterval);
         ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-        stars.forEach(s => {
-            const alpha = (Math.sin(s.twinkle) + 1) / 2 * 0.5 + 0.5;
-            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        for (var i = 0; i < stars.length; i++) {
+            var s = stars[i];
+            var alpha = (Math.sin(s.twinkle) + 1) / 2 * 0.5 + 0.5;
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
             ctx.beginPath();
             ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
             ctx.fill();
@@ -842,15 +739,16 @@ function draw(currentTime) {
                 s.y = 0;
                 s.x = Math.random() * window.innerWidth;
             }
-        });
+        }
 
-        shootingStars.forEach((star, index) => {
+        for (var i = shootingStars.length - 1; i >= 0; i--) {
+            var star = shootingStars[i];
             if (star.life <= 0) {
-                shootingStars.splice(index, 1);
-                return;
+                shootingStars.splice(i, 1);
+                continue;
             }
-            const alpha = star.life / 60;
-            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+            var alpha = star.life / 60;
+            ctx.strokeStyle = 'rgba(255, 255, 255, ' + alpha + ')';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(star.x, star.y);
@@ -862,10 +760,11 @@ function draw(currentTime) {
             star.x += Math.cos(star.angle) * star.speed;
             star.y += Math.sin(star.angle) * star.speed;
             star.life--;
-        });
+        }
 
         if (fireworks.length > 0) {
-            fireworks.forEach((f, index) => {
+            for (var i = fireworks.length - 1; i >= 0; i--) {
+                var f = fireworks[i];
                 ctx.fillStyle = f.color;
                 ctx.globalAlpha = f.life / 60;
                 ctx.beginPath();
@@ -875,34 +774,34 @@ function draw(currentTime) {
                 f.y += f.vy;
                 f.vy += 0.12;
                 f.life--;
-                if (f.life <= 0) fireworks.splice(index, 1);
-            });
+                if (f.life <= 0) fireworks.splice(i, 1);
+            }
             ctx.globalAlpha = 1;
         }
 
         createShootingStar();
     }
+    
     requestAnimationFrame(draw);
 }
 
 requestAnimationFrame(draw);
 
-// Hearts
-let heartsInterval;
 function createFloatingHearts() {
-    const heartFrequency = isMobile ? 1500 : 1000;
-    heartsInterval = setInterval(() => {
-        const heart = document.createElement("div");
+    var heartFrequency = isMobile ? 1500 : 1000;
+    heartsInterval = setInterval(function() {
+        var heart = document.createElement("div");
         heart.className = "heart";
         heart.textContent = Math.random() > 0.5 ? "❤️" : "💕";
         heart.style.left = Math.random() * window.innerWidth + "px";
         heart.style.animationDelay = Math.random() * 2 + "s";
         document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 4000);
+        setTimeout(function() {
+            heart.remove();
+        }, 4000);
     }, heartFrequency);
 }
 
-// Flow functions
 function startCelebration() {
     document.getElementById("initialScreen").classList.add("hidden");
     document.getElementById("giftSection").classList.remove("hidden");
@@ -910,13 +809,13 @@ function startCelebration() {
 }
 
 function openGift() {
-    const lid = document.getElementById("lid");
-    const giftContent = document.getElementById("giftContent");
-    const loveMessage = document.getElementById("loveMessage");
-    const memoryCards = document.getElementById("memoryCards");
-    const quizBtn = document.getElementById("quizBtn");
-    const giftBox = document.getElementById("giftBox");
-    const tapHint = document.getElementById("tapHint");
+    var lid = document.getElementById("lid");
+    var giftContent = document.getElementById("giftContent");
+    var loveMessage = document.getElementById("loveMessage");
+    var memoryCards = document.getElementById("memoryCards");
+    var quizBtn = document.getElementById("quizBtn");
+    var giftBox = document.getElementById("giftBox");
+    var tapHint = document.getElementById("tapHint");
     
     if (giftBox.classList.contains('opened')) return;
     giftBox.classList.add('opened');
@@ -926,16 +825,21 @@ function openGift() {
     if (window.navigator.vibrate) window.navigator.vibrate(50);
     
     lid.style.transform = "rotateX(120deg)";
-    setTimeout(() => {
+    setTimeout(function() {
         giftContent.classList.add("show");
         if (window.navigator.vibrate) window.navigator.vibrate(30);
     }, 400);
-    setTimeout(() => loveMessage.classList.add("show"), 1000);
-    setTimeout(() => memoryCards.classList.add("show"), 1700);
-    setTimeout(() => quizBtn.classList.remove("hidden"), 2500);
+    setTimeout(function() {
+        loveMessage.classList.add("show");
+    }, 1000);
+    setTimeout(function() {
+        memoryCards.classList.add("show");
+    }, 1700);
+    setTimeout(function() {
+        quizBtn.classList.remove("hidden");
+    }, 2500);
 }
 
-// Quiz Functions
 function startQuiz() {
     document.getElementById("giftSection").classList.add("hidden");
     document.getElementById("quizSection").classList.remove("hidden");
@@ -947,10 +851,10 @@ function startQuiz() {
 }
 
 function renderQuizProgress() {
-    const progressContainer = document.getElementById("quizProgress");
+    var progressContainer = document.getElementById("quizProgress");
     progressContainer.innerHTML = '';
-    for (let i = 0; i < quizQuestions.length; i++) {
-        const dot = document.createElement('div');
+    for (var i = 0; i < quizQuestions.length; i++) {
+        var dot = document.createElement('div');
         dot.className = 'progress-dot';
         if (i < currentQuestion) dot.classList.add('completed');
         if (i === currentQuestion) dot.classList.add('active');
@@ -959,23 +863,20 @@ function renderQuizProgress() {
 }
 
 function renderQuestion() {
-    const container = document.getElementById("quizContainer");
-    const question = quizQuestions[currentQuestion];
+    var container = document.getElementById("quizContainer");
+    var question = quizQuestions[currentQuestion];
     
-    container.innerHTML = `
-        <div class="quiz-question fade-in">
-            <div class="question-number">Question ${currentQuestion + 1} of ${quizQuestions.length}</div>
-            <div class="question-text">${question.question}</div>
-            <div class="quiz-options" id="quizOptions">
-                ${question.options.map((option, index) => `
-                    <div class="quiz-option" onclick="selectAnswer(${index})" data-index="${index}">
-                        ${option}
-                    </div>
-                `).join('')}
-            </div>
-            <div class="quiz-feedback" id="quizFeedback"></div>
-        </div>
-    `;
+    var optionsHTML = '';
+    for (var i = 0; i < question.options.length; i++) {
+        optionsHTML += '<div class="quiz-option" onclick="selectAnswer(' + i + ')">' + question.options[i] + '</div>';
+    }
+    
+    container.innerHTML = '<div class="quiz-question fade-in">' +
+        '<div class="question-number">Question ' + (currentQuestion + 1) + ' of ' + quizQuestions.length + '</div>' +
+        '<div class="question-text">' + question.question + '</div>' +
+        '<div class="quiz-options" id="quizOptions">' + optionsHTML + '</div>' +
+        '<div class="quiz-feedback" id="quizFeedback"></div>' +
+        '</div>';
     
     selectedAnswer = null;
     document.getElementById("nextBtn").classList.add("hidden");
@@ -985,34 +886,34 @@ function selectAnswer(index) {
     if (selectedAnswer !== null) return;
     
     selectedAnswer = index;
-    const question = quizQuestions[currentQuestion];
-    const options = document.querySelectorAll('.quiz-option');
-    const feedback = document.getElementById('quizFeedback');
-    const nextBtn = document.getElementById('nextBtn');
+    var question = quizQuestions[currentQuestion];
+    var options = document.querySelectorAll('.quiz-option');
+    var feedback = document.getElementById('quizFeedback');
+    var nextBtn = document.getElementById('nextBtn');
     
     if (window.navigator.vibrate) window.navigator.vibrate(30);
     
-    options.forEach((option, i) => {
-        option.style.pointerEvents = 'none';
+    for (var i = 0; i < options.length; i++) {
+        options[i].style.pointerEvents = 'none';
         if (i === question.correct) {
-            option.classList.add('correct');
+            options[i].classList.add('correct');
         } else if (i === index && index !== question.correct) {
-            option.classList.add('incorrect');
+            options[i].classList.add('incorrect');
         }
-    });
+    }
     
     if (index === question.correct) {
         score++;
         feedback.className = 'quiz-feedback correct show';
-        feedback.innerHTML = `✓ Correct! ${question.feedback}`;
+        feedback.innerHTML = '✓ Correct! ' + question.feedback;
         if (window.navigator.vibrate) window.navigator.vibrate([50, 50, 50]);
     } else {
         feedback.className = 'quiz-feedback incorrect show';
-        feedback.innerHTML = `✗ Oops! ${question.feedback}`;
+        feedback.innerHTML = '✗ Oops! ' + question.feedback;
         if (window.navigator.vibrate) window.navigator.vibrate(200);
     }
     
-    setTimeout(() => {
+    setTimeout(function() {
         nextBtn.classList.remove("hidden");
     }, 1500);
 }
@@ -1032,8 +933,8 @@ function showResults() {
     document.getElementById("quizSection").classList.add("hidden");
     document.getElementById("resultsSection").classList.remove("hidden");
     
-    const percentage = Math.round((score / quizQuestions.length) * 100);
-    let emoji, message, rating;
+    var percentage = Math.round((score / quizQuestions.length) * 100);
+    var emoji, message, rating;
     
     if (percentage === 100) {
         emoji = "💯";
@@ -1041,21 +942,21 @@ function showResults() {
         rating = "You two are SOULMATES! You know each other inside and out. This is true love! 💕";
     } else if (percentage >= 75) {
         emoji = "😍";
-        message = `${score} out of ${quizQuestions.length} correct!`;
+        message = score + " out of " + quizQuestions.length + " correct!";
         rating = "Amazing! You know each other so well. Your connection is truly special! ✨";
     } else if (percentage >= 50) {
         emoji = "💕";
-        message = `${score} out of ${quizQuestions.length} correct!`;
+        message = score + " out of " + quizQuestions.length + " correct!";
         rating = "Great job! You're learning more about each other every day. Keep making memories! 🌟";
     } else {
         emoji = "❤️";
-        message = `${score} out of ${quizQuestions.length} correct!`;
+        message = score + " out of " + quizQuestions.length + " correct!";
         rating = "Every relationship is a journey! You're creating new memories together every day! 💑";
     }
     
     document.getElementById("resultsEmoji").textContent = emoji;
     document.getElementById("resultsScore").textContent = message;
-    document.getElementById("resultsMessage").textContent = `You got ${percentage}% correct!`;
+    document.getElementById("resultsMessage").textContent = "You got " + percentage + "% correct!";
     document.getElementById("resultsRating").textContent = rating;
 }
 
@@ -1066,14 +967,14 @@ function celebrate() {
     
     if (window.navigator.vibrate) window.navigator.vibrate([50, 100, 50]);
     
-    const burstCount = isMobile ? 4 : 6;
-    let currentBurst = 0;
-    const burstInterval = setInterval(() => {
+    var burstCount = isMobile ? 4 : 6;
+    var currentBurst = 0;
+    var burstInterval = setInterval(function() {
         createFireworkBurst();
         currentBurst++;
         if (currentBurst >= burstCount) {
             clearInterval(burstInterval);
-            setInterval(() => {
+            setInterval(function() {
                 if (fireworks.length < maxFireworks / 2) {
                     createFireworkBurst();
                 }
@@ -1083,16 +984,16 @@ function celebrate() {
 }
 
 function createFireworkBurst() {
-    const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight / 2 + 50;
-    const colors = ['#ff1744', '#ff4569', '#ffd700', '#ff69b4', '#ff1493'];
-    const particleCount = isMobile ? 50 : 80;
+    var x = Math.random() * window.innerWidth;
+    var y = Math.random() * window.innerHeight / 2 + 50;
+    var colors = ['#ff1744', '#ff4569', '#ffd700', '#ff69b4', '#ff1493'];
+    var particleCount = isMobile ? 50 : 80;
     
     if (fireworks.length > maxFireworks) return;
     
-    for (let i = 0; i < particleCount; i++) {
-        const angle = (Math.PI * 2 * i) / particleCount;
-        const velocity = Math.random() * 3.5 + 2;
+    for (var i = 0; i < particleCount; i++) {
+        var angle = (Math.PI * 2 * i) / particleCount;
+        var velocity = Math.random() * 3.5 + 2;
         fireworks.push({
             x: x,
             y: y,
@@ -1104,13 +1005,9 @@ function createFireworkBurst() {
     }
 }
 
-window.addEventListener('beforeunload', () => {
+window.addEventListener('beforeunload', function() {
     if (heartsInterval) clearInterval(heartsInterval);
 });
-
-document.body.addEventListener('touchmove', (e) => {
-    if (e.target === document.body) e.preventDefault();
-}, { passive: false });
 </script>
 
 </body>
