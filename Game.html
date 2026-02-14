@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Beatrix ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #ff758c, #ff7eb3);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    touch-action: none;
+}
+
+/* Sparkles */
+.sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: sparkleFloat 4s linear infinite;
+}
+
+@keyframes sparkleFloat {
+    from { transform: translateY(100vh) scale(0.5); opacity: 0; }
+    50% { opacity: 1; }
+    to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+}
+
+h1 {
+    color: white;
+    margin-top: 15px;
+    font-size: 22px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+}
+
+#score {
+    color: white;
+    font-size: 18px;
+}
+
+#gameArea {
+    position: relative;
+    width: 100vw;
+    height: 85vh;
+}
+
+.heart {
+    position: absolute;
+    font-size: 28px;
+    animation: fall linear;
+}
+
+@keyframes fall {
+    from { transform: translateY(-50px); }
+    to { transform: translateY(100vh); }
+}
+
+#basket {
+    position: absolute;
+    bottom: 15px;
+    font-size: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#message {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    font-size: 28px;
+    color: white;
+    display: none;
+    padding: 0 20px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Floating Love Messages */
+.loveText {
+    position: absolute;
+    color: white;
+    font-size: 16px;
+    opacity: 0.8;
+    animation: floatLove 6s linear forwards;
+}
+
+@keyframes floatLove {
+    from { transform: translateY(100vh); opacity: 0; }
+    20% { opacity: 1; }
+    to { transform: translateY(-20vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Catch the Love, Beatrix ❤️</h1>
+<div id="score">Hearts Collected: 0</div>
+
+<div id="gameArea">
+    <div id="basket">💖</div>
+    <div id="message">Beatrix, I Love You Forever ❤️</div>
+</div>
+
+<audio id="bgMusic" autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c8a5a3e53.mp3?filename=romantic-love-11551.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let score = 0;
+const basket = document.getElementById("basket");
+const gameArea = document.getElementById("gameArea");
+const scoreDisplay = document.getElementById("score");
+const message = document.getElementById("message");
+const music = document.getElementById("bgMusic");
+
+const loveMessages = [
+    "You are my forever ❤️",
+    "My heart is yours 💕",
+    "You are my dream ✨",
+    "Always and forever 💖",
+    "My beautiful Beatrix 💫"
+];
+
+/* Touch + Mouse control */
+document.addEventListener("touchmove", (e) => {
+    basket.style.left = e.touches[0].clientX - 30 + "px";
+});
+
+document.addEventListener("mousemove", (e) => {
+    basket.style.left = e.clientX - 30 + "px";
+});
+
+document.addEventListener("touchstart", () => {
+    music.play();
+}, { once: true });
+
+/* Falling Hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+    gameArea.appendChild(heart);
+
+    const fallCheck = setInterval(() => {
+        const heartRect = heart.getBoundingClientRect();
+        const basketRect = basket.getBoundingClientRect();
+
+        if (
+            heartRect.bottom >= basketRect.top &&
+            heartRect.left < basketRect.right &&
+            heartRect.right > basketRect.left
+        ) {
+            score++;
+            scoreDisplay.textContent = "Hearts Collected: " + score;
+            heart.remove();
+            clearInterval(fallCheck);
+
+            if (score >= 20) {
+                message.style.display = "block";
+                clearInterval(spawnInterval);
+            }
+        }
+
+        if (heartRect.top > window.innerHeight) {
+            heart.remove();
+            clearInterval(fallCheck);
+        }
+    }, 50);
+}
+
+/* Sparkles */
+function createSparkle() {
+    const sparkle = document.createElement("div");
+    sparkle.classList.add("sparkle");
+    sparkle.style.left = Math.random() * window.innerWidth + "px";
+    sparkle.style.animationDuration = (3 + Math.random() * 3) + "s";
+    document.body.appendChild(sparkle);
+
+    setTimeout(() => sparkle.remove(), 6000);
+}
+
+/* Floating Love Text */
+function createLoveText() {
+    const text = document.createElement("div");
+    text.classList.add("loveText");
+    text.innerHTML = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+    text.style.left = Math.random() * window.innerWidth + "px";
+    document.body.appendChild(text);
+
+    setTimeout(() => text.remove(), 6000);
+}
+
+const spawnInterval = setInterval(createHeart, 800);
+setInterval(createSparkle, 300);
+setInterval(createLoveText, 2500);
+
+</script>
+
+</body>
+</html>

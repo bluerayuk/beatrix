@@ -2,24 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Andrius ❤️ Beatrix - Happy Valentine's Day</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title>Andrius ❤️ Beatrix</title>
 
 <style>
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+    overscroll-behavior: none;
 }
 
 body {
     margin: 0;
     background: radial-gradient(circle at bottom, #0b1d3a, #000);
-    overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
     color: white;
     text-align: center;
-    height: 100vh;
+    /* iPhone notch/dynamic island safe area */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 canvas {
@@ -27,6 +42,10 @@ canvas {
     top: 0;
     left: 0;
     pointer-events: none;
+    /* GPU acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
 }
 
 .content {
@@ -36,15 +55,22 @@ canvas {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     padding: 20px;
+    /* Smooth scrolling for iOS */
+    -webkit-overflow-scrolling: touch;
 }
 
 h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    margin-bottom: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     animation: glow 2s ease-in-out infinite;
+    /* Prevent text size adjustment on iOS */
+    -webkit-text-size-adjust: 100%;
 }
 
 @keyframes glow {
@@ -53,33 +79,36 @@ h1 {
 }
 
 .subtitle {
-    font-size: 1.5em;
-    margin-bottom: 40px;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    margin-bottom: 30px;
     opacity: 0.9;
+    font-weight: 500;
 }
 
 button {
-    padding: 15px 35px;
+    padding: 16px 36px;
     border-radius: 30px;
     border: 2px solid white;
-    font-size: 1.1em;
+    font-size: clamp(1rem, 4vw, 1.2rem);
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: white;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-}
-
-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+    /* Better touch target */
+    min-height: 48px;
+    min-width: 120px;
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 button:active {
-    transform: translateY(0);
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .hidden { 
@@ -87,48 +116,55 @@ button:active {
 }
 
 .fade-in {
-    animation: fadeIn 1.5s ease-in;
+    animation: fadeIn 1.2s ease-in;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Gift Box */
+/* Gift Box - Optimized for touch */
 .gift-box {
-    width: 150px;
-    height: 120px;
+    width: clamp(130px, 35vw, 170px);
+    height: clamp(100px, 28vw, 130px);
     background: linear-gradient(145deg, #c9184a, #a01744);
-    margin: 40px auto;
-    border-radius: 8px;
+    margin: 30px auto;
+    border-radius: 10px;
     position: relative;
     cursor: pointer;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+    /* Touch target */
+    touch-action: manipulation;
+    /* Hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
 }
 
-.gift-box:hover {
-    transform: scale(1.05) rotate(2deg);
+.gift-box:active {
+    transform: scale(0.95);
 }
 
 .gift-lid {
-    width: 150px;
-    height: 40px;
+    width: 100%;
+    height: 35%;
     background: linear-gradient(145deg, #ff1744, #c9184a);
-    border-radius: 8px 8px 0 0;
+    border-radius: 10px 10px 0 0;
     position: absolute;
     top: 0;
     transform-origin: bottom;
-    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    /* Hardware acceleration */
+    will-change: transform;
 }
 
-/* Gift ribbon */
 .ribbon-v {
     position: absolute;
-    width: 20px;
-    height: 120px;
+    width: 15%;
+    height: 100%;
     background: gold;
     left: 50%;
     transform: translateX(-50%);
@@ -137,31 +173,32 @@ button:active {
 
 .ribbon-h {
     position: absolute;
-    width: 150px;
-    height: 20px;
+    width: 100%;
+    height: 15%;
     background: gold;
-    top: 30px;
+    top: 28%;
     z-index: 1;
 }
 
 .bow {
     position: absolute;
-    top: -20px;
+    top: -15%;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 2.5em;
+    font-size: clamp(2rem, 6vw, 2.8rem);
     z-index: 2;
     filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
 }
 
 .gift-content {
-    font-size: 4em;
+    font-size: clamp(3rem, 10vw, 4.5rem);
     position: absolute;
-    bottom: 20px;
+    bottom: 15%;
     width: 100%;
     opacity: 0;
-    transition: all 1s ease;
+    transition: all 0.8s ease;
     transform: scale(0.5) rotate(-20deg);
+    will-change: transform, opacity;
 }
 
 .gift-content.show {
@@ -171,27 +208,29 @@ button:active {
 
 /* Love Message */
 .love-message {
-    margin-top: 30px;
-    font-size: 1.4em;
+    margin-top: 25px;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
     opacity: 0;
-    transition: opacity 2s ease;
-    line-height: 1.8;
-    max-width: 700px;
+    transition: opacity 1.5s ease;
+    line-height: 1.6;
+    max-width: 90%;
+    font-weight: 400;
 }
 
 .love-message.show {
     opacity: 1;
 }
 
-/* Memory Cards */
+/* Memory Cards - Optimized grid for mobile */
 .memory-cards {
-    display: flex;
-    gap: 20px;
-    margin-top: 40px;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+    width: 90%;
+    max-width: 600px;
     opacity: 0;
-    transition: opacity 1.5s ease;
+    transition: opacity 1.2s ease;
 }
 
 .memory-cards.show {
@@ -199,58 +238,64 @@ button:active {
 }
 
 .memory-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 15px;
-    padding: 25px;
-    width: 200px;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    padding: 20px 15px;
+    transition: all 0.2s ease;
+    /* Touch optimization */
+    touch-action: manipulation;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
-.memory-card:hover {
+.memory-card:active {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+    transform: scale(0.95);
 }
 
 .memory-card .emoji {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-.memory-card .title {
-    font-size: 1.1em;
-    font-weight: bold;
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
     margin-bottom: 8px;
 }
 
+.memory-card .title {
+    font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
 .memory-card .text {
-    font-size: 0.9em;
+    font-size: clamp(0.85rem, 3vw, 0.95rem);
     opacity: 0.9;
+    line-height: 1.4;
 }
 
 /* Final Message */
 .final-message {
-    font-size: 2em;
-    margin-top: 50px;
+    font-size: clamp(1.3rem, 5vw, 2rem);
+    margin-top: 35px;
     text-shadow: 0 0 30px rgba(255, 105, 180, 0.8);
     opacity: 0;
-    transition: opacity 2s ease;
+    transition: opacity 1.5s ease;
+    line-height: 1.5;
+    font-weight: 500;
 }
 
 .final-message.show {
     opacity: 1;
 }
 
-/* Hearts floating animation */
+/* Optimized hearts - reduced for performance */
 .heart {
     position: absolute;
-    font-size: 2em;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     opacity: 0;
-    animation: floatHeart 5s ease-in infinite;
+    animation: floatHeart 4s ease-in infinite;
     pointer-events: none;
+    will-change: transform, opacity;
 }
 
 @keyframes floatHeart {
@@ -262,57 +307,33 @@ button:active {
         opacity: 1;
     }
     100% {
-        transform: translateY(-100vh) scale(1.2) rotate(180deg);
+        transform: translateY(-100vh) scale(1) rotate(120deg);
         opacity: 0;
-    }
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2em;
-    }
-    
-    .subtitle {
-        font-size: 1.2em;
-    }
-    
-    .love-message {
-        font-size: 1.1em;
-    }
-    
-    .memory-card {
-        width: 160px;
-        padding: 20px;
-    }
-    
-    .final-message {
-        font-size: 1.5em;
     }
 }
 
 /* Music note indicator */
 .music-note {
     position: fixed;
-    top: 20px;
+    top: calc(20px + env(safe-area-inset-top));
     right: 20px;
-    font-size: 1.5em;
-    opacity: 0.6;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    opacity: 0.5;
     animation: bounce 1s ease-in-out infinite;
     z-index: 10;
 }
 
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-8px); }
 }
 
 /* Celebrate button */
 #celebrateBtn {
-    margin-top: 30px;
+    margin-top: 25px;
     background: linear-gradient(145deg, #ff1744, #c9184a);
     border: 2px solid white;
-    font-size: 1.2em;
+    font-size: clamp(1.05rem, 4vw, 1.3rem);
     padding: 18px 40px;
     animation: pulse 1.5s ease-in-out infinite;
 }
@@ -322,15 +343,69 @@ button:active {
     50% { transform: scale(1.05); }
 }
 
-#celebrateBtn:hover {
-    background: linear-gradient(145deg, #ff4569, #e91e63);
+#celebrateBtn:active {
+    animation: none;
+    transform: scale(0.95);
+}
+
+/* Loading overlay for smooth start */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #ff1744;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Tap indicator for gift */
+.tap-hint {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    opacity: 0.7;
+    animation: tapPulse 2s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.3; }
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop>
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+</div>
+
+<audio id="bgMusic" loop preload="auto">
 <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -354,6 +429,7 @@ button:active {
             <div class="ribbon-h"></div>
             <div class="gift-lid" id="lid"></div>
             <div class="gift-content" id="giftContent">💕</div>
+            <div class="tap-hint" id="tapHint">Tap to open 👆</div>
         </div>
 
         <div class="love-message" id="loveMessage">
@@ -395,140 +471,202 @@ button:active {
 </div>
 
 <script>
-// MUSIC - Auto-play on first interaction
-let musicStarted = false;
-document.body.addEventListener("click", function() {
-    if (!musicStarted) {
-        const music = document.getElementById("bgMusic");
-        music.volume = 0.3;
-        music.play().catch(e => console.log("Audio autoplay prevented"));
-        musicStarted = true;
-    }
-}, { once: true });
+// Performance optimization - use requestIdleCallback when available
+const scheduleWork = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
 
-// CANVAS SETUP
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-// Resize canvas on window resize
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+// Hide loading overlay once page is ready
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }, 500);
 });
 
-// Stars with twinkling
+// MUSIC - Optimized for iOS
+let musicStarted = false;
+let audioContext;
+
+function initAudio() {
+    if (!musicStarted) {
+        const music = document.getElementById("bgMusic");
+        
+        // iOS requires user interaction to play audio
+        const playPromise = music.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    music.volume = 0.25;
+                    musicStarted = true;
+                })
+                .catch(e => {
+                    console.log("Audio autoplay prevented - will retry on next interaction");
+                });
+        }
+    }
+}
+
+// Try to start music on any interaction
+['touchstart', 'click'].forEach(event => {
+    document.body.addEventListener(event, initAudio, { once: true, passive: true });
+});
+
+// CANVAS SETUP - Optimized for iPhone display
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+
+// Use device pixel ratio for sharp rendering on retina displays
+const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
+canvas.width = window.innerWidth * dpr;
+canvas.height = window.innerHeight * dpr;
+canvas.style.width = window.innerWidth + 'px';
+canvas.style.height = window.innerHeight + 'px';
+ctx.scale(dpr, dpr);
+
+// Optimized resize handler with debounce
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.scale(dpr, dpr);
+    }, 250);
+}, { passive: true });
+
+// Reduced star count for mobile performance
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const starCount = isMobile ? 150 : 250;
+
 let stars = [];
-for (let i = 0; i < 250; i++) {
+for (let i = 0; i < starCount; i++) {
     stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2,
-        speed: Math.random() * 0.5 + 0.1,
-        twinkle: Math.random() * Math.PI * 2
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        radius: Math.random() * 1.5 + 0.5,
+        speed: Math.random() * 0.4 + 0.1,
+        twinkle: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.03 + 0.02
     });
 }
 
-// Shooting stars
+// Shooting stars - less frequent on mobile
 let shootingStars = [];
 
 function createShootingStar() {
-    if (Math.random() < 0.015) {
+    const threshold = isMobile ? 0.008 : 0.015;
+    if (Math.random() < threshold) {
         shootingStars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height / 3,
-            length: Math.random() * 80 + 40,
-            speed: Math.random() * 10 + 5,
-            angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight / 3,
+            length: Math.random() * 60 + 30,
+            speed: Math.random() * 8 + 4,
+            angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+            life: 60
         });
     }
 }
 
-// Fireworks particles
+// Fireworks - optimized particle count
 let fireworks = [];
+const maxFireworks = isMobile ? 500 : 1000;
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// Optimized animation loop
+let lastTime = 0;
+const targetFPS = 60;
+const frameInterval = 1000 / targetFPS;
 
-    // Draw twinkling stars
-    stars.forEach(s => {
-        const alpha = (Math.sin(s.twinkle) + 1) / 2 * 0.5 + 0.5;
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fill();
+function draw(currentTime) {
+    const deltaTime = currentTime - lastTime;
+    
+    if (deltaTime >= frameInterval) {
+        lastTime = currentTime - (deltaTime % frameInterval);
         
-        s.y += s.speed;
-        s.twinkle += 0.05;
-        
-        if (s.y > canvas.height) {
-            s.y = 0;
-            s.x = Math.random() * canvas.width;
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+        // Draw twinkling stars
+        stars.forEach(s => {
+            const alpha = (Math.sin(s.twinkle) + 1) / 2 * 0.5 + 0.5;
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            s.y += s.speed;
+            s.twinkle += s.twinkleSpeed;
+            
+            if (s.y > window.innerHeight) {
+                s.y = 0;
+                s.x = Math.random() * window.innerWidth;
+            }
+        });
+
+        // Draw shooting stars with life check
+        shootingStars.forEach((star, index) => {
+            if (star.life <= 0) {
+                shootingStars.splice(index, 1);
+                return;
+            }
+            
+            const alpha = star.life / 60;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(star.x, star.y);
+            ctx.lineTo(
+                star.x - Math.cos(star.angle) * star.length,
+                star.y - Math.sin(star.angle) * star.length
+            );
+            ctx.stroke();
+            
+            star.x += Math.cos(star.angle) * star.speed;
+            star.y += Math.sin(star.angle) * star.speed;
+            star.life--;
+        });
+
+        // Draw fireworks
+        if (fireworks.length > 0) {
+            fireworks.forEach((f, index) => {
+                ctx.fillStyle = f.color;
+                ctx.globalAlpha = f.life / 60;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                f.x += f.vx;
+                f.y += f.vy;
+                f.vy += 0.12;
+                f.life--;
+
+                if (f.life <= 0) fireworks.splice(index, 1);
+            });
+            ctx.globalAlpha = 1;
         }
-    });
 
-    // Draw shooting stars
-    shootingStars.forEach((star, index) => {
-        const gradient = ctx.createLinearGradient(
-            star.x, star.y,
-            star.x - Math.cos(star.angle) * star.length,
-            star.y - Math.sin(star.angle) * star.length
-        );
-        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(star.x, star.y);
-        ctx.lineTo(
-            star.x - Math.cos(star.angle) * star.length,
-            star.y - Math.sin(star.angle) * star.length
-        );
-        ctx.stroke();
-        
-        star.x += Math.cos(star.angle) * star.speed;
-        star.y += Math.sin(star.angle) * star.speed;
-        
-        if (star.x > canvas.width || star.y > canvas.height) {
-            shootingStars.splice(index, 1);
-        }
-    });
-
-    // Draw fireworks
-    fireworks.forEach((f, index) => {
-        ctx.fillStyle = f.color;
-        ctx.globalAlpha = f.life / 80;
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        
-        f.x += f.vx;
-        f.y += f.vy;
-        f.vy += 0.15; // Gravity
-        f.life--;
-
-        if (f.life <= 0) fireworks.splice(index, 1);
-    });
-
-    createShootingStar();
+        createShootingStar();
+    }
+    
     requestAnimationFrame(draw);
 }
-draw();
 
-// Valentine's Day Celebration Flow
+// Start animation
+requestAnimationFrame(draw);
+
+// Valentine's Celebration Flow
+let heartsInterval;
+
 function startCelebration() {
     document.getElementById("initialScreen").classList.add("hidden");
     document.getElementById("celebrationSection").classList.remove("hidden");
     
-    // Create floating hearts
+    // Create floating hearts - reduced frequency for performance
     createFloatingHearts();
 }
 
 function createFloatingHearts() {
-    setInterval(() => {
+    const heartFrequency = isMobile ? 1500 : 1000;
+    heartsInterval = setInterval(() => {
         if (document.getElementById("celebrationSection").classList.contains("hidden")) return;
         
         const heart = document.createElement("div");
@@ -538,8 +676,8 @@ function createFloatingHearts() {
         heart.style.animationDelay = Math.random() * 2 + "s";
         document.body.appendChild(heart);
         
-        setTimeout(() => heart.remove(), 5000);
-    }, 1000);
+        setTimeout(() => heart.remove(), 4000);
+    }, heartFrequency);
 }
 
 function openGift() {
@@ -549,30 +687,42 @@ function openGift() {
     const memoryCards = document.getElementById("memoryCards");
     const celebrateBtn = document.getElementById("celebrateBtn");
     const giftBox = document.getElementById("giftBox");
+    const tapHint = document.getElementById("tapHint");
     
-    // Prevent multiple clicks
+    // Prevent multiple taps
+    if (giftBox.classList.contains('opened')) return;
+    giftBox.classList.add('opened');
     giftBox.style.pointerEvents = "none";
+    
+    // Hide tap hint
+    tapHint.style.display = 'none';
+    
+    // Haptic feedback (if supported)
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate(50);
+    }
     
     lid.style.transform = "rotateX(120deg)";
     
     setTimeout(() => {
         giftContent.classList.add("show");
-    }, 500);
+        if (window.navigator.vibrate) window.navigator.vibrate(30);
+    }, 400);
     
     setTimeout(() => {
         loveMessage.classList.add("show");
-    }, 1200);
+    }, 1000);
     
     setTimeout(() => {
         memoryCards.classList.add("show");
-    }, 2000);
+    }, 1700);
     
     setTimeout(() => {
         celebrateBtn.classList.remove("hidden");
-    }, 3000);
+    }, 2500);
 }
 
-// Celebration with fireworks
+// Celebration with optimized fireworks
 function celebrate() {
     const finalMessage = document.getElementById("finalMessage");
     const celebrateBtn = document.getElementById("celebrateBtn");
@@ -581,39 +731,65 @@ function celebrate() {
     finalMessage.classList.remove("hidden");
     finalMessage.classList.add("show");
     
-    // Create multiple firework bursts
-    let burstCount = 0;
+    // Haptic feedback
+    if (window.navigator.vibrate) {
+        window.navigator.vibrate([50, 100, 50]);
+    }
+    
+    // Optimized firework bursts
+    const burstCount = isMobile ? 4 : 6;
+    let currentBurst = 0;
     const burstInterval = setInterval(() => {
         createFireworkBurst();
-        burstCount++;
+        currentBurst++;
         
-        if (burstCount >= 6) {
+        if (currentBurst >= burstCount) {
             clearInterval(burstInterval);
-            // Continue with occasional bursts
-            setInterval(createFireworkBurst, 1800);
+            // Occasional bursts after initial celebration
+            setInterval(() => {
+                if (fireworks.length < maxFireworks / 2) {
+                    createFireworkBurst();
+                }
+            }, 2500);
         }
-    }, 350);
+    }, 300);
 }
 
 function createFireworkBurst() {
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * canvas.height / 2 + 50;
-    const colors = ['#ff1744', '#ff4569', '#ffd700', '#ff69b4', '#ff1493', '#ff6b9d'];
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight / 2 + 50;
+    const colors = ['#ff1744', '#ff4569', '#ffd700', '#ff69b4', '#ff1493'];
+    const particleCount = isMobile ? 50 : 80;
     
-    for (let i = 0; i < 80; i++) {
-        const angle = (Math.PI * 2 * i) / 80;
-        const velocity = Math.random() * 4 + 2;
+    // Don't exceed max particles
+    if (fireworks.length > maxFireworks) return;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = Math.random() * 3.5 + 2;
         
         fireworks.push({
             x: x,
             y: y,
             vx: Math.cos(angle) * velocity,
             vy: Math.sin(angle) * velocity,
-            life: 80,
+            life: 60,
             color: colors[Math.floor(Math.random() * colors.length)]
         });
     }
 }
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (heartsInterval) clearInterval(heartsInterval);
+});
+
+// Prevent iOS rubber band scrolling
+document.body.addEventListener('touchmove', (e) => {
+    if (e.target === document.body) {
+        e.preventDefault();
+    }
+}, { passive: false });
 </script>
 
 </body>
