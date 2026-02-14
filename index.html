@@ -53,19 +53,28 @@ canvas {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    padding: 20px;
-    padding-top: max(40px, env(safe-area-inset-top) + 20px);
-    padding-bottom: max(40px, env(safe-area-inset-bottom) + 20px);
+    height: 100vh;
+    height: -webkit-fill-available;
+    padding: 15px;
+    padding-top: max(30px, env(safe-area-inset-top) + 15px);
+    padding-bottom: max(30px, env(safe-area-inset-bottom) + 15px);
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
+/* Center initial screen only */
+#initialScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+}
+
 h1 {
-    font-size: clamp(1.8rem, 7vw, 3.5rem);
-    margin-bottom: 10px;
+    font-size: clamp(1.5rem, 6vw, 3.5rem);
+    margin-bottom: 8px;
     font-weight: 700;
     letter-spacing: -0.02em;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
@@ -79,23 +88,23 @@ h1 {
 }
 
 h2 {
-    font-size: clamp(1.3rem, 5vw, 2.5rem);
-    margin-bottom: 15px;
+    font-size: clamp(1.2rem, 4.5vw, 2.5rem);
+    margin-bottom: 12px;
     font-weight: 600;
 }
 
 .subtitle {
-    font-size: clamp(1rem, 3.5vw, 1.5rem);
-    margin-bottom: 20px;
+    font-size: clamp(0.9rem, 3.2vw, 1.5rem);
+    margin-bottom: 15px;
     opacity: 0.9;
     font-weight: 500;
 }
 
 button {
-    padding: 16px 36px;
-    border-radius: 30px;
+    padding: 12px 28px;
+    border-radius: 25px;
     border: 2px solid white;
-    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
     cursor: pointer;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
@@ -104,11 +113,11 @@ button {
     font-weight: 600;
     transition: all 0.2s ease;
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
-    min-height: 48px;
-    min-width: 120px;
+    min-height: 44px;
+    min-width: 100px;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
-    margin: 8px;
+    margin: 6px;
 }
 
 button:active {
@@ -131,11 +140,11 @@ button:active {
 
 /* Gift Box */
 .gift-box {
-    width: clamp(120px, 32vw, 170px);
-    height: clamp(90px, 25vw, 130px);
+    width: clamp(100px, 28vw, 150px);
+    height: clamp(75px, 22vw, 115px);
     background: linear-gradient(145deg, #c9184a, #a01744);
-    margin: 20px auto;
-    border-radius: 10px;
+    margin: 15px auto;
+    border-radius: 8px;
     position: relative;
     cursor: pointer;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
@@ -154,7 +163,7 @@ button:active {
     width: 100%;
     height: 35%;
     background: linear-gradient(145deg, #ff1744, #c9184a);
-    border-radius: 10px 10px 0 0;
+    border-radius: 8px 8px 0 0;
     position: absolute;
     top: 0;
     transform-origin: bottom;
@@ -187,13 +196,13 @@ button:active {
     top: -15%;
     left: 50%;
     transform: translateX(-50%);
-    font-size: clamp(2rem, 6vw, 2.8rem);
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
     z-index: 2;
     filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
 }
 
 .gift-content {
-    font-size: clamp(3rem, 10vw, 4.5rem);
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
     position: absolute;
     bottom: 15%;
     width: 100%;
@@ -210,12 +219,13 @@ button:active {
 
 .tap-hint {
     position: absolute;
-    bottom: -35px;
+    bottom: -30px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     opacity: 0.7;
     animation: tapPulse 2s ease-in-out infinite;
+    white-space: nowrap;
 }
 
 @keyframes tapPulse {
@@ -225,11 +235,11 @@ button:active {
 
 /* Love Message */
 .love-message {
-    margin-top: 15px;
-    font-size: clamp(1rem, 3.8vw, 1.5rem);
+    margin-top: 10px;
+    font-size: clamp(0.9rem, 3.5vw, 1.5rem);
     opacity: 0;
     transition: opacity 1.5s ease;
-    line-height: 1.5;
+    line-height: 1.4;
     max-width: 90%;
     font-weight: 400;
 }
@@ -241,9 +251,9 @@ button:active {
 /* Memory Cards */
 .memory-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 12px;
-    margin-top: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 15px;
     width: 90%;
     max-width: 600px;
     opacity: 0;
@@ -259,8 +269,8 @@ button:active {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 15px;
-    padding: 15px 12px;
+    border-radius: 12px;
+    padding: 10px 8px;
     transition: all 0.2s ease;
     touch-action: manipulation;
     transform: translateZ(0);
@@ -273,27 +283,27 @@ button:active {
 }
 
 .memory-card .emoji {
-    font-size: clamp(2.2rem, 7vw, 3.5rem);
-    margin-bottom: 6px;
+    font-size: clamp(1.8rem, 6vw, 3.5rem);
+    margin-bottom: 4px;
 }
 
 .memory-card .title {
-    font-size: clamp(0.9rem, 3.3vw, 1.15rem);
+    font-size: clamp(0.8rem, 3vw, 1.15rem);
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .memory-card .text {
-    font-size: clamp(0.8rem, 2.8vw, 0.95rem);
+    font-size: clamp(0.7rem, 2.5vw, 0.95rem);
     opacity: 0.9;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 /* Quiz Section */
 .quiz-container {
     width: 90%;
     max-width: 500px;
-    margin: 15px auto;
+    margin: 10px auto;
 }
 
 .quiz-question {
@@ -301,42 +311,42 @@ button:active {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 20px 15px;
-    margin-bottom: 15px;
+    border-radius: 15px;
+    padding: 15px 12px;
+    margin-bottom: 12px;
 }
 
 .question-number {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     opacity: 0.7;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-weight: 500;
 }
 
 .question-text {
-    font-size: clamp(1.1rem, 4.2vw, 1.6rem);
-    margin-bottom: 20px;
-    line-height: 1.3;
+    font-size: clamp(1rem, 4vw, 1.6rem);
+    margin-bottom: 15px;
+    line-height: 1.25;
     font-weight: 600;
 }
 
 .quiz-options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .quiz-option {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 15px;
-    padding: 14px 16px;
-    font-size: clamp(0.95rem, 3.3vw, 1.2rem);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: clamp(0.85rem, 3.2vw, 1.2rem);
     color: white;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
-    min-height: 50px;
+    min-height: 44px;
     display: flex;
     align-items: center;
 }
@@ -374,11 +384,11 @@ button:active {
 }
 
 .quiz-feedback {
-    margin-top: 15px;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: clamp(0.9rem, 3.3vw, 1.1rem);
-    line-height: 1.4;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: clamp(0.8rem, 3.1vw, 1.1rem);
+    line-height: 1.3;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -400,13 +410,13 @@ button:active {
 .quiz-progress {
     display: flex;
     justify-content: center;
-    gap: 6px;
-    margin: 15px 0;
+    gap: 5px;
+    margin: 12px 0;
 }
 
 .progress-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
@@ -427,45 +437,45 @@ button:active {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 30px 15px;
-    margin-top: 15px;
+    border-radius: 15px;
+    padding: 25px 15px;
+    margin-top: 12px;
 }
 
 .results-emoji {
-    font-size: clamp(3.5rem, 12vw, 6rem);
-    margin-bottom: 15px;
+    font-size: clamp(3rem, 10vw, 6rem);
+    margin-bottom: 12px;
 }
 
 .results-score {
-    font-size: clamp(1.6rem, 6.5vw, 3rem);
+    font-size: clamp(1.4rem, 6vw, 3rem);
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     color: #ff1744;
 }
 
 .results-message {
-    font-size: clamp(1rem, 3.8vw, 1.4rem);
-    line-height: 1.5;
-    margin-bottom: 15px;
+    font-size: clamp(0.95rem, 3.6vw, 1.4rem);
+    line-height: 1.4;
+    margin-bottom: 12px;
 }
 
 .results-rating {
-    font-size: clamp(0.95rem, 3.3vw, 1.2rem);
+    font-size: clamp(0.85rem, 3.1vw, 1.2rem);
     opacity: 0.9;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     font-style: italic;
 }
 
 /* Final Message */
 .final-message {
-    font-size: clamp(1.2rem, 4.5vw, 2rem);
-    margin-top: 25px;
-    margin-bottom: 25px;
+    font-size: clamp(1.1rem, 4.2vw, 2rem);
+    margin-top: 20px;
+    margin-bottom: 20px;
     text-shadow: 0 0 30px rgba(255, 105, 180, 0.8);
     opacity: 0;
     transition: opacity 1.5s ease;
-    line-height: 1.4;
+    line-height: 1.35;
     font-weight: 500;
 }
 
