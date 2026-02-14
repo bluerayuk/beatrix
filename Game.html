@@ -146,13 +146,14 @@ h1 {
     bottom: max(20px, env(safe-area-inset-bottom, 20px) + 10px);
     font-size: 60px;
     left: 50%;
+    /* Use transform for GPU-composited movement — no layout reflow */
     transform: translateX(-50%);
-    transition: left 0.05s linear;
+    /* NO transition — direct 1:1 finger tracking */
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     z-index: 10;
-    /* Ensure instant touch response */
     touch-action: none;
-    will-change: left;
+    will-change: transform;
+    -webkit-transform: translateX(-50%);
 }
 
 #basket.invincible {
@@ -497,31 +498,44 @@ function startGame(diff) {
     startCollisionLoop();
 }
 
-/* Touch + Mouse control */
+/* Smooth transform-based basket control */
 let basketX = window.innerWidth / 2;
+let rafMoveScheduled = false;
 
-// Get usable game width accounting for safe areas
 function getGameWidth() {
     return window.visualViewport ? window.visualViewport.width : window.innerWidth;
 }
 
+function setBasketX(clientX) {
+    const halfBasket = 35;
+    const w = getGameWidth();
+    basketX = Math.max(halfBasket, Math.min(w - halfBasket, clientX));
+    if (!rafMoveScheduled) {
+        rafMoveScheduled = true;
+        requestAnimationFrame(applyBasketTransform);
+    }
+}
+
+function applyBasketTransform() {
+    // Transform from center (basket is left:50%), offset by finger delta from center
+    const offsetFromCenter = basketX - getGameWidth() / 2;
+    basket.style.transform = `translateX(calc(-50% + ${offsetFromCenter}px))`;
+    basket.style.webkitTransform = `translateX(calc(-50% + ${offsetFromCenter}px))`;
+    rafMoveScheduled = false;
+}
+
 document.addEventListener("touchmove", (e) => {
-    e.preventDefault(); // CRITICAL: stops Safari scrolling the page during play
-    basketX = e.touches[0].clientX;
-    updateBasketPosition();
-}, { passive: false }); // Must be non-passive to call preventDefault
+    e.preventDefault();
+    setBasketX(e.touches[0].clientX);
+}, { passive: false });
 
 document.addEventListener("mousemove", (e) => {
-    basketX = e.clientX;
-    updateBasketPosition();
+    setBasketX(e.clientX);
 });
 
 function updateBasketPosition() {
-    const halfBasket = 30; // ~half basket width
-    const w = getGameWidth();
-    // Clamp so basket can't go off screen
-    const clamped = Math.max(halfBasket, Math.min(w - halfBasket, basketX));
-    basket.style.left = clamped + "px";
+    // Legacy alias kept for any calls elsewhere
+    applyBasketTransform();
 }
 
 // Resume AudioContext on first touch (Safari requirement)
