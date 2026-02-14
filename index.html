@@ -33,7 +33,6 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
     color: white;
     text-align: center;
-    /* iPhone notch/dynamic island safe area */
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
@@ -42,7 +41,6 @@ canvas {
     top: 0;
     left: 0;
     pointer-events: none;
-    /* GPU acceleration */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: transform;
@@ -58,7 +56,6 @@ canvas {
     min-height: 100vh;
     min-height: -webkit-fill-available;
     padding: 20px;
-    /* Smooth scrolling for iOS */
     -webkit-overflow-scrolling: touch;
 }
 
@@ -69,13 +66,18 @@ h1 {
     letter-spacing: -0.02em;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     animation: glow 2s ease-in-out infinite;
-    /* Prevent text size adjustment on iOS */
     -webkit-text-size-adjust: 100%;
 }
 
 @keyframes glow {
     0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
     50% { text-shadow: 0 0 40px rgba(255, 105, 180, 0.8); }
+}
+
+h2 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .subtitle {
@@ -98,12 +100,11 @@ button {
     font-weight: 600;
     transition: all 0.2s ease;
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
-    /* Better touch target */
     min-height: 48px;
     min-width: 120px;
-    /* Hardware acceleration */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    margin: 8px;
 }
 
 button:active {
@@ -124,7 +125,7 @@ button:active {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Gift Box - Optimized for touch */
+/* Gift Box */
 .gift-box {
     width: clamp(130px, 35vw, 170px);
     height: clamp(100px, 28vw, 130px);
@@ -135,9 +136,7 @@ button:active {
     cursor: pointer;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s ease;
-    /* Touch target */
     touch-action: manipulation;
-    /* Hardware acceleration */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: transform;
@@ -157,7 +156,6 @@ button:active {
     transform-origin: bottom;
     transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
-    /* Hardware acceleration */
     will-change: transform;
 }
 
@@ -206,6 +204,21 @@ button:active {
     transform: scale(1) rotate(0deg);
 }
 
+.tap-hint {
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    opacity: 0.7;
+    animation: tapPulse 2s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.3; }
+}
+
 /* Love Message */
 .love-message {
     margin-top: 25px;
@@ -221,7 +234,7 @@ button:active {
     opacity: 1;
 }
 
-/* Memory Cards - Optimized grid for mobile */
+/* Memory Cards */
 .memory-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -245,7 +258,6 @@ button:active {
     border-radius: 15px;
     padding: 20px 15px;
     transition: all 0.2s ease;
-    /* Touch optimization */
     touch-action: manipulation;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
@@ -273,6 +285,174 @@ button:active {
     line-height: 1.4;
 }
 
+/* Quiz Section */
+.quiz-container {
+    width: 90%;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.quiz-question {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px 20px;
+    margin-bottom: 20px;
+}
+
+.question-number {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.question-text {
+    font-size: clamp(1.2rem, 4.5vw, 1.6rem);
+    margin-bottom: 25px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.quiz-option {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 18px 20px;
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+}
+
+.quiz-option:active {
+    transform: scale(0.97);
+}
+
+.quiz-option.selected {
+    background: rgba(255, 23, 68, 0.3);
+    border-color: #ff1744;
+}
+
+.quiz-option.correct {
+    background: rgba(76, 175, 80, 0.3);
+    border-color: #4caf50;
+    animation: correctPulse 0.5s ease;
+}
+
+.quiz-option.incorrect {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: #f44336;
+    animation: shake 0.5s ease;
+}
+
+@keyframes correctPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.quiz-feedback {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.quiz-feedback.show {
+    opacity: 1;
+}
+
+.quiz-feedback.correct {
+    background: rgba(76, 175, 80, 0.2);
+    border: 2px solid #4caf50;
+}
+
+.quiz-feedback.incorrect {
+    background: rgba(244, 67, 54, 0.2);
+    border: 2px solid #f44336;
+}
+
+.quiz-progress {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.progress-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+    background: #ff1744;
+    transform: scale(1.3);
+}
+
+.progress-dot.completed {
+    background: #4caf50;
+}
+
+/* Quiz Results */
+.quiz-results {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 40px 20px;
+    margin-top: 20px;
+}
+
+.results-emoji {
+    font-size: clamp(4rem, 15vw, 6rem);
+    margin-bottom: 20px;
+}
+
+.results-score {
+    font-size: clamp(2rem, 8vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #ff1744;
+}
+
+.results-message {
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.results-rating {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    opacity: 0.9;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
 /* Final Message */
 .final-message {
     font-size: clamp(1.3rem, 5vw, 2rem);
@@ -288,7 +468,7 @@ button:active {
     opacity: 1;
 }
 
-/* Optimized hearts - reduced for performance */
+/* Hearts */
 .heart {
     position: absolute;
     font-size: clamp(1.5rem, 5vw, 2rem);
@@ -312,7 +492,6 @@ button:active {
     }
 }
 
-/* Music note indicator */
 .music-note {
     position: fixed;
     top: calc(20px + env(safe-area-inset-top));
@@ -328,27 +507,7 @@ button:active {
     50% { transform: translateY(-8px); }
 }
 
-/* Celebrate button */
-#celebrateBtn {
-    margin-top: 25px;
-    background: linear-gradient(145deg, #ff1744, #c9184a);
-    border: 2px solid white;
-    font-size: clamp(1.05rem, 4vw, 1.3rem);
-    padding: 18px 40px;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-#celebrateBtn:active {
-    animation: none;
-    transform: scale(0.95);
-}
-
-/* Loading overlay for smooth start */
+/* Loading overlay */
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -381,20 +540,20 @@ button:active {
     to { transform: rotate(360deg); }
 }
 
-/* Tap indicator for gift */
-.tap-hint {
-    position: absolute;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.9rem;
-    opacity: 0.7;
-    animation: tapPulse 2s ease-in-out infinite;
+/* Special button styles */
+.primary-btn {
+    background: linear-gradient(145deg, #ff1744, #c9184a);
+    animation: pulse 1.5s ease-in-out infinite;
 }
 
-@keyframes tapPulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 0.3; }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.primary-btn:active {
+    animation: none;
+    transform: scale(0.95);
 }
 </style>
 </head>
@@ -414,13 +573,15 @@ button:active {
 <canvas id="stars"></canvas>
 
 <div class="content">
+    <!-- Initial Screen -->
     <div id="initialScreen">
         <h1 class="fade-in">Andrius ❤️ Beatrix</h1>
         <p class="subtitle fade-in">Happy Valentine's Day 2026</p>
         <button onclick="startCelebration()">Open Your Valentine 💝</button>
     </div>
 
-    <div id="celebrationSection" class="hidden">
+    <!-- Gift Opening -->
+    <div id="giftSection" class="hidden">
         <h1 class="fade-in">To My Beautiful Wife</h1>
         
         <div class="gift-box" onclick="openGift()" id="giftBox">
@@ -460,69 +621,144 @@ button:active {
             </div>
         </div>
 
-        <button id="celebrateBtn" class="hidden" onclick="celebrate()">Let's Celebrate! 🎉</button>
+        <button id="quizBtn" class="hidden primary-btn" onclick="startQuiz()">Play Our Love Quiz! 💕</button>
+    </div>
 
-        <div id="finalMessage" class="hidden final-message">
-            Happy Valentine's Day! 💕<br>
-            I love you more than words can say ❤️<br>
-            Forever yours, Andrius
+    <!-- Quiz Section -->
+    <div id="quizSection" class="hidden">
+        <h2 class="fade-in">How Well Do We Know Each Other? 💕</h2>
+        
+        <div class="quiz-progress" id="quizProgress"></div>
+        
+        <div class="quiz-container" id="quizContainer"></div>
+        
+        <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question ➡️</button>
+    </div>
+
+    <!-- Quiz Results -->
+    <div id="resultsSection" class="hidden">
+        <div class="quiz-results fade-in">
+            <div class="results-emoji" id="resultsEmoji">💕</div>
+            <div class="results-score" id="resultsScore"></div>
+            <div class="results-message" id="resultsMessage"></div>
+            <div class="results-rating" id="resultsRating"></div>
+            <button class="primary-btn" onclick="celebrate()">Celebrate Our Love! 🎉</button>
         </div>
+    </div>
+
+    <!-- Final Celebration -->
+    <div id="finalMessage" class="hidden final-message">
+        Happy Valentine's Day! 💕<br>
+        I love you more than words can say ❤️<br>
+        Forever yours, Andrius
     </div>
 </div>
 
 <script>
-// Performance optimization - use requestIdleCallback when available
-const scheduleWork = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+// Quiz Questions - Personalized for Andrius & Beatrix
+const quizQuestions = [
+    {
+        question: "Which app did we meet on?",
+        options: ["Tinder", "Bumble", "Hinge", "Match"],
+        correct: 1,
+        feedback: "Yes! Bumble brought us together. Best swipe ever! 🐝💕"
+    },
+    {
+        question: "Which shop did we go to on our first date?",
+        options: ["Tesco", "Morrisons", "Sainsbury's", "Asda"],
+        correct: 1,
+        feedback: "That's right! Morrisons on our first date. Who knew grocery shopping could be so romantic? 🛒❤️"
+    },
+    {
+        question: "What is my favourite cuisine?",
+        options: ["Chinese", "Italian", "Indian", "Mexican"],
+        correct: 1,
+        feedback: "Exactly! Italian food is the best. Pasta and pizza forever! 🍝🍕"
+    },
+    {
+        question: "How old am I?",
+        options: ["36", "37", "38", "39"],
+        correct: 2,
+        feedback: "Correct! 38 and still amazing! Age is just a number when you're with the right person. 💫"
+    },
+    {
+        question: "When is my birthday?",
+        options: ["July 15th", "August 11th", "September 20th", "October 5th"],
+        correct: 1,
+        feedback: "Perfect! August 11th - a day to celebrate the most wonderful person in my life! 🎂🎉"
+    },
+    {
+        question: "What is my favourite restaurant?",
+        options: ["Nando's", "Pizza Express", "Garden City Buffet", "Wagamama"],
+        correct: 2,
+        feedback: "Yes! Garden City Buffet is the best! So many delicious choices! 🍽️✨"
+    },
+    {
+        question: "Which location have we camped at the most?",
+        options: ["Brighton, UK", "Polegate, UK", "Canterbury, UK", "Hastings, UK"],
+        correct: 1,
+        feedback: "That's right! Polegate - our special camping spot with so many beautiful memories! ⛺💕"
+    },
+    {
+        question: "When did we get married?",
+        options: ["April 12th", "May 5th", "June 20th", "July 8th"],
+        correct: 1,
+        feedback: "How could we forget! May 5th - the best day of our lives! Forever and always! 💍❤️"
+    },
+    {
+        question: "What Pringles flavour is my favourite?",
+        options: ["Original", "Sour Cream & Onion", "Prawn Cocktail", "BBQ"],
+        correct: 2,
+        feedback: "Spot on! Prawn Cocktail Pringles are the best! You know me so well! 🦐😋"
+    },
+    {
+        question: "What restaurant in Eastbourne was our favourite?",
+        options: ["The Greek", "Buffet Time", "The Griddle", "Bella Italia"],
+        correct: 1,
+        feedback: "Absolutely! Buffet Time in Eastbourne - so many great meals and memories there! 🍜💖"
+    }
+];
 
-// Hide loading overlay once page is ready
+let currentQuestion = 0;
+let score = 0;
+let selectedAnswer = null;
+
+// Performance optimization
 window.addEventListener('load', () => {
     setTimeout(() => {
         document.getElementById('loadingOverlay').classList.add('hidden');
     }, 500);
 });
 
-// MUSIC - Optimized for iOS
+// Audio
 let musicStarted = false;
-let audioContext;
-
 function initAudio() {
     if (!musicStarted) {
         const music = document.getElementById("bgMusic");
-        
-        // iOS requires user interaction to play audio
         const playPromise = music.play();
-        
         if (playPromise !== undefined) {
-            playPromise
-                .then(() => {
-                    music.volume = 0.25;
-                    musicStarted = true;
-                })
-                .catch(e => {
-                    console.log("Audio autoplay prevented - will retry on next interaction");
-                });
+            playPromise.then(() => {
+                music.volume = 0.25;
+                musicStarted = true;
+            }).catch(e => console.log("Audio autoplay prevented"));
         }
     }
 }
 
-// Try to start music on any interaction
 ['touchstart', 'click'].forEach(event => {
     document.body.addEventListener(event, initAudio, { once: true, passive: true });
 });
 
-// CANVAS SETUP - Optimized for iPhone display
+// Canvas setup
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-
-// Use device pixel ratio for sharp rendering on retina displays
-const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for performance
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
 canvas.width = window.innerWidth * dpr;
 canvas.height = window.innerHeight * dpr;
 canvas.style.width = window.innerWidth + 'px';
 canvas.style.height = window.innerHeight + 'px';
 ctx.scale(dpr, dpr);
 
-// Optimized resize handler with debounce
 let resizeTimeout;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
@@ -535,10 +771,9 @@ window.addEventListener('resize', () => {
     }, 250);
 }, { passive: true });
 
-// Reduced star count for mobile performance
+// Stars
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 const starCount = isMobile ? 150 : 250;
-
 let stars = [];
 for (let i = 0; i < starCount; i++) {
     stars.push({
@@ -551,9 +786,7 @@ for (let i = 0; i < starCount; i++) {
     });
 }
 
-// Shooting stars - less frequent on mobile
 let shootingStars = [];
-
 function createShootingStar() {
     const threshold = isMobile ? 0.008 : 0.015;
     if (Math.random() < threshold) {
@@ -568,11 +801,9 @@ function createShootingStar() {
     }
 }
 
-// Fireworks - optimized particle count
 let fireworks = [];
 const maxFireworks = isMobile ? 500 : 1000;
 
-// Optimized animation loop
 let lastTime = 0;
 const targetFPS = 60;
 const frameInterval = 1000 / targetFPS;
@@ -582,33 +813,27 @@ function draw(currentTime) {
     
     if (deltaTime >= frameInterval) {
         lastTime = currentTime - (deltaTime % frameInterval);
-        
         ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-        // Draw twinkling stars
         stars.forEach(s => {
             const alpha = (Math.sin(s.twinkle) + 1) / 2 * 0.5 + 0.5;
             ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
             ctx.beginPath();
             ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
             ctx.fill();
-            
             s.y += s.speed;
             s.twinkle += s.twinkleSpeed;
-            
             if (s.y > window.innerHeight) {
                 s.y = 0;
                 s.x = Math.random() * window.innerWidth;
             }
         });
 
-        // Draw shooting stars with life check
         shootingStars.forEach((star, index) => {
             if (star.life <= 0) {
                 shootingStars.splice(index, 1);
                 return;
             }
-            
             const alpha = star.life / 60;
             ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
             ctx.lineWidth = 2;
@@ -619,13 +844,11 @@ function draw(currentTime) {
                 star.y - Math.sin(star.angle) * star.length
             );
             ctx.stroke();
-            
             star.x += Math.cos(star.angle) * star.speed;
             star.y += Math.sin(star.angle) * star.speed;
             star.life--;
         });
 
-        // Draw fireworks
         if (fireworks.length > 0) {
             fireworks.forEach((f, index) => {
                 ctx.fillStyle = f.color;
@@ -633,12 +856,10 @@ function draw(currentTime) {
                 ctx.beginPath();
                 ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2);
                 ctx.fill();
-                
                 f.x += f.vx;
                 f.y += f.vy;
                 f.vy += 0.12;
                 f.life--;
-
                 if (f.life <= 0) fireworks.splice(index, 1);
             });
             ctx.globalAlpha = 1;
@@ -646,38 +867,31 @@ function draw(currentTime) {
 
         createShootingStar();
     }
-    
     requestAnimationFrame(draw);
 }
 
-// Start animation
 requestAnimationFrame(draw);
 
-// Valentine's Celebration Flow
+// Hearts
 let heartsInterval;
-
-function startCelebration() {
-    document.getElementById("initialScreen").classList.add("hidden");
-    document.getElementById("celebrationSection").classList.remove("hidden");
-    
-    // Create floating hearts - reduced frequency for performance
-    createFloatingHearts();
-}
-
 function createFloatingHearts() {
     const heartFrequency = isMobile ? 1500 : 1000;
     heartsInterval = setInterval(() => {
-        if (document.getElementById("celebrationSection").classList.contains("hidden")) return;
-        
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.textContent = Math.random() > 0.5 ? "❤️" : "💕";
         heart.style.left = Math.random() * window.innerWidth + "px";
         heart.style.animationDelay = Math.random() * 2 + "s";
         document.body.appendChild(heart);
-        
         setTimeout(() => heart.remove(), 4000);
     }, heartFrequency);
+}
+
+// Flow functions
+function startCelebration() {
+    document.getElementById("initialScreen").classList.add("hidden");
+    document.getElementById("giftSection").classList.remove("hidden");
+    createFloatingHearts();
 }
 
 function openGift() {
@@ -685,67 +899,165 @@ function openGift() {
     const giftContent = document.getElementById("giftContent");
     const loveMessage = document.getElementById("loveMessage");
     const memoryCards = document.getElementById("memoryCards");
-    const celebrateBtn = document.getElementById("celebrateBtn");
+    const quizBtn = document.getElementById("quizBtn");
     const giftBox = document.getElementById("giftBox");
     const tapHint = document.getElementById("tapHint");
     
-    // Prevent multiple taps
     if (giftBox.classList.contains('opened')) return;
     giftBox.classList.add('opened');
     giftBox.style.pointerEvents = "none";
-    
-    // Hide tap hint
     tapHint.style.display = 'none';
     
-    // Haptic feedback (if supported)
-    if (window.navigator.vibrate) {
-        window.navigator.vibrate(50);
-    }
+    if (window.navigator.vibrate) window.navigator.vibrate(50);
     
     lid.style.transform = "rotateX(120deg)";
-    
     setTimeout(() => {
         giftContent.classList.add("show");
         if (window.navigator.vibrate) window.navigator.vibrate(30);
     }, 400);
-    
-    setTimeout(() => {
-        loveMessage.classList.add("show");
-    }, 1000);
-    
-    setTimeout(() => {
-        memoryCards.classList.add("show");
-    }, 1700);
-    
-    setTimeout(() => {
-        celebrateBtn.classList.remove("hidden");
-    }, 2500);
+    setTimeout(() => loveMessage.classList.add("show"), 1000);
+    setTimeout(() => memoryCards.classList.add("show"), 1700);
+    setTimeout(() => quizBtn.classList.remove("hidden"), 2500);
 }
 
-// Celebration with optimized fireworks
-function celebrate() {
-    const finalMessage = document.getElementById("finalMessage");
-    const celebrateBtn = document.getElementById("celebrateBtn");
+// Quiz Functions
+function startQuiz() {
+    document.getElementById("giftSection").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
+    currentQuestion = 0;
+    score = 0;
+    selectedAnswer = null;
+    renderQuizProgress();
+    renderQuestion();
+}
+
+function renderQuizProgress() {
+    const progressContainer = document.getElementById("quizProgress");
+    progressContainer.innerHTML = '';
+    for (let i = 0; i < quizQuestions.length; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot';
+        if (i < currentQuestion) dot.classList.add('completed');
+        if (i === currentQuestion) dot.classList.add('active');
+        progressContainer.appendChild(dot);
+    }
+}
+
+function renderQuestion() {
+    const container = document.getElementById("quizContainer");
+    const question = quizQuestions[currentQuestion];
     
-    celebrateBtn.classList.add("hidden");
-    finalMessage.classList.remove("hidden");
-    finalMessage.classList.add("show");
+    container.innerHTML = `
+        <div class="quiz-question fade-in">
+            <div class="question-number">Question ${currentQuestion + 1} of ${quizQuestions.length}</div>
+            <div class="question-text">${question.question}</div>
+            <div class="quiz-options" id="quizOptions">
+                ${question.options.map((option, index) => `
+                    <div class="quiz-option" onclick="selectAnswer(${index})" data-index="${index}">
+                        ${option}
+                    </div>
+                `).join('')}
+            </div>
+            <div class="quiz-feedback" id="quizFeedback"></div>
+        </div>
+    `;
     
-    // Haptic feedback
-    if (window.navigator.vibrate) {
-        window.navigator.vibrate([50, 100, 50]);
+    selectedAnswer = null;
+    document.getElementById("nextBtn").classList.add("hidden");
+}
+
+function selectAnswer(index) {
+    if (selectedAnswer !== null) return;
+    
+    selectedAnswer = index;
+    const question = quizQuestions[currentQuestion];
+    const options = document.querySelectorAll('.quiz-option');
+    const feedback = document.getElementById('quizFeedback');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (window.navigator.vibrate) window.navigator.vibrate(30);
+    
+    options.forEach((option, i) => {
+        option.style.pointerEvents = 'none';
+        if (i === question.correct) {
+            option.classList.add('correct');
+        } else if (i === index && index !== question.correct) {
+            option.classList.add('incorrect');
+        }
+    });
+    
+    if (index === question.correct) {
+        score++;
+        feedback.className = 'quiz-feedback correct show';
+        feedback.innerHTML = `✓ Correct! ${question.feedback}`;
+        if (window.navigator.vibrate) window.navigator.vibrate([50, 50, 50]);
+    } else {
+        feedback.className = 'quiz-feedback incorrect show';
+        feedback.innerHTML = `✗ Oops! ${question.feedback}`;
+        if (window.navigator.vibrate) window.navigator.vibrate(200);
     }
     
-    // Optimized firework bursts
+    setTimeout(() => {
+        nextBtn.classList.remove("hidden");
+    }, 1500);
+}
+
+function nextQuestion() {
+    currentQuestion++;
+    renderQuizProgress();
+    
+    if (currentQuestion < quizQuestions.length) {
+        renderQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function showResults() {
+    document.getElementById("quizSection").classList.add("hidden");
+    document.getElementById("resultsSection").classList.remove("hidden");
+    
+    const percentage = Math.round((score / quizQuestions.length) * 100);
+    let emoji, message, rating;
+    
+    if (percentage === 100) {
+        emoji = "💯";
+        message = "PERFECT SCORE! 🎉";
+        rating = "You two are SOULMATES! You know each other inside and out. This is true love! 💕";
+    } else if (percentage >= 75) {
+        emoji = "😍";
+        message = `${score} out of ${quizQuestions.length} correct!`;
+        rating = "Amazing! You know each other so well. Your connection is truly special! ✨";
+    } else if (percentage >= 50) {
+        emoji = "💕";
+        message = `${score} out of ${quizQuestions.length} correct!`;
+        rating = "Great job! You're learning more about each other every day. Keep making memories! 🌟";
+    } else {
+        emoji = "❤️";
+        message = `${score} out of ${quizQuestions.length} correct!`;
+        rating = "Every relationship is a journey! You're creating new memories together every day! 💑";
+    }
+    
+    document.getElementById("resultsEmoji").textContent = emoji;
+    document.getElementById("resultsScore").textContent = message;
+    document.getElementById("resultsMessage").textContent = `You got ${percentage}% correct!`;
+    document.getElementById("resultsRating").textContent = rating;
+}
+
+function celebrate() {
+    document.getElementById("resultsSection").classList.add("hidden");
+    document.getElementById("finalMessage").classList.remove("hidden");
+    document.getElementById("finalMessage").classList.add("show");
+    
+    if (window.navigator.vibrate) window.navigator.vibrate([50, 100, 50]);
+    
     const burstCount = isMobile ? 4 : 6;
     let currentBurst = 0;
     const burstInterval = setInterval(() => {
         createFireworkBurst();
         currentBurst++;
-        
         if (currentBurst >= burstCount) {
             clearInterval(burstInterval);
-            // Occasional bursts after initial celebration
             setInterval(() => {
                 if (fireworks.length < maxFireworks / 2) {
                     createFireworkBurst();
@@ -761,13 +1073,11 @@ function createFireworkBurst() {
     const colors = ['#ff1744', '#ff4569', '#ffd700', '#ff69b4', '#ff1493'];
     const particleCount = isMobile ? 50 : 80;
     
-    // Don't exceed max particles
     if (fireworks.length > maxFireworks) return;
     
     for (let i = 0; i < particleCount; i++) {
         const angle = (Math.PI * 2 * i) / particleCount;
         const velocity = Math.random() * 3.5 + 2;
-        
         fireworks.push({
             x: x,
             y: y,
@@ -779,16 +1089,12 @@ function createFireworkBurst() {
     }
 }
 
-// Cleanup on page unload
 window.addEventListener('beforeunload', () => {
     if (heartsInterval) clearInterval(heartsInterval);
 });
 
-// Prevent iOS rubber band scrolling
 document.body.addEventListener('touchmove', (e) => {
-    if (e.target === document.body) {
-        e.preventDefault();
-    }
+    if (e.target === document.body) e.preventDefault();
 }, { passive: false });
 </script>
 
