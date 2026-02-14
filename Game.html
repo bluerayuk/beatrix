@@ -2,17 +2,68 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Beatrix ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Catch the Love - For Beatrix ❤️</title>
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
 body {
     margin: 0;
     overflow: hidden;
     background: linear-gradient(to bottom, #ff758c, #ff7eb3);
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Arial', sans-serif;
     text-align: center;
     touch-action: none;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Header */
+.header {
+    position: relative;
+    z-index: 100;
+    padding: 15px;
+    background: rgba(0,0,0,0.2);
+}
+
+h1 {
+    color: white;
+    font-size: 22px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    margin-bottom: 5px;
+}
+
+#scoreBoard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stat {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+}
+
+#combo {
+    color: #FFD700;
+    font-size: 20px;
+    transform: scale(1);
+    transition: transform 0.2s;
+}
+
+#combo.pulse {
+    transform: scale(1.3);
 }
 
 /* Sparkles */
@@ -24,6 +75,7 @@ body {
     border-radius: 50%;
     opacity: 0.8;
     animation: sparkleFloat 4s linear infinite;
+    pointer-events: none;
 }
 
 @keyframes sparkleFloat {
@@ -32,43 +84,76 @@ body {
     to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
 }
 
-h1 {
-    color: white;
-    margin-top: 15px;
-    font-size: 22px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
-}
-
-#score {
-    color: white;
-    font-size: 18px;
-}
-
 #gameArea {
     position: relative;
     width: 100vw;
-    height: 85vh;
+    height: calc(100vh - 100px);
+    overflow: hidden;
 }
 
-.heart {
+/* Hearts and Items */
+.heart, .powerup, .bomb {
     position: absolute;
     font-size: 28px;
     animation: fall linear;
+    cursor: pointer;
+    user-select: none;
+}
+
+.powerup {
+    font-size: 32px;
+    animation: fall linear, spin 2s linear infinite;
+}
+
+.bomb {
+    font-size: 30px;
+    animation: fallWobble linear;
 }
 
 @keyframes fall {
     from { transform: translateY(-50px); }
-    to { transform: translateY(100vh); }
+    to { transform: translateY(calc(100vh + 50px)); }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes wobble {
+    0%, 100% { transform: translateY(var(--fall-pos)) rotate(-5deg); }
+    50% { transform: translateY(var(--fall-pos)) rotate(5deg); }
+}
+
+@keyframes fallWobble {
+    from { transform: translateY(-50px) rotate(-5deg); }
+    25% { transform: translateY(calc(25vh)) rotate(5deg); }
+    50% { transform: translateY(calc(50vh)) rotate(-5deg); }
+    75% { transform: translateY(calc(75vh)) rotate(5deg); }
+    to { transform: translateY(calc(100vh + 50px)) rotate(-5deg); }
 }
 
 #basket {
     position: absolute;
-    bottom: 15px;
-    font-size: 55px;
+    bottom: 20px;
+    font-size: 60px;
     left: 50%;
     transform: translateX(-50%);
+    transition: left 0.05s linear;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    z-index: 10;
 }
 
+#basket.invincible {
+    animation: rainbow 0.5s linear infinite;
+}
+
+@keyframes rainbow {
+    0% { filter: hue-rotate(0deg) drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+    100% { filter: hue-rotate(360deg) drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+}
+
+/* Messages */
 #message {
     position: absolute;
     top: 35%;
@@ -78,20 +163,31 @@ h1 {
     display: none;
     padding: 0 20px;
     animation: fadeIn 2s ease-in-out;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+#popupText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 3px 3px 10px rgba(0,0,0,0.8);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1000;
 }
 
-/* Floating Love Messages */
 .loveText {
     position: absolute;
     color: white;
     font-size: 16px;
     opacity: 0.8;
     animation: floatLove 6s linear forwards;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    pointer-events: none;
 }
 
 @keyframes floatLove {
@@ -99,86 +195,478 @@ h1 {
     20% { opacity: 1; }
     to { transform: translateY(-20vh); opacity: 0; }
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Back button */
+.backBtn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.3);
+    border: 2px solid white;
+    border-radius: 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    z-index: 101;
+    transition: all 0.2s;
+}
+
+.backBtn:active {
+    transform: scale(0.95);
+    background: rgba(255,255,255,0.5);
+}
+
+/* Difficulty selector */
+#difficultySelect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    padding: 30px;
+    border-radius: 20px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#difficultySelect h2 {
+    color: #ff758c;
+    margin-bottom: 20px;
+}
+
+.diffBtn {
+    display: block;
+    width: 200px;
+    margin: 10px auto;
+    padding: 15px;
+    background: linear-gradient(145deg, #ff758c, #ff7eb3);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.diffBtn:active {
+    transform: scale(0.95);
+}
 </style>
 </head>
 
 <body>
 
-<h1>Catch the Love, Beatrix ❤️</h1>
-<div id="score">Hearts Collected: 0</div>
+<a href="index.html" class="backBtn">← Back</a>
+
+<div id="difficultySelect">
+    <h2>Choose Your Challenge!</h2>
+    <button class="diffBtn" onclick="startGame('easy')">😊 Easy - Chill Vibes</button>
+    <button class="diffBtn" onclick="startGame('normal')">😎 Normal - Fun Times</button>
+    <button class="diffBtn" onclick="startGame('hard')">🔥 Hard - Pro Catcher!</button>
+</div>
+
+<div class="header">
+    <h1>Catch the Love, Beatrix ❤️</h1>
+    <div id="scoreBoard">
+        <div class="stat">❤️ <span id="score">0</span></div>
+        <div class="stat">⚡ <span id="streak">0</span></div>
+        <div class="stat" id="combo"></div>
+    </div>
+</div>
 
 <div id="gameArea">
     <div id="basket">💖</div>
     <div id="message">Beatrix, I Love You Forever ❤️</div>
+    <div id="popupText"></div>
 </div>
 
-<audio id="bgMusic" autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c8a5a3e53.mp3?filename=romantic-love-11551.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+    <source src="1.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 let score = 0;
+let streak = 0;
+let maxStreak = 0;
+let combo = 0;
+let invincible = false;
+let speedBoost = false;
+let gameStarted = false;
+let difficulty = 'normal';
+
 const basket = document.getElementById("basket");
 const gameArea = document.getElementById("gameArea");
 const scoreDisplay = document.getElementById("score");
+const streakDisplay = document.getElementById("streak");
+const comboDisplay = document.getElementById("combo");
 const message = document.getElementById("message");
 const music = document.getElementById("bgMusic");
+const popupText = document.getElementById("popupText");
+
+let spawnInterval;
+let basketSpeed = 1;
 
 const loveMessages = [
     "You are my forever ❤️",
     "My heart is yours 💕",
     "You are my dream ✨",
     "Always and forever 💖",
-    "My beautiful Beatrix 💫"
+    "My beautiful Beatrix 💫",
+    "You complete me 🌟",
+    "Forever yours 💝",
+    "You're amazing! 🎉"
 ];
 
+const funnyMessages = [
+    "BOINK! 😄",
+    "Nice catch! 🎯",
+    "Smooth! 😎",
+    "On fire! 🔥",
+    "Wow! ⚡",
+    "Perfect! ✨",
+    "Combo! 💥",
+    "Streak! 🌟"
+];
+
+// Sound effects using Web Audio API
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+    try {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        switch(type) {
+            case 'catch':
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 800 + (combo * 50);
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
+                break;
+                
+            case 'powerup':
+                oscillator.type = 'square';
+                oscillator.frequency.value = 600;
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                oscillator.start(audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.2);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.stop(audioContext.currentTime + 0.2);
+                break;
+                
+            case 'bomb':
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.value = 100;
+                gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+                break;
+                
+            case 'combo':
+                for (let i = 0; i < 3; i++) {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    osc.type = 'sine';
+                    osc.frequency.value = 800 + (i * 200);
+                    gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.05 + 0.1);
+                    osc.start(audioContext.currentTime + i * 0.05);
+                    osc.stop(audioContext.currentTime + i * 0.05 + 0.1);
+                }
+                break;
+                
+            case 'win':
+                const notes = [523.25, 587.33, 659.25, 783.99, 880.00];
+                notes.forEach((freq, i) => {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.1 + 0.3);
+                    osc.start(audioContext.currentTime + i * 0.1);
+                    osc.stop(audioContext.currentTime + i * 0.1 + 0.3);
+                });
+                break;
+                
+            case 'easteregg':
+                // Funny painful "OW!" sound
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.value = 400;
+                gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                oscillator.start(audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.2);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.stop(audioContext.currentTime + 0.2);
+                break;
+                
+            case 'spawn':
+                // Funny bouncy "BOING!" sound when it appears
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 200;
+                gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                oscillator.start(audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.15);
+                oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.25);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+                oscillator.stop(audioContext.currentTime + 0.25);
+                break;
+        }
+        
+        if (window.navigator.vibrate) {
+            if (type === 'catch') window.navigator.vibrate(10);
+            if (type === 'powerup') window.navigator.vibrate([20, 50, 20]);
+            if (type === 'bomb') window.navigator.vibrate(200);
+            if (type === 'combo') window.navigator.vibrate([10, 30, 10, 30, 10]);
+            if (type === 'easteregg') window.navigator.vibrate(300); // Long painful vibration
+        }
+    } catch(e) {
+        console.log('Sound error:', e);
+    }
+}
+
+function startGame(diff) {
+    difficulty = diff;
+    gameStarted = true;
+    document.getElementById('difficultySelect').style.display = 'none';
+    
+    music.play().catch(e => console.log('Music play failed:', e));
+    
+    let spawnRate = 800;
+    if (diff === 'easy') spawnRate = 1200;
+    if (diff === 'hard') spawnRate = 500;
+    
+    spawnInterval = setInterval(createItem, spawnRate);
+    setInterval(createSparkle, 300);
+    setInterval(createLoveText, 3000);
+}
+
 /* Touch + Mouse control */
+let basketX = window.innerWidth / 2;
+
 document.addEventListener("touchmove", (e) => {
-    basket.style.left = e.touches[0].clientX - 30 + "px";
+    basketX = e.touches[0].clientX;
+    updateBasketPosition();
 });
 
 document.addEventListener("mousemove", (e) => {
-    basket.style.left = e.clientX - 30 + "px";
+    basketX = e.clientX;
+    updateBasketPosition();
 });
 
+function updateBasketPosition() {
+    basket.style.left = basketX + "px";
+}
+
 document.addEventListener("touchstart", () => {
-    music.play();
+    if (gameStarted) music.play();
 }, { once: true });
 
-/* Falling Hearts */
+/* Create falling items */
+function createItem() {
+    const rand = Math.random();
+    let item;
+    
+    if (rand < 0.25) {
+        // Regular heart
+        item = createHeart();
+    } else if (rand < 0.35) {
+        // Power-up
+        item = createPowerup();
+    } else if (rand < 0.40) {
+        // Bomb
+        item = createBomb();
+    } else {
+        // Flying penis easter egg (60% chance - it's EVERYWHERE!)
+        item = createEasterEgg();
+    }
+}
+
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+    const hearts = ["❤️", "💕", "💖", "💗", "💓", "💝"];
+    heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+    heart.style.left = Math.random() * (window.innerWidth - 50) + "px";
+    heart.style.animationDuration = (2 + Math.random() * 2) + "s";
+    if (difficulty === 'hard') heart.style.animationDuration = (1.5 + Math.random() * 1) + "s";
+    if (difficulty === 'easy') heart.style.animationDuration = (3 + Math.random() * 2) + "s";
     gameArea.appendChild(heart);
 
     const fallCheck = setInterval(() => {
-        const heartRect = heart.getBoundingClientRect();
-        const basketRect = basket.getBoundingClientRect();
-
-        if (
-            heartRect.bottom >= basketRect.top &&
-            heartRect.left < basketRect.right &&
-            heartRect.right > basketRect.left
-        ) {
-            score++;
-            scoreDisplay.textContent = "Hearts Collected: " + score;
-            heart.remove();
-            clearInterval(fallCheck);
-
-            if (score >= 20) {
-                message.style.display = "block";
-                clearInterval(spawnInterval);
-            }
-        }
-
-        if (heartRect.top > window.innerHeight) {
-            heart.remove();
-            clearInterval(fallCheck);
-        }
+        checkCollision(heart, 'heart', fallCheck);
     }, 50);
+}
+
+function createPowerup() {
+    const powerup = document.createElement("div");
+    powerup.classList.add("powerup");
+    const powerups = ["⭐", "💫", "✨", "🌟"];
+    powerup.innerHTML = powerups[Math.floor(Math.random() * powerups.length)];
+    powerup.style.left = Math.random() * (window.innerWidth - 50) + "px";
+    powerup.style.animationDuration = (2 + Math.random() * 2) + "s";
+    gameArea.appendChild(powerup);
+
+    const fallCheck = setInterval(() => {
+        checkCollision(powerup, 'powerup', fallCheck);
+    }, 50);
+}
+
+function createBomb() {
+    const bomb = document.createElement("div");
+    bomb.classList.add("bomb");
+    bomb.innerHTML = "💣";
+    bomb.style.left = Math.random() * (window.innerWidth - 50) + "px";
+    bomb.style.animationDuration = (2 + Math.random() * 1.5) + "s";
+    gameArea.appendChild(bomb);
+
+    const fallCheck = setInterval(() => {
+        checkCollision(bomb, 'bomb', fallCheck);
+    }, 50);
+}
+
+function createEasterEgg() {
+    const egg = document.createElement("div");
+    egg.classList.add("bomb"); // Using bomb class for wobble effect
+    egg.innerHTML = "🍆";
+    egg.style.left = Math.random() * (window.innerWidth - 50) + "px";
+    egg.style.animationDuration = (1.5 + Math.random() * 1) + "s";
+    egg.style.fontSize = "35px";
+    gameArea.appendChild(egg);
+    
+    // Play funny "BOING!" sound when it appears
+    playSound('spawn');
+
+    const fallCheck = setInterval(() => {
+        checkCollision(egg, 'easteregg', fallCheck);
+    }, 50);
+}
+
+function checkCollision(item, type, fallCheck) {
+    const itemRect = item.getBoundingClientRect();
+    const basketRect = basket.getBoundingClientRect();
+
+    if (
+        itemRect.bottom >= basketRect.top &&
+        itemRect.left < basketRect.right &&
+        itemRect.right > basketRect.left
+    ) {
+        if (type === 'heart') {
+            score++;
+            streak++;
+            combo++;
+            scoreDisplay.textContent = score;
+            streakDisplay.textContent = streak;
+            
+            if (combo > 2) {
+                comboDisplay.textContent = `${combo}x COMBO!`;
+                comboDisplay.classList.add('pulse');
+                setTimeout(() => comboDisplay.classList.remove('pulse'), 200);
+                playSound('combo');
+                showPopup(funnyMessages[Math.floor(Math.random() * funnyMessages.length)]);
+            } else {
+                playSound('catch');
+            }
+            
+            if (streak > maxStreak) maxStreak = streak;
+            
+        } else if (type === 'powerup') {
+            score += 5;
+            scoreDisplay.textContent = score;
+            playSound('powerup');
+            showPopup("⭐ +5 BONUS! ⭐");
+            activatePowerup();
+            
+        } else if (type === 'bomb') {
+            if (!invincible) {
+                score = Math.max(0, score - 3);
+                streak = 0;
+                combo = 0;
+                scoreDisplay.textContent = score;
+                streakDisplay.textContent = streak;
+                comboDisplay.textContent = "";
+                playSound('bomb');
+                showPopup("💥 OOPS! -3");
+            } else {
+                showPopup("🛡️ PROTECTED!");
+            }
+        } else if (type === 'easteregg') {
+            // Easter egg now hurts!
+            score = Math.max(0, score - 5);
+            streak = 0;
+            combo = 0;
+            scoreDisplay.textContent = score;
+            streakDisplay.textContent = streak;
+            comboDisplay.textContent = "";
+            playSound('easteregg');
+            showPopup("🍆 OUCH! -5 😂");
+        }
+        
+        item.remove();
+        clearInterval(fallCheck);
+
+        if (score >= 30) {
+            message.style.display = "block";
+            clearInterval(spawnInterval);
+            playSound('win');
+            showPopup("🎉 YOU WIN! 🎉");
+        }
+    }
+
+    if (itemRect.top > window.innerHeight) {
+        item.remove();
+        clearInterval(fallCheck);
+        if (type === 'heart') {
+            streak = 0;
+            combo = 0;
+            streakDisplay.textContent = streak;
+            comboDisplay.textContent = "";
+        }
+    }
+}
+
+function activatePowerup() {
+    invincible = true;
+    basket.classList.add('invincible');
+    setTimeout(() => {
+        invincible = false;
+        basket.classList.remove('invincible');
+    }, 3000);
+}
+
+function showPopup(text) {
+    popupText.textContent = text;
+    popupText.style.opacity = 1;
+    popupText.style.transform = 'translate(-50%, -50%) scale(1)';
+    
+    setTimeout(() => {
+        popupText.style.transition = 'all 0.5s ease-out';
+        popupText.style.opacity = 0;
+        popupText.style.transform = 'translate(-50%, -80%) scale(0.5)';
+    }, 800);
+    
+    setTimeout(() => {
+        popupText.style.transition = '';
+    }, 1300);
 }
 
 /* Sparkles */
@@ -188,7 +676,6 @@ function createSparkle() {
     sparkle.style.left = Math.random() * window.innerWidth + "px";
     sparkle.style.animationDuration = (3 + Math.random() * 3) + "s";
     document.body.appendChild(sparkle);
-
     setTimeout(() => sparkle.remove(), 6000);
 }
 
@@ -197,15 +684,10 @@ function createLoveText() {
     const text = document.createElement("div");
     text.classList.add("loveText");
     text.innerHTML = loveMessages[Math.floor(Math.random() * loveMessages.length)];
-    text.style.left = Math.random() * window.innerWidth + "px";
+    text.style.left = Math.random() * (window.innerWidth - 200) + "px";
     document.body.appendChild(text);
-
     setTimeout(() => text.remove(), 6000);
 }
-
-const spawnInterval = setInterval(createHeart, 800);
-setInterval(createSparkle, 300);
-setInterval(createLoveText, 2500);
 
 </script>
 
