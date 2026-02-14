@@ -2,11 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#ff758c">
 <title>Catch the Love - For Beatrix ❤️</title>
+
+<script>
+// Set background IMMEDIATELY on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.style.backgroundColor = '#ff758c';
+    document.body.style.backgroundImage = 'linear-gradient(to bottom, #ff758c, #ff7eb3)';
+    console.log('IMMEDIATE: Background set on page load');
+});
+</script>
 
 <style>
 * {
@@ -14,6 +26,11 @@
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    background: #ff758c;
+    height: 100%;
 }
 
 body {
@@ -31,37 +48,49 @@ body {
     transition: background 1s ease;
 }
 
-/* Level-specific backgrounds */
-body.level-1 {
-    background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+
+/* Animated background particles */
+.bg-particle {
+    position: fixed;
+    top: -60px;
+    pointer-events: none;
+    z-index: 1;
 }
 
-body.level-2 {
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(168, 237, 234, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(254, 214, 227, 0.3) 0%, transparent 50%),
-        linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+.bg-particle.falling {
+    animation: bgFall linear forwards;
 }
 
-body.level-3 {
-    background: 
-        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.1) 35px, rgba(255, 255, 255, 0.1) 70px),
-        linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+@keyframes bgFall {
+    0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(110vh) rotate(400deg); opacity: 0; }
 }
 
-body.level-4 {
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(224, 195, 252, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 90% 60%, rgba(142, 197, 252, 0.4) 0%, transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(224, 195, 252, 0.3) 0%, transparent 50%),
-        linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+@keyframes bgDrift {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(110vh) translateX(40px) rotate(360deg); opacity: 0; }
 }
 
-body.level-5 {
-    background: 
-        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 215, 0, 0.1) 50px, rgba(255, 215, 0, 0.1) 100px),
-        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(25, 84, 123, 0.1) 50px, rgba(25, 84, 123, 0.1) 100px),
-        linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+@keyframes bgFloat {
+    0%,100% { transform: translateY(0) scale(1);   opacity: 0.7; }
+    50%      { transform: translateY(-12px) scale(1.15); opacity: 1; }
+}
+
+@keyframes bgCloudFloat {
+    0%   { transform: translateX(-220px); }
+    100% { transform: translateX(calc(100vw + 220px)); }
+}
+
+@keyframes bgBubble {
+    0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
+    20%  { opacity: 0.8; }
+    100% { transform: translateY(-80px)  scale(1.2); opacity: 0; }
+}
+
+@keyframes bgPulse {
+    0%,100% { transform: scale(1);   opacity: 0.6; }
+    50%      { transform: scale(1.3); opacity: 1;   }
 }
 
 /* Header */
@@ -116,11 +145,6 @@ h1 {
     animation: sparkleFloat 4s linear infinite;
     pointer-events: none;
 }
-
-body.level-2 .sparkle { background: #a8edea; }
-body.level-3 .sparkle { background: #fcb69f; }
-body.level-4 .sparkle { background: #e0c3fc; }
-body.level-5 .sparkle { background: #ffd89b; }
 
 @keyframes sparkleFloat {
     from { transform: translateY(100vh) scale(0.5); opacity: 0; }
@@ -541,7 +565,7 @@ body.level-5 .sparkle { background: #ffd89b; }
 }
 </style>
 </head>
-<body class="level-1">
+<body>
 
 <!-- Sound Toggle -->
 <button id="soundToggle" onclick="toggleSound()">🔊</button>
@@ -570,6 +594,7 @@ body.level-5 .sparkle { background: #ffd89b; }
             <button class="difficulty-btn selected" onclick="selectDifficulty('medium')">Medium</button>
             <button class="difficulty-btn" onclick="selectDifficulty('hard')">Hard</button>
         </div>
+        
         <button class="menu-button" onclick="startGame()" style="margin-top: 20px;">Start! 🚀</button>
     </div>
     
@@ -635,7 +660,7 @@ body.level-5 .sparkle { background: #ffd89b; }
 <div id="gameArea">
     <div id="message"></div>
     <div id="popupText"></div>
-    <div id="basket"><img id="basketImg" src="me.png" style="height:90px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));"></div>
+    <div id="basket"><img id="basketImg" src="me.jpg" style="height:90px;width:auto;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));"></div>
 </div>
 
 <!-- Love Overlay -->
@@ -647,38 +672,10 @@ body.level-5 .sparkle { background: #ffd89b; }
 
 <script>
 /* Base64 Images */
-const ME_SAD = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FFE4C4'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M 30 70 Q 50 60 70 70' fill='none' stroke='%23000' stroke-width='3'/%3E%3C/svg%3E";
-const ME_HAPPY = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FFE4C4'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23000'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23000'/%3E%3Cpath d='M 30 60 Q 50 75 70 60' fill='none' stroke='%23000' stroke-width='3'/%3E%3C/svg%3E";
+const ME_SAD = "me2.jpg";
+const ME_HAPPY = "me3.jpg";
 
 /* Level Themes */
-const levelThemes = {
-    1: {
-        name: "Sweet Beginnings",
-        description: "Pink skies of love",
-        className: "level-1"
-    },
-    2: {
-        name: "Ocean of Dreams",
-        description: "Aqua waves of affection",
-        className: "level-2"
-    },
-    3: {
-        name: "Sunset Romance",
-        description: "Warm peach glow",
-        className: "level-3"
-    },
-    4: {
-        name: "Starlight Magic",
-        description: "Purple cosmic love",
-        className: "level-4"
-    },
-    5: {
-        name: "Golden Horizon",
-        description: "The final adventure",
-        className: "level-5"
-    }
-};
-
 /* Game Variables */
 const basket = document.getElementById("basket");
 const gameArea = document.getElementById("gameArea");
@@ -704,6 +701,7 @@ let invincible = false;
 let doublePoints = false;
 let soundEnabled = true;
 let highScore = localStorage.getItem('beatrix_highscore') || 0;
+let themeAnimationInterval;
 document.getElementById('menuHighScore').textContent = highScore;
 
 /* Love messages */
@@ -725,38 +723,235 @@ const funnyMessages = [
     "🎯 LEGEND!"
 ];
 
-/* Sound Effects */
-const sounds = {
-    catch: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    bomb: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    powerup: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    combo: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    levelup: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    gameover: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    win: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    easteregg: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA='),
-    spawn: new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=')
-};
-
-const music = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
-music.loop = true;
-music.volume = 0.3;
+/* ── Web Audio Sound Engine ── */
+let audioCtx = null;
+function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+}
 
 function playSound(type) {
-    if (soundEnabled && sounds[type]) {
-        sounds[type].currentTime = 0;
-        sounds[type].play().catch(() => {});
-    }
+    if (!soundEnabled) return;
+    try {
+        const ctx = getAudioCtx();
+        const t = ctx.currentTime;
+        switch(type) {
+
+            case 'catch': {
+                // Sweet little "ding" — rising tone
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.type = 'sine';
+                o.frequency.setValueAtTime(520, t);
+                o.frequency.linearRampToValueAtTime(880, t + 0.12);
+                g.gain.setValueAtTime(0.35, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                o.start(t); o.stop(t + 0.3);
+                break;
+            }
+
+            case 'combo': {
+                // Fast upward arpeggio
+                [523, 659, 784, 1047].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'triangle';
+                    const st = t + i * 0.07;
+                    o.frequency.setValueAtTime(freq, st);
+                    g.gain.setValueAtTime(0.3, st);
+                    g.gain.exponentialRampToValueAtTime(0.001, st + 0.18);
+                    o.start(st); o.stop(st + 0.18);
+                });
+                break;
+            }
+
+            case 'bomb': {
+                // Deep thud + noise burst
+                const buf = ctx.createBuffer(1, ctx.sampleRate * 0.5, ctx.sampleRate);
+                const data = buf.getChannelData(0);
+                for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3);
+                const src = ctx.createBufferSource();
+                src.buffer = buf;
+                const g = ctx.createGain();
+                const f = ctx.createBiquadFilter();
+                f.type = 'lowpass'; f.frequency.value = 180;
+                src.connect(f); f.connect(g); g.connect(ctx.destination);
+                g.gain.setValueAtTime(1.2, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+                src.start(t);
+
+                // Sub thud
+                const o = ctx.createOscillator();
+                const g2 = ctx.createGain();
+                o.connect(g2); g2.connect(ctx.destination);
+                o.type = 'sine';
+                o.frequency.setValueAtTime(120, t);
+                o.frequency.exponentialRampToValueAtTime(30, t + 0.4);
+                g2.gain.setValueAtTime(0.8, t);
+                g2.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+                o.start(t); o.stop(t + 0.4);
+                break;
+            }
+
+            case 'easteregg': {
+                // Silly descending "womp womp"
+                [400, 300, 220].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'sawtooth';
+                    const st = t + i * 0.15;
+                    o.frequency.setValueAtTime(freq, st);
+                    o.frequency.exponentialRampToValueAtTime(freq * 0.7, st + 0.14);
+                    g.gain.setValueAtTime(0.25, st);
+                    g.gain.exponentialRampToValueAtTime(0.001, st + 0.15);
+                    o.start(st); o.stop(st + 0.15);
+                });
+                break;
+            }
+
+            case 'powerup': {
+                // Sparkling rising sweep
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.type = 'sine';
+                o.frequency.setValueAtTime(330, t);
+                o.frequency.exponentialRampToValueAtTime(1320, t + 0.4);
+                g.gain.setValueAtTime(0.0, t);
+                g.gain.linearRampToValueAtTime(0.4, t + 0.05);
+                g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+                o.start(t); o.stop(t + 0.5);
+                // Shimmer layer
+                const o2 = ctx.createOscillator();
+                const g2 = ctx.createGain();
+                o2.connect(g2); g2.connect(ctx.destination);
+                o2.type = 'triangle';
+                o2.frequency.setValueAtTime(660, t);
+                o2.frequency.exponentialRampToValueAtTime(2640, t + 0.4);
+                g2.gain.setValueAtTime(0.2, t);
+                g2.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+                o2.start(t); o2.stop(t + 0.45);
+                break;
+            }
+
+            case 'levelup': {
+                // Triumphant fanfare — C E G C
+                [262, 330, 392, 523].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'square';
+                    const st = t + i * 0.13;
+                    o.frequency.setValueAtTime(freq, st);
+                    g.gain.setValueAtTime(0.18, st);
+                    g.gain.exponentialRampToValueAtTime(0.001, st + 0.25);
+                    o.start(st); o.stop(st + 0.25);
+                });
+                // Final chord shimmer
+                [523, 659, 784].forEach((freq) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'sine';
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0.12, t + 0.55);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
+                    o.start(t + 0.55); o.stop(t + 1.1);
+                });
+                break;
+            }
+
+            case 'gameover': {
+                // Sad descending trombone
+                [440, 370, 311, 261].forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = 'sawtooth';
+                    const st = t + i * 0.2;
+                    o.frequency.setValueAtTime(freq, st);
+                    o.frequency.linearRampToValueAtTime(freq * 0.88, st + 0.18);
+                    g.gain.setValueAtTime(0.22, st);
+                    g.gain.exponentialRampToValueAtTime(0.001, st + 0.22);
+                    o.start(st); o.stop(st + 0.22);
+                });
+                break;
+            }
+
+            case 'win': {
+                // Big celebratory jingle
+                const melody = [523,659,784,1047,784,1047,1319];
+                melody.forEach((freq, i) => {
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.connect(g); g.connect(ctx.destination);
+                    o.type = i % 2 === 0 ? 'sine' : 'triangle';
+                    const st = t + i * 0.1;
+                    o.frequency.setValueAtTime(freq, st);
+                    g.gain.setValueAtTime(0.25, st);
+                    g.gain.exponentialRampToValueAtTime(0.001, st + 0.2);
+                    o.start(st); o.stop(st + 0.2);
+                });
+                break;
+            }
+
+            case 'spawn': {
+                // Tiny soft pop
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.connect(g); g.connect(ctx.destination);
+                o.type = 'sine';
+                o.frequency.setValueAtTime(900, t);
+                o.frequency.exponentialRampToValueAtTime(400, t + 0.08);
+                g.gain.setValueAtTime(0.15, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+                o.start(t); o.stop(t + 0.1);
+                break;
+            }
+        }
+    } catch(e) {}
+}
+
+/* Background music — simple looping chime pattern */
+let musicInterval = null;
+const musicNotes = [523, 659, 784, 659, 523, 392, 440, 523];
+let musicStep = 0;
+
+function startMusic() {
+    if (musicInterval) return;
+    musicInterval = setInterval(() => {
+        if (!soundEnabled) return;
+        try {
+            const ctx = getAudioCtx();
+            const t = ctx.currentTime;
+            const freq = musicNotes[musicStep % musicNotes.length];
+            musicStep++;
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.connect(g); g.connect(ctx.destination);
+            o.type = 'sine';
+            o.frequency.value = freq;
+            g.gain.setValueAtTime(0.0, t);
+            g.gain.linearRampToValueAtTime(0.08, t + 0.05);
+            g.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+            o.start(t); o.stop(t + 0.55);
+        } catch(e) {}
+    }, 400);
+}
+
+function stopMusic() {
+    if (musicInterval) { clearInterval(musicInterval); musicInterval = null; }
 }
 
 function toggleSound() {
     soundEnabled = !soundEnabled;
     document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
-    if (soundEnabled) {
-        music.play().catch(() => {});
-    } else {
-        music.pause();
-    }
+    if (!soundEnabled) stopMusic();
+    else startMusic();
 }
 
 /* Menu Functions */
@@ -768,6 +963,156 @@ function selectDifficulty(diff) {
     difficulty = diff;
     document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
     event.target.classList.add('selected');
+}
+
+
+/* ── Per-level themes ── */
+const levelThemeData = {
+    1: {
+        name: "Sweet Beginnings",
+        description: "Pink skies of love",
+        bg: 'linear-gradient(180deg, #ff758c 0%, #ff9ab0 60%, #ffb3c6 100%)',
+        particles: () => spawnLoop(['💕','❤️','🌸'], 900, 18, 'fall')
+    },
+    2: {
+        name: "Ocean Dreams",
+        description: "Aqua waves of affection",
+        bg: 'linear-gradient(180deg, #0099cc 0%, #00ccdd 50%, #a8edea 100%)',
+        particles: () => spawnBubbles()
+    },
+    3: {
+        name: "Sunset Romance",
+        description: "Warm golden glow",
+        bg: 'linear-gradient(180deg, #ff6b35 0%, #f7931e 40%, #ffd89b 100%)',
+        particles: () => spawnLoop(['🍂','🍁','✨','🌟'], 700, 22, 'fall')
+    },
+    4: {
+        name: "Starlight Magic",
+        description: "Purple cosmic love",
+        bg: 'linear-gradient(180deg, #0a0a2e 0%, #1a0b4e 50%, #2d1b6e 100%)',
+        particles: () => spawnStars()
+    },
+    5: {
+        name: "Golden Finale",
+        description: "The final adventure",
+        bg: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)',
+        particles: () => { spawnStars(); spawnLoop(['⭐','💫','✨','🌟','💛'], 500, 20, 'fall'); }
+    }
+};
+
+function applyTheme() {
+    // Clear old particles
+    clearParticles();
+
+    const theme = levelThemeData[level] || levelThemeData[1];
+    document.body.style.background = theme.bg;
+
+    // Start this level's particles
+    theme.particles();
+}
+
+function clearParticles() {
+    if (themeAnimationInterval) {
+        clearInterval(themeAnimationInterval);
+        themeAnimationInterval = null;
+    }
+    document.querySelectorAll('.bg-particle').forEach(el => el.remove());
+}
+
+function spawnParticleEl(content, isStar) {
+    const el = document.createElement('div');
+    el.className = 'bg-particle';
+    el.style.left = (Math.random() * 100) + 'vw';
+    el.style.top = '-60px';
+    el.style.fontSize = (Math.random() * 14 + 14) + 'px';
+    el.style.zIndex = '1';
+
+    if (isStar) {
+        el.style.width  = (Math.random() * 4 + 2) + 'px';
+        el.style.height = el.style.width;
+        el.style.background = 'white';
+        el.style.borderRadius = '50%';
+        el.style.boxShadow = '0 0 6px 2px rgba(255,255,255,0.9)';
+        el.style.top  = (Math.random() * 100) + 'vh';
+        el.style.left = (Math.random() * 100) + 'vw';
+        el.style.animation = `bgPulse ${(Math.random() * 2 + 1.5).toFixed(2)}s ease-in-out infinite`;
+        el.style.animationDelay = (Math.random() * 3) + 's';
+        el.style.position = 'fixed';
+        document.body.appendChild(el);
+        return el;
+    }
+
+    el.textContent = content;
+    el.style.animation = `bgFall ${(Math.random() * 4 + 4).toFixed(2)}s linear forwards`;
+    el.style.animationDelay = (Math.random() * 0.5) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 9000);
+    return el;
+}
+
+function spawnLoop(emojis, interval, fontSize, mode) {
+    themeAnimationInterval = setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'bg-particle';
+        el.style.position = 'fixed';
+        el.style.left = (Math.random() * 98) + 'vw';
+        el.style.top = '-50px';
+        el.style.fontSize = (Math.random() * 8 + fontSize - 4) + 'px';
+        el.style.zIndex = '1';
+        el.style.pointerEvents = 'none';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const dur = (Math.random() * 4 + 5).toFixed(2);
+        el.style.animation = `bgFall ${dur}s linear forwards`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (parseFloat(dur) + 0.5) * 1000);
+    }, interval);
+}
+
+function spawnStars() {
+    // Static twinkling stars scattered across screen
+    for (let i = 0; i < 35; i++) {
+        spawnParticleEl('', true);
+    }
+    // Occasional shooting stars
+    themeAnimationInterval = setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'bg-particle';
+        el.style.position = 'fixed';
+        el.style.left = (Math.random() * 80) + 'vw';
+        el.style.top = '-10px';
+        el.style.fontSize = (Math.random() * 6 + 10) + 'px';
+        el.style.zIndex = '1';
+        el.style.pointerEvents = 'none';
+        el.textContent = '⭐';
+        const dur = (Math.random() * 2 + 2).toFixed(2);
+        el.style.animation = `bgFall ${dur}s linear forwards`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (parseFloat(dur) + 0.3) * 1000);
+    }, 1200);
+}
+
+function spawnBubbles() {
+    // Bubbles rise from bottom
+    themeAnimationInterval = setInterval(() => {
+        const el = document.createElement('div');
+        el.className = 'bg-particle';
+        el.style.position = 'fixed';
+        el.style.left = (Math.random() * 95) + 'vw';
+        el.style.bottom = '-40px';
+        el.style.top = 'auto';
+        el.style.zIndex = '1';
+        el.style.pointerEvents = 'none';
+        const size = Math.random() * 22 + 10;
+        el.style.width  = size + 'px';
+        el.style.height = size + 'px';
+        el.style.borderRadius = '50%';
+        el.style.border = '2px solid rgba(255,255,255,0.6)';
+        el.style.background = 'rgba(255,255,255,0.15)';
+        const dur = (Math.random() * 4 + 4).toFixed(2);
+        el.style.animation = `bgBubble ${dur}s ease-in forwards`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), (parseFloat(dur) + 0.3) * 1000);
+    }, 400);
 }
 
 function showHowToPlay() {
@@ -796,7 +1141,7 @@ function startGame() {
     combo = 0;
     updateLivesDisplay();
     updateHeartsDisplay();
-    updateLevelTheme();
+    applyTheme();
     showLevelTransition();
     
     let spawnRate = 1200;
@@ -809,18 +1154,15 @@ function startGame() {
     
     startCollisionLoop();
     
-    if (soundEnabled) music.play().catch(() => {});
+    if (soundEnabled) startMusic();
 }
 
 function updateLevelTheme() {
-    const theme = levelThemes[level];
-    if (theme) {
-        document.body.className = theme.className;
-    }
+    applyTheme();
 }
 
 function showLevelTransition() {
-    const theme = levelThemes[level];
+    const theme = levelThemeData[level];
     if (!theme) return;
     
     const transition = document.getElementById('levelTransition');
@@ -861,7 +1203,7 @@ function loseLife() {
 
 function gameOver() {
     const imgEl = document.getElementById('gameOverImg');
-    imgEl.innerHTML = `<img src="${ME_SAD}">`;
+    imgEl.innerHTML = `<img src="${ME_SAD}" style="height:100px;width:auto;border-radius:12px;object-fit:cover;">`;
     document.getElementById('gameOverTitle').textContent = '💔 Game Over';
     
     if (score > highScore) {
@@ -876,6 +1218,7 @@ function gameOver() {
     
     gameStarted = false;
     clearInterval(spawnInterval);
+    stopMusic();
     playSound('gameover');
     
     setTimeout(() => {
@@ -904,8 +1247,7 @@ function showLoveMessage() {
     }, 2500);
 }
 
-/* Basket movement */
-let isDragging = false;
+/* Basket movement - follows mouse/touch directly, no click required */
 let basketX = window.innerWidth / 2;
 
 function getGameWidth() {
@@ -919,63 +1261,51 @@ function updateBasketPosition(clientX) {
     basket.style.transform = 'translateX(-50%)';
 }
 
-gameArea.addEventListener('mousedown', (e) => {
-    if (!gameStarted) return;
-    isDragging = true;
-    updateBasketPosition(e.clientX);
-});
-
 document.addEventListener('mousemove', (e) => {
-    if (isDragging && gameStarted) {
+    if (gameStarted) {
         updateBasketPosition(e.clientX);
     }
-});
-
-document.addEventListener('mouseup', () => {
-    isDragging = false;
 });
 
 gameArea.addEventListener('touchstart', (e) => {
     if (!gameStarted) return;
     e.preventDefault();
-    isDragging = true;
     updateBasketPosition(e.touches[0].clientX);
 }, { passive: false });
 
 document.addEventListener('touchmove', (e) => {
-    if (isDragging && gameStarted) {
+    if (gameStarted) {
         e.preventDefault();
         updateBasketPosition(e.touches[0].clientX);
     }
 }, { passive: false });
 
-document.addEventListener('touchend', () => {
-    isDragging = false;
-});
+/* Preload reaction images */
+const imgNormal = new Image(); imgNormal.src = 'me.jpg';
+const imgHit    = new Image(); imgHit.src    = 'me2.jpg';
+const imgHappy  = new Image(); imgHappy.src  = 'me3.jpg';
+
+let reactionTimeout = null;
 
 /* Basket reactions */
 function reactToHeart() {
     basket.style.animation = 'celebrateJump 0.5s ease';
+    setTimeout(() => { basket.style.animation = ''; }, 500);
+
     const basketImg = document.getElementById('basketImg');
-    console.log('Heart caught! Changing to me3.jpg');
-    basketImg.src = 'me3.jpg?' + new Date().getTime();
-    setTimeout(() => { 
-        basket.style.animation = ''; 
-        console.log('Changing back to me.png');
-        basketImg.src = 'me.png?' + new Date().getTime();
-    }, 2000);
+    if (reactionTimeout) clearTimeout(reactionTimeout);
+    basketImg.src = 'me3.jpg';
+    reactionTimeout = setTimeout(() => { basketImg.src = 'me.jpg'; }, 2000);
 }
 
 function reactToHit() {
     basket.style.animation = 'hitFlash 0.4s ease';
+    setTimeout(() => { basket.style.animation = ''; }, 400);
+
     const basketImg = document.getElementById('basketImg');
-    console.log('Hit by bomb/easter egg! Changing to me2.jpg');
-    basketImg.src = 'me2.jpg?' + new Date().getTime();
-    setTimeout(() => { 
-        basket.style.animation = ''; 
-        console.log('Changing back to me.png');
-        basketImg.src = 'me.png?' + new Date().getTime();
-    }, 2000);
+    if (reactionTimeout) clearTimeout(reactionTimeout);
+    basketImg.src = 'me2.jpg';
+    reactionTimeout = setTimeout(() => { basketImg.src = 'me.jpg'; }, 2000);
 }
 
 function screenShake() {
@@ -1013,7 +1343,7 @@ function activateDoublePoints() {
 
 /* Auto-play music on first interaction */
 document.body.addEventListener('touchstart', () => {
-    if (gameStarted) music.play().catch(() => {});
+    if (gameStarted) startMusic();
 }, { passive: true, once: true });
 
 /* Create falling items */
@@ -1210,7 +1540,7 @@ function handleCatch(type, itemRect) {
     // Win condition: reach level 6 (complete 5 levels of 10 hearts)
     if (level > 5 && gameStarted) {
         const imgEl = document.getElementById('gameOverImg');
-        imgEl.innerHTML = `<img src="${ME_HAPPY}">`;
+        imgEl.innerHTML = `<img src="${ME_HAPPY}" style="height:100px;width:auto;border-radius:12px;object-fit:cover;">`;
         document.getElementById('gameOverTitle').textContent = '🎉 You Won!';
         if (score > highScore) {
             highScore = score;
@@ -1221,6 +1551,7 @@ function handleCatch(type, itemRect) {
         document.getElementById('gameOverLevel').textContent = `Completed all 5 levels!`;
         gameStarted = false;
         clearInterval(spawnInterval);
+        stopMusic();
         message.style.display = "block";
         playSound('win');
         showPopup("🎉 YOU WIN! 🎉");
@@ -1275,6 +1606,13 @@ function createLoveText() {
     document.body.appendChild(text);
     setTimeout(() => text.remove(), 6000);
 }
+
+/* Initialize page with default theme */
+window.addEventListener('DOMContentLoaded', function() {
+    // Set initial background
+    document.body.style.background = 'linear-gradient(to bottom, #ff758c, #ff7eb3)';
+    console.log('Page loaded, background set');
+});
 
 </script>
 
