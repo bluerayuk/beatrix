@@ -486,6 +486,101 @@ button:active {
 #giftSection, #quizSection, #resultsSection {
     text-align: center;
 }
+
+/* Love Notes Section */
+#loveNotesSection {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.notes-container {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    height: 380px;
+    margin: 30px auto;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.note-card {
+    position: absolute;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 40px 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+    pointer-events: none;
+}
+
+.note-card.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+    z-index: 2;
+}
+
+.note-card.prev {
+    opacity: 0;
+    transform: translateX(-100%) scale(0.9);
+    z-index: 1;
+}
+
+.note-card.next {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+    z-index: 1;
+}
+
+.note-emoji {
+    font-size: clamp(3.5rem, 12vw, 5rem);
+    margin-bottom: 20px;
+}
+
+.note-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ff1744;
+}
+
+.note-text {
+    font-size: clamp(1rem, 3.8vw, 1.3rem);
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+.notes-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 25px 0;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #ff1744;
+    transform: scale(1.3);
+}
+
+.dot:active {
+    transform: scale(1.1);
+}
 </style>
 </head>
 
@@ -540,6 +635,68 @@ button:active {
             </div>
         </div>
 
+        <button id="loveNotesBtn" class="hidden primary-btn" onclick="showLoveNotes()">Read Love Notes 💌</button>
+    </div>
+
+    <div id="loveNotesSection" class="hidden">
+        <h2 class="fade-in">Love Notes For You 💌</h2>
+        <p class="subtitle">Swipe to read more ←→</p>
+        
+        <div class="notes-container">
+            <div class="note-card active" id="note0">
+                <div class="note-emoji">💕</div>
+                <div class="note-title">My Forever</div>
+                <div class="note-text">
+                    From the moment I met you on Bumble, I knew you were special. 
+                    Every day with you is a gift, and I'm so grateful you're my wife.
+                </div>
+            </div>
+            
+            <div class="note-card" id="note1">
+                <div class="note-emoji">🌟</div>
+                <div class="note-title">Our Adventures</div>
+                <div class="note-text">
+                    From camping in Polegate to our favorite meals at Buffet Time, 
+                    every moment with you is an adventure I treasure.
+                </div>
+            </div>
+            
+            <div class="note-card" id="note2">
+                <div class="note-emoji">🍝</div>
+                <div class="note-title">Little Things</div>
+                <div class="note-text">
+                    I love how you light up at Italian food, your birthday in August, 
+                    and even your love for Prawn Cocktail Pringles. Every detail about you matters to me.
+                </div>
+            </div>
+            
+            <div class="note-card" id="note3">
+                <div class="note-emoji">💍</div>
+                <div class="note-title">May 5th</div>
+                <div class="note-text">
+                    The day we got married was the best day of my life. 
+                    I promise to love you, cherish you, and make you smile every single day.
+                </div>
+            </div>
+            
+            <div class="note-card" id="note4">
+                <div class="note-emoji">❤️</div>
+                <div class="note-title">Today & Always</div>
+                <div class="note-text">
+                    Happy Valentine's Day, my beautiful Beatrix. 
+                    You're my today, my tomorrow, and my forever. I love you more than words can say.
+                </div>
+            </div>
+        </div>
+        
+        <div class="notes-dots">
+            <span class="dot active" onclick="goToNote(0)"></span>
+            <span class="dot" onclick="goToNote(1)"></span>
+            <span class="dot" onclick="goToNote(2)"></span>
+            <span class="dot" onclick="goToNote(3)"></span>
+            <span class="dot" onclick="goToNote(4)"></span>
+        </div>
+        
         <button id="quizBtn" class="hidden primary-btn" onclick="startQuiz()">Play Our Love Quiz! 💕</button>
     </div>
 
@@ -784,12 +941,106 @@ function openGift() {
         document.getElementById("memoryCards").classList.add("show");
     }, 1700);
     setTimeout(function() {
-        document.getElementById("quizBtn").classList.remove("hidden");
+        document.getElementById("loveNotesBtn").classList.remove("hidden");
     }, 2500);
 }
 
 function startQuiz() {
+    document.getElementById("loveNotesSection").classList.add("hidden");
+    document.getElementById("quizSection").classList.remove("hidden");
+    currentQuestion = 0;
+    score = 0;
+    selectedAnswer = null;
+    renderQuizProgress();
+    renderQuestion();
+}
+
+var currentNoteIndex = 0;
+var totalNotes = 5;
+var touchStartX = 0;
+var touchEndX = 0;
+var notesContainer = null;
+
+function showLoveNotes() {
     document.getElementById("giftSection").classList.add("hidden");
+    document.getElementById("loveNotesSection").classList.remove("hidden");
+    
+    notesContainer = document.querySelector('.notes-container');
+    if (notesContainer) {
+        notesContainer.addEventListener('touchstart', handleTouchStart, false);
+        notesContainer.addEventListener('touchmove', handleTouchMove, false);
+        notesContainer.addEventListener('touchend', handleTouchEnd, false);
+    }
+    
+    setTimeout(function() {
+        document.getElementById("quizBtn").classList.remove("hidden");
+    }, 1500);
+}
+
+function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+}
+
+function handleTouchMove(event) {
+    touchEndX = event.touches[0].clientX;
+}
+
+function handleTouchEnd() {
+    var swipeThreshold = 50;
+    var diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0 && currentNoteIndex < totalNotes - 1) {
+            nextNote();
+        } else if (diff < 0 && currentNoteIndex > 0) {
+            prevNote();
+        }
+    }
+}
+
+function nextNote() {
+    if (currentNoteIndex < totalNotes - 1) {
+        updateNoteDisplay(currentNoteIndex + 1);
+    }
+}
+
+function prevNote() {
+    if (currentNoteIndex > 0) {
+        updateNoteDisplay(currentNoteIndex - 1);
+    }
+}
+
+function goToNote(index) {
+    updateNoteDisplay(index);
+}
+
+function updateNoteDisplay(newIndex) {
+    var oldCard = document.getElementById('note' + currentNoteIndex);
+    var newCard = document.getElementById('note' + newIndex);
+    var dots = document.querySelectorAll('.dot');
+    
+    if (newIndex > currentNoteIndex) {
+        oldCard.classList.remove('active');
+        oldCard.classList.add('prev');
+        newCard.classList.remove('next');
+        newCard.classList.add('active');
+    } else {
+        oldCard.classList.remove('active');
+        oldCard.classList.add('next');
+        newCard.classList.remove('prev');
+        newCard.classList.add('active');
+    }
+    
+    dots[currentNoteIndex].classList.remove('active');
+    dots[newIndex].classList.add('active');
+    
+    if (window.navigator.vibrate) window.navigator.vibrate(20);
+    
+    currentNoteIndex = newIndex;
+}
+
+function startQuiz() {
+    document.getElementById("loveNotesSection").classList.add("hidden");
     document.getElementById("quizSection").classList.remove("hidden");
     currentQuestion = 0;
     score = 0;
