@@ -20,13 +20,26 @@
     -webkit-touch-callout: none;
 }
 
-html, body {
+html {
     width: 100%;
     height: 100%;
+    height: -webkit-fill-available;
     margin: 0;
     padding: 0;
     overscroll-behavior: none;
     background: #000;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    background: #000;
+    touch-action: pan-y;
 }
 
 body {
@@ -38,6 +51,9 @@ body {
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent elastic bounce on Safari */
+    position: fixed;
+    width: 100%;
 }
 
 /* Hardware acceleration for better 120Hz performance */
@@ -58,10 +74,15 @@ canvas {
 }
 
 .content {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 2;
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    min-height: 100dvh;
     padding: 20px;
     padding-top: max(40px, env(safe-area-inset-top, 20px) + 20px);
     padding-bottom: max(30px, env(safe-area-inset-bottom, 20px) + 20px);
@@ -75,6 +96,9 @@ canvas {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    /* Prevent Safari from hiding content behind nav bars */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 #initialScreen {
@@ -177,6 +201,9 @@ button {
     will-change: transform;
     -webkit-user-select: none;
     user-select: none;
+    touch-action: manipulation;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 button:active {
@@ -225,6 +252,7 @@ button:active {
     will-change: transform;
     -webkit-user-select: none;
     user-select: none;
+    touch-action: manipulation;
 }
 
 .gift-box:active {
@@ -422,6 +450,7 @@ button:active {
     will-change: transform, background;
     -webkit-user-select: none;
     user-select: none;
+    touch-action: manipulation;
 }
 
 .quiz-option:active {
@@ -529,8 +558,9 @@ button:active {
     width: 90%;
     max-width: 500px;
     margin: 20px auto;
-    height: 420px;
+    height: clamp(280px, 50vh, 420px);
     overflow: hidden;
+    touch-action: pan-x;
 }
 
 .love-note {
@@ -810,12 +840,17 @@ var ctx = canvas ? canvas.getContext("2d") : null;
 var particleCanvas = document.getElementById("particles");
 var particleCtx = particleCanvas ? particleCanvas.getContext("2d") : null;
 
-if (canvas && particleCanvas) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    particleCanvas.width = window.innerWidth;
-    particleCanvas.height = window.innerHeight;
+function resizeCanvases() {
+    var w = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+    var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    if (canvas && particleCanvas) {
+        canvas.width = w;
+        canvas.height = h;
+        particleCanvas.width = w;
+        particleCanvas.height = h;
+    }
 }
+resizeCanvases();
 
 var particles = [];
 var fireworks = [];
@@ -946,12 +981,13 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-window.addEventListener("resize", function() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    particleCanvas.width = window.innerWidth;
-    particleCanvas.height = window.innerHeight;
+window.addEventListener("resize", resizeCanvases);
+window.addEventListener("orientationchange", function() {
+    setTimeout(resizeCanvases, 300);
 });
+if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", resizeCanvases);
+}
 
 function openGift() {
     playSound('click');
@@ -993,11 +1029,23 @@ function openGift() {
     }, 2200);
 }
 
+var sharedAudioCtx = null;
+
+function getAudioContext() {
+    if (!sharedAudioCtx) {
+        sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+        sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+}
+
 function playSound(type) {
     try {
         if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
         
-        var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        var audioContext = getAudioContext();
         var oscillator = audioContext.createOscillator();
         var gainNode = audioContext.createGain();
         
@@ -1050,7 +1098,6 @@ function playSound(type) {
                     var gain = audioContext.createGain();
                     osc.connect(gain);
                     gain.connect(audioContext.destination);
-                    
                     var frequencies = [523.25, 659.25, 783.99, 1046.50, 1318.51];
                     osc.frequency.value = frequencies[i];
                     gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.1);
@@ -1082,9 +1129,9 @@ function showLoveNotes() {
     
     notesContainer = document.querySelector('.notes-container');
     if (notesContainer) {
-        notesContainer.addEventListener('touchstart', handleTouchStart, false);
-        notesContainer.addEventListener('touchmove', handleTouchMove, false);
-        notesContainer.addEventListener('touchend', handleTouchEnd, false);
+        notesContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+        notesContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+        notesContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
     }
     
     setTimeout(function() {
